@@ -188,7 +188,6 @@ extension strumvg {
         
         return (0..<quantity).map { i in
             if noteLength.duration == .quarter {
-                //   return `${(i % 4) + 1}`;
                 if triplet {
                     if i.isMultiple(of: 3) {
                         return "\(i / 3 + 1)"
@@ -206,7 +205,6 @@ extension strumvg {
                     }
                 }
                 if i.isMultiple(of: 2) {
-                    // return `${(Math.round(i / 2) % 4) + 1}`;
                     return "\(Int((Double(i) / 2).rounded() + 1))"
                 } else {
                     return "&"
