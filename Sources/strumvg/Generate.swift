@@ -221,9 +221,9 @@ extension strumvg {
                     if int % 3 == 0 {
                         let v = Int(i / 3 + 1)
                         if v.isMultiple(of: 2) {
-                            return "\(v)"
-                        } else {
                             return "&"
+                        } else {
+                            return "\(v)"
                         }
                     } else {
                         return ""
