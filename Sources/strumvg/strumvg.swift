@@ -18,6 +18,12 @@ struct strumvg: ParsableCommand {
     let options: Options = .default
     
     mutating func run() throws {
+        let pattern = Pattern(rawValue: patternString)
+//        print(pattern?.rawValue)
         
+        guard let pattern else { return }
+        
+        let svg = generate(pattern: pattern)
+        print(svg.render(indentedBy: .spaces(2)))
     }
 }
