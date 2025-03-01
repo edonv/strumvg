@@ -194,8 +194,9 @@ extension strumvg {
                     } else {
                         return ""
                     }
+                } else {
+                    return "\(i + 1)"
                 }
-                return "\(i + 1)"
             } else if noteLength.duration == .eighth {
                 if triplet {
                     if i.isMultiple(of: 3) {
@@ -203,11 +204,12 @@ extension strumvg {
                     } else {
                         return ""
                     }
-                }
-                if i.isMultiple(of: 2) {
-                    return "\(Int((Double(i) / 2).rounded() + 1))"
                 } else {
-                    return "&"
+                    if i.isMultiple(of: 2) {
+                        return "\(Int((Double(i) / 2).rounded() + 1))"
+                    } else {
+                        return "&"
+                    }
                 }
             } else {
                 if triplet {
@@ -221,16 +223,16 @@ extension strumvg {
                     } else {
                         return ""
                     }
-                }
-                let odd = !i.isMultiple(of: 2)
-                let halfOdd = !(i / 2).isMultiple(of: 2)
-                if odd {
-                    return ""
-                } else if halfOdd {
-                    return "&"
                 } else {
-                    // return `${(Math.round(i / 2) % 4) + 1}`;
-                    return "\(Int((Double(i) / 4).rounded() + 1))"
+                    let odd = !i.isMultiple(of: 2)
+                    let halfOdd = !(i / 2).isMultiple(of: 2)
+                    if odd {
+                        return ""
+                    } else if halfOdd {
+                        return "&"
+                    } else {
+                        return "\(Int((Double(i) / 4).rounded() + 1))"
+                    }
                 }
             }
         }
