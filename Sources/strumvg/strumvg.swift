@@ -18,6 +18,7 @@ struct strumvg: ParsableCommand {
     let options: Options = .default
     
     mutating func run() throws {
+//        let string = "{xD} D u uD u-16t"
         let pattern = Pattern(rawValue: patternString)
 //        print(pattern?.rawValue)
         
