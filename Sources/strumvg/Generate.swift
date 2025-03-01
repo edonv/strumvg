@@ -186,28 +186,30 @@ extension strumvg {
     ) -> [String] {
         let triplet = noteLength.triplet
         
-        return (0..<quantity).map { i in
+        return (0..<quantity).map { int in
+            let i = Double(int)
+            
             switch noteLength.duration {
             case .quarter:
                 if triplet {
-                    if i.isMultiple(of: 3) {
-                        return "\(i / 3 + 1)"
+                    if int % 3 == 0 {
+                        return "\(Double(i / 3 + 1))"
                     } else {
                         return ""
                     }
                 } else {
-                    return "\(i + 1)"
+                    return "\(int + 1)"
                 }
                 
             case .eighth:
                 if triplet {
-                    if i.isMultiple(of: 3) {
-                        return "\(i / 3 + 1)"
+                    if int % 3 == 0 {
+                        return "\(Double(i / 3 + 1))"
                     } else {
                         return ""
                     }
                 } else {
-                    if i.isMultiple(of: 2) {
+                    if int % 2 == 0 {
                         return "\(Int((Double(i) / 2).rounded() + 1))"
                     } else {
                         return "&"
@@ -216,8 +218,8 @@ extension strumvg {
                 
             case .sixteenth:
                 if triplet {
-                    if i.isMultiple(of: 3) {
-                        let v = i / 3 + 1
+                    if int % 3 == 0 {
+                        let v = Int(i / 3 + 1)
                         if v.isMultiple(of: 2) {
                             return "\(v)"
                         } else {
@@ -227,8 +229,8 @@ extension strumvg {
                         return ""
                     }
                 } else {
-                    let odd = !i.isMultiple(of: 2)
-                    let halfOdd = !(i / 2).isMultiple(of: 2)
+                    let odd = int % 2 != 0
+                    let halfOdd = Int(i / 2) % 2 != 0
                     if odd {
                         return ""
                     } else if halfOdd {
