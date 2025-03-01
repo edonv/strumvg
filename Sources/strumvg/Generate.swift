@@ -187,7 +187,8 @@ extension strumvg {
         let triplet = noteLength.triplet
         
         return (0..<quantity).map { i in
-            if noteLength.duration == .quarter {
+            switch noteLength.duration {
+            case .quarter:
                 if triplet {
                     if i.isMultiple(of: 3) {
                         return "\(i / 3 + 1)"
@@ -197,7 +198,8 @@ extension strumvg {
                 } else {
                     return "\(i + 1)"
                 }
-            } else if noteLength.duration == .eighth {
+                
+            case .eighth:
                 if triplet {
                     if i.isMultiple(of: 3) {
                         return "\(i / 3 + 1)"
@@ -211,7 +213,8 @@ extension strumvg {
                         return "&"
                     }
                 }
-            } else {
+                
+            case .sixteenth:
                 if triplet {
                     if i.isMultiple(of: 3) {
                         let v = i / 3 + 1
