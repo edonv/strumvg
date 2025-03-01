@@ -26,6 +26,8 @@ let package = Package(
             name: "strumvg",
             dependencies: [
                 .product(name: "Plot", package: "Plot"),
+                "StrumModels",
+                "PlotSVG",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
