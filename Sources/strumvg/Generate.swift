@@ -212,7 +212,7 @@ extension strumvg {
                     if int % 2 == 0 {
                         return "\(Int((Double(i) / 2).rounded() + 1))"
                     } else {
-                        return "&"
+                        return "+"
                     }
                 }
                 
@@ -234,7 +234,7 @@ extension strumvg {
                     if odd {
                         return ""
                     } else if halfOdd {
-                        return "&"
+                        return "+"
                     } else {
                         return "\(Int((Double(i) / 4).rounded() + 1))"
                     }
