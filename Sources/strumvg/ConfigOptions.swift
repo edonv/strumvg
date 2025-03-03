@@ -1,5 +1,5 @@
 //
-//  Options.swift
+//  ConfigOptions.swift
 //  strumvg
 //
 //  Created by Edon Valdman on 2/25/25.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Options: Codable {
-    static let `default`: Options = .init(
+struct ConfigOptions: Codable {
+    static let `default`: ConfigOptions = .init(
         arrowColor: "#000000",
         rhythmColor: "#555555",
         articulationColor: "#555555",

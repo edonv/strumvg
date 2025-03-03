@@ -15,7 +15,7 @@ struct strumvg: ParsableCommand {
     @Argument(help: "The string representation of a pattern.")
     var patternString: String
     
-    let options: Options = .default
+    let options: ConfigOptions = .default
     
     mutating func run() throws {
 //        let string = "{xD} D u uD u-16t"
