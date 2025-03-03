@@ -43,7 +43,7 @@ extension strumvg {
                 let arrow = createStrumArrow(strum: strum)
                 let index = CGFloat(i)
                 
-                let group = Node<SVG.DocumentContext>.element(
+                return .element(
                     named: "g",
                     nodes: [
                         .attribute(named: "key", value: "strum\(i)"),
@@ -216,7 +216,7 @@ extension strumvg {
         
         switch variant {
         case .normal:
-            pathEl = Node<SVG.DocumentContext>.element(
+            return .element(
                 named: "path",
                 attributes: [
                     .attribute(
@@ -229,8 +229,6 @@ extension strumvg {
                     )
                 ]
             )
-            
-            return pathEl
             
         case .arpeggio:
             let offsetY = height * headHeight * 0.9
@@ -273,13 +271,13 @@ extension strumvg {
                     .attribute(named: "stroke", value: fill /*?? ""*/)
                 ]
             )
-            gEl = Node<SVG.DocumentContext>.element(named: "g", nodes: [pathEl1, pathEl2])
-            return gEl
+
+            return .element(named: "g", nodes: [pathEl1, pathEl2])
 
 //        case .accent:
 //            let newStrokeWidth = min(1, strokeWidth * 2)
 //            
-//            pathEl = Node<XML.DocumentContext>.element(
+//            return Node<XML.DocumentContext>.element(
 //                named: "path",
 //                attributes: [
 //                    .attribute(
@@ -289,8 +287,6 @@ extension strumvg {
 //                    .attribute(named: "stroke-width", value: "0")
 //                ]
 //            )
-//            
-//            return pathEl
             
         case .muted:
             pathEl = Node<SVG.DocumentContext>.element(
@@ -342,7 +338,7 @@ extension strumvg {
                 ].flatMap { $0 }
             )
             
-            gEl = Node<SVG.DocumentContext>.element(
+            return .element(
                 named: "g",
                 nodes: [
                     pathEl,
@@ -350,7 +346,6 @@ extension strumvg {
                     rectEl2,
                 ]
             )
-            return gEl
             
         case .space:
             return nil
@@ -400,7 +395,7 @@ extension strumvg {
                 ].flatMap { $0 }
             )
             
-            gEl = Node<SVG.DocumentContext>.element(
+            return Node<SVG.DocumentContext>.element(
                 named: "g",
                 nodes: [
                     rectEl1,
@@ -408,10 +403,8 @@ extension strumvg {
                 ]
             )
             
-            return gEl
-            
         case .other(let char):
-            let textEl = Node<SVG.DocumentContext>.element(
+            return .element(
                 named: "text",
                 nodes: [
                     .attribute(
@@ -458,8 +451,6 @@ extension strumvg {
                     .text(String(char)),
                 ]
             )
-            
-            return textEl
         }
     }
     
