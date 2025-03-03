@@ -466,20 +466,18 @@ extension strumvg {
         let subdivision = triplet ? 3 : 2
         let quantity = Int(floor(Double(strums.count) / Double(subdivision)))
         
-        let attrs: [Node<SVG.DocumentContext>] = (0..<quantity).map { i in
-            return createNoteGroup(
-                quantity: subdivision,
-                triplet: triplet,
-                horizontalStrokes: horizontalStrokes,
-                x: CGFloat(subdivision) * (options.strumWidth + options.strumGap) * CGFloat(i) + options.strumWidth / 2,
-                y: y,
-                width: CGFloat(subdivision) * (options.strumWidth + options.strumGap)
-            )
-        }
-        
-        return Node<SVG.DocumentContext>.element(
+        return .element(
             named: "g",
-            nodes: attrs
+            nodes: (0..<quantity).map { i in
+                return createNoteGroup(
+                    quantity: subdivision,
+                    triplet: triplet,
+                    horizontalStrokes: horizontalStrokes,
+                    x: CGFloat(subdivision) * (options.strumWidth + options.strumGap) * CGFloat(i) + options.strumWidth / 2,
+                    y: y,
+                    width: CGFloat(subdivision) * (options.strumWidth + options.strumGap)
+                )
+            }
         )
     }
     
