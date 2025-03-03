@@ -492,32 +492,27 @@ extension strumvg {
         let quantityFloat = CGFloat(quantity)
         let fill = options.rhythmColor
         
-        let textEl: Node<SVG.DocumentContext>?
-        if triplet {
-            textEl = .element(
-                named: "text",
-                nodes: [
-                    .text("3"), // triplet label
-                    
+        let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
+            named: "text",
+            nodes: [
+                .text("3"), // triplet label
+                
                     .attribute(
                         named: "x",
                         value: (width * (quantityFloat - 1)) / quantityFloat / 2,
                         format: numberFormat
                     ),
-                    .attribute(
-                        named: "y",
-                        value: options.beamHeight + 16,
-                        format: numberFormat
-                    ),
-                    .attribute(named: "font-size", value: "14"),
-                    .attribute(named: "text-anchor", value: "middle"),
-                    .attribute(named: "font-family", value: "sans-serif"),
-                    .attribute(named: "fill", value: fill),
-                ]
-            )
-        } else {
-            textEl = nil
-        }
+                .attribute(
+                    named: "y",
+                    value: options.beamHeight + 16,
+                    format: numberFormat
+                ),
+                .attribute(named: "font-size", value: "14"),
+                .attribute(named: "text-anchor", value: "middle"),
+                .attribute(named: "font-family", value: "sans-serif"),
+                .attribute(named: "fill", value: fill),
+            ]
+        ) : nil
         
         let stemLines = (0..<quantity).map { i in
             Node<SVG.DocumentContext>.element(
