@@ -20,6 +20,18 @@ struct strumvg: ParsableCommand {
     
     let options: ConfigOptions = .default
     
+    func validate() throws {
+        if ioOptions.inputSource == .argument
+            && patternString == nil {
+            throw ValidationError("`inputSource` flag set to `--arg` and the `patternString` argument is missing.")
+        }
+        
+        if ioOptions.inputSource == .stdin
+            && patternString != nil {
+            throw ValidationError("`inputSource` flag set to `--stdin` and the `patternString` argument is present.")
+        }
+    }
+    
     mutating func run() throws {
 //        let string = "{xD} D u uD u-16t"
         let pattern = Pattern(rawValue: patternString)
