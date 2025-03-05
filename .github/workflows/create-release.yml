@@ -20,12 +20,14 @@ jobs:
       - uses: swift-actions/setup-swift@v2
         with:
           swift-version: "6.0"
-      - name: Build macOS Binary
-        run: swift build -v -c release --arch x86_64 --arch arm64
+      - name: Build macOS ARM64 Binary
+        run: swift build -c release --arch arm64
+      - name: Build macOS Intel Binary
+        run: swift build -c release --arch x86_64
       # - name: Run tests
       #   run: swift test -v
-      - name: "Move/Rename Binary"
-        run: cp ".build/release/strumvg" "builds/strumvg-macos"
+      - name: Merge Binaries into Universal
+        run: lipo -create -output "builds/strumvg-macos" ".build/arm64-apple-macosx/release/strumvg" ".build/x86_64-apple-macosx/release/strumvg"
       - name: 'Upload macOS Build Artifact'
         uses: actions/upload-artifact@v4
         with:
@@ -48,5 +50,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ github.ref_name }}
-          files: ./builds/
+          files: ./builds/*
           fail_on_unmatched_files: true
