@@ -27,7 +27,9 @@ jobs:
       # - name: Run tests
       #   run: swift test -v
       - name: Merge Binaries into Universal
-        run: lipo -create -output "builds/strumvg-macos" ".build/arm64-apple-macosx/release/strumvg" ".build/x86_64-apple-macosx/release/strumvg"
+        run: lipo -create -output "strumvg" ".build/arm64-apple-macosx/release/strumvg" ".build/x86_64-apple-macosx/release/strumvg"
+      - name: Rename Binary
+        run: mv "strumvg" "builds/strumvg-macos"
       - name: 'Upload macOS Build Artifact'
         uses: actions/upload-artifact@v4
         with:
