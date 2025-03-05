@@ -13,7 +13,10 @@ import PlotSVG
 @main
 struct strumvg: ParsableCommand {
     @Argument(help: "The string representation of a pattern.")
-    var patternString: String
+    var patternString: String?
+    
+    @OptionGroup
+    var ioOptions: InOutOptions
     
     let options: ConfigOptions = .default
     
