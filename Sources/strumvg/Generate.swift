@@ -10,6 +10,7 @@ import StrumModels
 import Plot
 
 import PlotSVG
+import PlotExtensions
 
 private let numberFormat = FloatingPointFormatStyle<CGFloat>()
     .precision(.fractionLength(...4))

@@ -1,5 +1,5 @@
 {
-  "originHash" : "c27776ecc541d45a81e4a93d71ed7307d054c4ca5eae5f071f540847c2a9dabc",
+  "originHash" : "9f888fc58022e81df92e3974510dc37dbde7cac82ef6f19b7f5b3bd23d7516d4",
   "pins" : [
     {
       "identity" : "plot",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "271926b4413fe868739d99f5eadcf2bd6cd62fb8",
         "version" : "0.14.0"
+      }
+    },
+    {
+      "identity" : "plotsvg",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/edonv/PlotSVG.git",
+      "state" : {
+        "revision" : "8fed259845bedb170bcda105c3045c7d17ca89a4",
+        "version" : "0.0.0"
       }
     },
     {
