@@ -44,7 +44,7 @@ jobs:
           path: .
       - name: List downloaded files
         run: ls -R
-      - name: Upload to Release
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
