@@ -30,11 +30,6 @@ struct ConfigOptions: ParsableArguments {
     @Option(help: "The actual font-size of the articulations and header text above the arrows, relative to its height.")
     var headerFontSize: CGFloat = 0.8
     
-    @Option(help: "The stroke width of the rhythm stems/beams below the arrows.")
-    var beamStrokeWidth: CGFloat = 2
-    
-    @Option(help: "The vertical length of the beam stems.")
-    var beamStemHeight: CGFloat = 8
     
     @Option(
         help: .init(
@@ -49,6 +44,12 @@ struct ConfigOptions: ParsableArguments {
     
     @Option(help: "The horizontal space between each strum ")
     var strumGap: CGFloat = 30
+    
+    @Option(help: "The stroke width of the rhythm stems/beams below the arrows.")
+    var beamStrokeWidth: CGFloat = 2
+    
+    @Option(help: "The vertical length of the beam stems.")
+    var beamStemHeight: CGFloat = 8
     
     
     
