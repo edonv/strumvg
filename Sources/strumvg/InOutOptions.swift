@@ -22,7 +22,7 @@ struct InOutOptions: ParsableArguments {
         static func name(for value: InputSource) -> NameSpecification {
             switch value {
             case .stdin:
-                return [.customShort("s"), .long]
+                return [.customShort("i"), .long]
             case .argument:
                 return [.customShort("a"), .customLong("arg")]
             }
@@ -36,7 +36,7 @@ struct InOutOptions: ParsableArguments {
         static func name(for value: OutputDestination) -> NameSpecification {
             switch value {
             case .stdout:
-                return [.customShort("s"), .long]
+                return [.customShort("o"), .long]
             case .log:
                 return [.customShort("l"), .long]
             }
