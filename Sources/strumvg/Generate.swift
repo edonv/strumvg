@@ -490,12 +490,11 @@ extension strumvg {
             named: "text",
             nodes: [
                 .text("3"), // triplet label
-                
-                    .attribute(
-                        named: "x",
-                        value: (width * (quantityFloat - 1)) / quantityFloat / 2,
-                        format: numberFormat
-                    ),
+                .attribute(
+                    named: "x",
+                    value: (width * (quantityFloat - 1)) / quantityFloat / 2,
+                    format: numberFormat
+                ),
                 .attribute(
                     named: "y",
                     value: options.beamHeight + 16,
