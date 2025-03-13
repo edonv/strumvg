@@ -15,7 +15,7 @@ struct ConfigOptions: Codable {
         beatTextHeight: 30,
         beatTextFontSize: 0.8,
         beamStrokeWidth: 2,
-        beamHeight: 8,
+        beamStemHeight: 8,
         strumWidth: 20,
         strumHeight: 80,
         strumGap: 30,
@@ -29,10 +29,10 @@ struct ConfigOptions: Codable {
     let beatTextHeight: CGFloat
     let beatTextFontSize: CGFloat
     let beamStrokeWidth: CGFloat
-    let beamHeight: CGFloat
     let strumWidth: CGFloat
     let strumHeight: CGFloat
     let strumGap: CGFloat
     let headerHeight: CGFloat
+    let beamStemHeight: CGFloat
     let headerFontSize: CGFloat
 }

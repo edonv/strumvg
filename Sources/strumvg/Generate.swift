@@ -497,7 +497,7 @@ extension strumvg {
                 ),
                 .attribute(
                     named: "y",
-                    value: options.beamHeight + 16,
+                    value: options.beamStemHeight + 16,
                     format: numberFormat
                 ),
                 .attribute(named: "font-size", value: "14"),
@@ -516,7 +516,7 @@ extension strumvg {
                         value: options.beamStrokeWidth,
                         format: numberFormat
                     ),
-                    .attribute(named: "height", value: options.beamHeight, format: numberFormat),
+                    .attribute(named: "height", value: options.beamStemHeight, format: numberFormat),
                     .attribute(named: "fill", value: fill),
                     .attribute(
                         named: "x",
@@ -549,7 +549,7 @@ extension strumvg {
                     ),
                     .attribute(
                         named: "y",
-                        value: options.beamHeight - CGFloat(i) * options.beamStrokeWidth,
+                        value: options.beamStemHeight - CGFloat(i) * options.beamStrokeWidth,
                         format: numberFormat
                     ),
                 ] as [Attribute<XML.DocumentContext>]
