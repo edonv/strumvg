@@ -187,8 +187,6 @@ extension strumvg {
             nodes: [
                 .text("\(content)"),
                 .attribute(named: "key", value: "head\(index)"),
-                .attribute(named: "height", value: height, format: numberFormat),
-                .attribute(named: "width", value: width, format: numberFormat),
                 .attribute(named: "fill", value: fill),
                 .attribute(named: "x", value: x, format: numberFormat),
                 .attribute(named: "y", value: yBase + height * fontSize, format: numberFormat),
@@ -443,11 +441,6 @@ extension strumvg {
                     .attribute(
                         named: "lengthAdjust",
                         value: "spacingAndGlyphs"
-                    ),
-                    .attribute(
-                        named: "width",
-                        value: width,
-                        format: numberFormat
                     ),
                     .text(String(char)),
                 ]
