@@ -293,27 +293,24 @@ extension strumvg {
                 attributes: [
                     .attribute(
                         named: "d",
-                        value: "m0,\(height * headHeight)l\(width),0l\((-width * (1 - strokeWidth)) / 2),0l0,\(height / 2)l\(-width * strokeWidth),0l0,\(-height / 2)l\(-width / 4),0z"
+                        value: [
+                            // bottom of the line
+                            "M\(width / 2),\(height * (headHeight + 0.5))",
+                            // draw up
+                            // TODO: check why this isn't longer than half the height
+                            "l0,\(-height / 2)",
+                        ].joined()
                     ),
-                    .attribute(named: "stroke-width", value: "0")
                 ]
             )
-
-            let rectElAttrs: [Attribute<SVG.DocumentContext>] = [
+            
+            let xMarkLineAttrs: [Attribute<SVG.DocumentContext>] = [
                 .attribute(
-                    named: "width",
-                    value: width * strokeWidth,
-                    format: numberFormat
-                ),
-                .attribute(
-                    named: "height",
-                    value: height * headHeight * 2,
-                    format: numberFormat
-                ),
-                .attribute(
-                    named: "x",
-                    value: width / 2 - (width * strokeWidth) / 2,
-                    format: numberFormat
+                    named: "d",
+                    value: [
+                        "M\(width / 2),0",
+                        "l0,\(height * headHeight * 2)",
+                    ].joined()
                 ),
                 .attribute(
                     named: "style",
@@ -321,28 +318,32 @@ extension strumvg {
                 ),
             ]
             
-            rectEl1 = Node<SVG.DocumentContext>.element(
-                named: "rect",
-                attributes: [
-                    rectElAttrs,
-                    [.attribute(named: "transform", value: "rotate(45 0 0)")]
-                ].flatMap { $0 }
+            let xMarkLine1 = Node<SVG.DocumentContext>.element(
+                named: "path",
+                attributes: xMarkLineAttrs + CollectionOfOne(
+                    .attribute(named: "transform", value: "rotate(45 0 0)")
+                )
             )
-            
-            rectEl2 = Node<SVG.DocumentContext>.element(
-                named: "rect",
-                attributes: [
-                    rectElAttrs,
-                    [.attribute(named: "transform", value: "rotate(-45 0 0)")]
-                ].flatMap { $0 }
+            let xMarkLine2 = Node<SVG.DocumentContext>.element(
+                named: "path",
+                attributes: xMarkLineAttrs + CollectionOfOne(
+                    .attribute(named: "transform", value: "rotate(-45 0 0)")
+                )
             )
             
             return .element(
                 named: "g",
                 nodes: [
+                    .attribute(named: "fill", value: "none"),
+                    .attribute(named: "stroke", value: options.colors.arrows),
+                    .attribute(
+                        named: "stroke-width",
+                        value: width * strokeWidth,
+                        format: numberFormat
+                    ),
                     pathEl,
-                    rectEl1,
-                    rectEl2,
+                    xMarkLine1,
+                    xMarkLine2,
                 ]
             )
             
