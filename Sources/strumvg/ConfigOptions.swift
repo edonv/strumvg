@@ -6,33 +6,48 @@
 //
 
 import Foundation
+import ArgumentParser
 
-struct ConfigOptions: Codable {
-    static let `default`: ConfigOptions = .init(
-        arrowColor: "#000000",
-        rhythmColor: "#555555",
-        articulationColor: "#555555",
-        beatTextHeight: 30,
-        beatTextFontSize: 0.8,
-        beamStrokeWidth: 2,
-        beamStemHeight: 8,
-        strumWidth: 20,
-        strumHeight: 80,
-        strumGap: 30,
-        headerHeight: 30,
-        headerFontSize: 0.8
-    )
+struct ConfigOptions: ParsableArguments {
+    @Option(help: "The color of the arrows.")
+    var arrowColor: String = "#000000"
     
-    let arrowColor: String
-    let rhythmColor: String
-    let articulationColor: String
-    let beatTextHeight: CGFloat
-    let beatTextFontSize: CGFloat
-    let beamStrokeWidth: CGFloat
-    let strumWidth: CGFloat
-    let strumHeight: CGFloat
-    let strumGap: CGFloat
-    let headerHeight: CGFloat
-    let beamStemHeight: CGFloat
-    let headerFontSize: CGFloat
+    @Option(help: "The color of the rhythm text and stems below the arrows.")
+    var rhythmColor: String = "#555555"
+    
+    @Option(help: "The color of the articulations and header text above the arrows.")
+    var articulationColor: String = "#000000"
+    
+    @Option(help: "The height of the space reserved for rhythm text below the arrows.")
+    var beatTextHeight: CGFloat = 30
+    
+    @Option(help: "The actual size of the rhythm text below the arrows, relative to its height.")
+    var beatTextFontSize: CGFloat = 0.8
+    
+    @Option(help: "The stroke width of the rhythm stems/beams below the arrows.")
+    var beamStrokeWidth: CGFloat = 2
+    
+    @Option(help: "The vertical length of the beam stems.")
+    var beamStemHeight: CGFloat = 8
+    
+    @Option(
+        help: .init(
+            "The width of each strum arrow.",
+            discussion: "This is also the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text."
+        )
+    )
+    var strumWidth: CGFloat = 20
+    
+    @Option(help: "The height of each strum arrow.")
+    var strumHeight: CGFloat = 80
+    
+    @Option(help: "The horizontal space between each strum ")
+    var strumGap: CGFloat = 30
+    
+    @Option(help: "The height of the space reserved for articulations and header text above the arrows.")
+    var headerHeight: CGFloat = 30
+    
+    @Option(help: "The actual size of the articulations and header text above the arrows, relative to its height.")
+    var headerFontSize: CGFloat = 0.8
+    
 }
