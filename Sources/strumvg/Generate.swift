@@ -33,7 +33,7 @@ extension strumvg {
                 createStrumHeader(
                     content: strum.headingChar.map(String.init),
                     index: i,
-                    rhythm: false
+                    rhythmText: false
                 )
             }
         
@@ -68,7 +68,7 @@ extension strumvg {
                 return createStrumHeader(
                     content: str,
                     index: i,
-                    rhythm: true
+                    rhythmText: true
                 )
             }
         
@@ -171,16 +171,16 @@ extension strumvg {
     private func createStrumHeader(
         content: String?,
         index: Int,
-        rhythm: Bool
+        rhythmText: Bool
     ) -> Node<SVG.DocumentContext>? {
         guard let content else { return nil }
         
-        let height = rhythm ? options.beatTextHeight : options.headerHeight
+        let height = rhythmText ? options.beatTextHeight : options.headerHeight
         let width = options.strumWidth
-        let fill = rhythm ? options.rhythmColor : options.articulationColor
-        let fontSize = rhythm ? options.beatTextFontSize : options.headerFontSize
+        let fill = rhythmText ? options.rhythmColor : options.articulationColor
+        let fontSize = rhythmText ? options.beatTextFontSize : options.headerFontSize
         let x = (options.strumWidth + options.strumGap) * CGFloat(index) + options.strumWidth / 2
-        let yBase = rhythm ? options.headerHeight + options.strumHeight * FIX_FACTOR : 0
+        let yBase = rhythmText ? options.headerHeight + options.strumHeight * FIX_FACTOR : 0
         
         return Node<SVG.DocumentContext>.element(
             named: "text",
