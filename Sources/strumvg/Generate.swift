@@ -500,8 +500,7 @@ extension strumvg {
                     value: options.beamSizes.stemHeight + 16,
                     format: numberFormat
                 ),
-//                .attribute(named: "font-size", value: options.tripletTextFontSize, format: numberFormat),
-                .attribute(named: "font-size", value: "14"),
+                .attribute(named: "font-size", value: options.textSizes.tripletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
                 .attribute(named: "font-family", value: "sans-serif"),
                 .attribute(named: "fill", value: fill),

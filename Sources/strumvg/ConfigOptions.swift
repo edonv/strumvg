@@ -55,6 +55,12 @@ struct ConfigOptions: ParsableArguments {
             help: "The actual font-size of the articulations and header text above the arrows, relative to its height."
         )
         var headerFontSize: CGFloat = 0.8
+        
+        @Option(
+            name: .customLong("triplet-font-size"),
+            help: "The actual font-size of the triplet label, if applicable."
+        )
+        var tripletFontSize: CGFloat = 14
     }
     
     @OptionGroup(title: "Strum Sizes")
