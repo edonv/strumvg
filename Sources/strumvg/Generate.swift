@@ -484,7 +484,7 @@ extension strumvg {
         width: CGFloat
     ) -> Node<SVG.DocumentContext> {
         let quantityFloat = CGFloat(quantity)
-        let fill = options.colors.rhythms
+        let color = options.colors.rhythms
         
         let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
             named: "text",
@@ -503,59 +503,48 @@ extension strumvg {
                 .attribute(named: "font-size", value: options.textSizes.tripletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
                 .attribute(named: "font-family", value: "sans-serif"),
-                .attribute(named: "fill", value: fill),
+                .attribute(named: "fill", value: color),
             ]
         ) : nil
         
         let stemLines = (0..<quantity).map { i in
             Node<SVG.DocumentContext>.element(
-                named: "rect",
+                named: "path",
                 attributes: [
-                    .attribute(
-                        named: "width",
-                        value: options.beamSizes.strokeWidth,
-                        format: numberFormat
-                    ),
-                    .attribute(named: "height", value: options.beamSizes.stemHeight, format: numberFormat),
-                    .attribute(named: "fill", value: fill),
-                    .attribute(
-                        named: "x",
-                        value: (width * CGFloat(i)) / quantityFloat - options.beamSizes.strokeWidth / 2,
-                        format: numberFormat
-                    ),
+                    .attribute(named: "d", value: "M\((width * CGFloat(i)) / quantityFloat),0l0,\(options.beamSizes.stemHeight)")
                 ]
             )
         }
         
+        // Space out horizontal strokes by 1.5*strokeWidth, or 1 (whichever is larger)
+        let horizontalStrokeGap = max(1.5 * options.beamSizes.strokeWidth, 1)
+        // This seems weird but it seems to work
+        let beamLength = (width * (quantityFloat - 1)) / quantityFloat
+        
         let stemBeams = (0..<horizontalStrokes).map { i in
-            Node<SVG.DocumentContext>.element(
-                named: "rect",
+            let strokeY = options.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
+            
+            return Node<SVG.DocumentContext>.element(
+                named: "path",
                 attributes: [
-                    .attribute(
-                        named: "width",
-                        value: (width * (quantityFloat - 1)) / quantityFloat + options.beamSizes.strokeWidth,
-                        format: numberFormat
-                    ),
-                    .attribute(
-                        named: "height",
-                        value: options.beamSizes.strokeWidth / CGFloat(horizontalStrokes),
-                        format: numberFormat
-                    ),
-                    .attribute(named: "fill", value: fill),
-                    .attribute(
-                        named: "x",
-                        value: -options.beamSizes.strokeWidth / 2,
-                        format: numberFormat
-                    ),
-                    .attribute(
-                        named: "y",
-                        value: options.beamSizes.stemHeight - CGFloat(i) * options.beamSizes.strokeWidth,
-                        format: numberFormat
-                    ),
-                ] as [Attribute<XML.DocumentContext>]
+                    .attribute(named: "d", value: "M0,\(strokeY)l\(beamLength),0")
+                ]
             )
         }
-
+        
+        let beamsGroup = Node<SVG.DocumentContext>.element(
+            named: "g",
+            nodes: [
+                .attribute(named: "fill", value: "none"),
+                .attribute(named: "stroke", value: color),
+                .attribute(
+                    named: "stroke-width",
+                    value: options.beamSizes.strokeWidth,
+                    format: numberFormat
+                ),
+                .attribute(named: "stroke-linecap", value: "square")
+            ] + stemLines + stemBeams
+        )
         
         return Node<SVG.DocumentContext>.element(
             named: "g",
@@ -564,9 +553,7 @@ extension strumvg {
                     named: "transform",
                     value: "translate(\(x.formatted(numberFormat)),\(y.formatted(numberFormat)))"
                 )],
-                stemLines,
-                stemBeams,
-                [textEl]
+                [beamsGroup, textEl]
                     .compactMap { $0 },
             ].flatMap { $0 }
         )
