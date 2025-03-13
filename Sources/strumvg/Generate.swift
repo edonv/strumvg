@@ -409,6 +409,11 @@ extension strumvg {
                 named: "text",
                 nodes: [
                     .attribute(
+                        named: "x",
+                        value: width / 2,
+                        format: numberFormat
+                    ),
+                    .attribute(
                         named: "y",
                         value: height / 2,
                         format: numberFormat
@@ -416,11 +421,6 @@ extension strumvg {
                     .attribute(
                         named: "font-size",
                         value: height / 2,
-                        format: numberFormat
-                    ),
-                    .attribute(
-                        named: "x",
-                        value: width / 2,
                         format: numberFormat
                     ),
                     .attribute(
