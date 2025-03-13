@@ -19,7 +19,8 @@ struct strumvg: ParsableCommand {
     @OptionGroup
     var ioOptions: InOutOptions
     
-    let options: ConfigOptions = .default
+    @OptionGroup
+    var options: ConfigOptions
     
     func validate() throws {
         if ioOptions.inputSource == .argument
