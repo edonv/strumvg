@@ -177,7 +177,7 @@ extension strumvg {
         
         let height = rhythmText ? options.textSizes.beatTextHeight : options.textSizes.headerHeight
         let width = options.strumSizes.strumWidth
-        let fill = rhythmText ? options.colors.rhythmColor : options.colors.articulationColor
+        let fill = rhythmText ? options.colors.rhythmColor : options.colors.headerColor
         let fontSize = rhythmText ? options.textSizes.beatTextFontSize : options.textSizes.headerFontSize
         let x = (options.strumSizes.strumWidth + options.strumSizes.strumGap) * CGFloat(index) + options.strumSizes.strumWidth / 2
         let yBase = rhythmText ? options.textSizes.headerHeight + options.strumSizes.strumHeight * FIX_FACTOR : 0

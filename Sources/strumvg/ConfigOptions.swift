@@ -20,7 +20,7 @@ struct ConfigOptions: ParsableArguments {
         var rhythmColor: String = "#555555"
         
         @Option(help: "The color of the articulations and header text above the arrows.")
-        var articulationColor: String = "#000000"
+        var headerColor: String = "#000000"
     }
     
     @OptionGroup(title: "Text Sizes")
