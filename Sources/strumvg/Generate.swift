@@ -283,7 +283,7 @@ extension strumvg {
                         value: width * strokeWidth,
                         format: numberFormat
                     ),
-                    .attribute(named: "fill", value: "transparent"),
+                    .attribute(named: "fill", value: "none"),
                     .attribute(named: "stroke", value: fill /*?? ""*/)
                 ]
             )
