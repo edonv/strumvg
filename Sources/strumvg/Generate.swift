@@ -222,7 +222,6 @@ extension strumvg {
         let strokeWidth: CGFloat = 0.2
         let headHeight: CGFloat = 0.2
         
-        let pathEl: Node<SVG.DocumentContext>
         
         switch variant {
         case .normal:
@@ -303,7 +302,7 @@ extension strumvg {
 //            )
             
         case .muted:
-            pathEl = Node<SVG.DocumentContext>.element(
+            let pathEl = Node<SVG.DocumentContext>.element(
                 named: "path",
                 attributes: [
                     .attribute(
