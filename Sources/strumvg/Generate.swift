@@ -223,8 +223,6 @@ extension strumvg {
         let headHeight: CGFloat = 0.2
         
         let pathEl: Node<SVG.DocumentContext>
-        let rectEl1: Node<SVG.DocumentContext>
-        let rectEl2: Node<SVG.DocumentContext>
         
         switch variant {
         case .normal:
