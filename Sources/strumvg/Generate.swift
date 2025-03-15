@@ -238,6 +238,10 @@ extension strumvg {
                     .attribute(
                         named: "stroke-width",
                         value: "0"
+                    ),
+                    .attribute(
+                        named: "fill",
+                        value: fill
                     )
                 ]
             )
