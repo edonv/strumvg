@@ -31,12 +31,12 @@ struct strumvg: ParsableCommand {
     func validate() throws {
         if ioOptions.inputSource == .argument
             && patternString == nil {
-            throw ValidationError("`inputSource` flag set to `--arg` and the `patternString` argument is missing.")
+            throw ValidationError("`inputSource` flag set to `--arg` and `patternString` argument is missing.")
         }
         
         if ioOptions.inputSource == .stdin
             && patternString != nil {
-            throw ValidationError("`inputSource` flag set to `--stdin` and the `patternString` argument is present.")
+            throw ValidationError("`inputSource` flag set to `--stdin` and `patternString` argument is present.")
         }
     }
     
