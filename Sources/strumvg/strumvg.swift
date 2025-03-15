@@ -15,7 +15,7 @@ import PlotSVG
 struct strumvg: ParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "A command for generating an SVG of a strumming pattern.",
-        discussion: "Any SVG-compatible value can be used for any option."
+        discussion: "Any SVG-compatible value can be used for any configuration option."
     )
     
     @Argument(help: "The string representation of a pattern.")
