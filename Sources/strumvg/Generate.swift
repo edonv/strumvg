@@ -225,22 +225,37 @@ extension strumvg {
         
         switch variant {
         case .normal:
-            return .element(
-                named: "path",
-                attributes: [
-                    .attribute(
-                        named: "d",
-                        value: "m0,\(height * headHeight)l\(width / 2),\(-height * headHeight)l\(width / 2),\(height * headHeight)l\((-width * (1 - strokeWidth)) / 2),0l0,\(height / 2)l\(-width * strokeWidth),0l0,\(-height / 2)l\(-width / 4),0z"
-                    ),
-                    .attribute(
-                        named: "stroke-width",
-                        value: "0"
-                    ),
-                    .attribute(
-                        named: "fill",
-                        value: fill
-                    )
+            let line = Node<SVG.DocumentContext>.element(
+                named: "line",
+                nodes: [
+                    .attribute(named: "x1", value: width / 2, format: numberFormat),
+                    .attribute(named: "y1", value: height * headHeight, format: numberFormat),
+                    .attribute(named: "x2", value: width / 2, format: numberFormat),
+                    .attribute(named: "y2", value: height * (0.5 + headHeight), format: numberFormat),
+                    .attribute(named: "stroke-width", value: width * strokeWidth, format: numberFormat),
+                    .attribute(named: "stroke", value: fill),
                 ]
+            )
+            
+            let triangle = Node<SVG.DocumentContext>.element(
+                named: "polygon",
+                nodes: [
+                    .attribute(
+                        named: "points",
+                        value: [
+                            "0,\(height * headHeight)",
+                            "\(width / 2),0",
+                            "\(width),\(height * headHeight)",
+                        ].joined(separator: " ")
+                    ),
+                    .attribute(named: "stroke-width", value: "0"),
+                    .attribute(named: "fill", value: fill),
+                ]
+            )
+            
+            return .element(
+                named: "g",
+                nodes: [line, triangle]
             )
             
         case .arpeggio:
