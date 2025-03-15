@@ -309,52 +309,27 @@ extension strumvg {
 //            )
             
         case .muted:
-            let pathEl = Node<SVG.DocumentContext>.element(
+            return Node<SVG.DocumentContext>.element(
                 named: "path",
                 attributes: [
                     .attribute(
                         named: "d",
+                        // M 20 0 L 0 20 M 20 20 L 0 0 M 10 56 V 10
                         value: [
-                            // bottom of the line
-                            "M\(width / 2),\(height * (headRatio + 0.5))",
-                            // draw up
-                            // TODO: check why this isn't longer than half the height
-                            "l0,\(-height / 2)",
+                            // move to top right of X
+                            "M \(width) 0",
+                            // draw to lower left of X
+                            "L 0 \(width)",
+                            // move to lower right of X
+                            "M \(width) \(width)",
+                            // draw to top left of X
+                            "L 0 0",
+                            // move to bottom of line
+                            "M \(width / 2) \(height * (headRatio + 0.5))",
+                            // draw to top of line
+                            "V \(width / 2)",
                         ].joined()
                     ),
-                ]
-            )
-            
-            let xMarkLineAttrs: [Attribute<SVG.DocumentContext>] = [
-                .attribute(
-                    named: "d",
-                    value: [
-                        "M\(width / 2),0",
-                        "l0,\(headHeight * 2)",
-                    ].joined()
-                ),
-                .attribute(
-                    named: "style",
-                    value: "transform-box: fill-box; transform-origin: center;"
-                ),
-            ]
-            
-            let xMarkLine1 = Node<SVG.DocumentContext>.element(
-                named: "path",
-                attributes: xMarkLineAttrs + CollectionOfOne(
-                    .attribute(named: "transform", value: "rotate(45 0 0)")
-                )
-            )
-            let xMarkLine2 = Node<SVG.DocumentContext>.element(
-                named: "path",
-                attributes: xMarkLineAttrs + CollectionOfOne(
-                    .attribute(named: "transform", value: "rotate(-45 0 0)")
-                )
-            )
-            
-            return .element(
-                named: "g",
-                nodes: [
                     .attribute(named: "fill", value: "none"),
                     .attribute(named: "stroke", value: options.colors.arrows),
                     .attribute(
@@ -362,9 +337,6 @@ extension strumvg {
                         value: strokeWidth,
                         format: numberFormat
                     ),
-                    pathEl,
-                    xMarkLine1,
-                    xMarkLine2,
                 ]
             )
             
