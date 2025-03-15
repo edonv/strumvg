@@ -225,21 +225,8 @@ extension strumvg {
         let headRatio: CGFloat = 0.2
         let headHeight: CGFloat = height * headRatio
         
-        switch variant {
-        case .normal:
-            let line = Node<SVG.DocumentContext>.element(
-                named: "line",
-                nodes: [
-                    .attribute(named: "x1", value: width / 2, format: numberFormat),
-                    .attribute(named: "y1", value: headHeight, format: numberFormat),
-                    .attribute(named: "x2", value: width / 2, format: numberFormat),
-                    .attribute(named: "y2", value: height * (0.5 + headRatio), format: numberFormat),
-                    .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
-                    .attribute(named: "stroke", value: fill),
-                ]
-            )
-            
-            let triangle = Node<SVG.DocumentContext>.element(
+        let triangle = { () -> Node<SVG.DocumentContext> in
+            .element(
                 named: "polygon",
                 nodes: [
                     .attribute(
@@ -254,10 +241,25 @@ extension strumvg {
                     .attribute(named: "fill", value: fill),
                 ]
             )
+        }
+        
+        switch variant {
+        case .normal:
+            let line = Node<SVG.DocumentContext>.element(
+                named: "line",
+                nodes: [
+                    .attribute(named: "x1", value: width / 2, format: numberFormat),
+                    .attribute(named: "y1", value: headHeight, format: numberFormat),
+                    .attribute(named: "x2", value: width / 2, format: numberFormat),
+                    .attribute(named: "y2", value: height * (0.5 + headRatio), format: numberFormat),
+                    .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
+                    .attribute(named: "stroke", value: fill),
+                ]
+            )
             
             return .element(
                 named: "g",
-                nodes: [line, triangle]
+                nodes: [line, triangle()]
             )
             
         case .arpeggio:
@@ -266,18 +268,6 @@ extension strumvg {
             let amplitude = 6
             // let offsetX = amplitude * 2;
             let wavelength = height / CGFloat(numWaves) / CGFloat(2)
-            
-            // Triangle
-            let pathEl1 = Node<SVG.DocumentContext>.element(
-                named: "path",
-                attributes: [
-                    .attribute(
-                        named: "d",
-                        value: "M\(0),\(headHeight)l\(width / 2),\(-headHeight)l\(width / 2),\(headHeight)"
-                    ),
-                    .attribute(named: "stroke-width", value: "0")
-                ]
-            )
             
             // Squiggle
             let pathEl2 = Node<SVG.DocumentContext>.element(
@@ -302,7 +292,7 @@ extension strumvg {
                 ]
             )
 
-            return .element(named: "g", nodes: [pathEl1, pathEl2])
+            return .element(named: "g", nodes: [triangle(), pathEl2])
 
 //        case .accent:
 //            let newStrokeWidth = min(1, strokeRatio * 2)
