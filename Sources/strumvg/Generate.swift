@@ -222,7 +222,8 @@ extension strumvg {
         
         let strokeRatio: CGFloat = 0.2
         let strokeWidth: CGFloat = width * strokeRatio
-        let headHeight: CGFloat = 0.2
+        let headRatio: CGFloat = 0.2
+        let headHeight: CGFloat = height * headHeight
         
         
         switch variant {
@@ -231,9 +232,9 @@ extension strumvg {
                 named: "line",
                 nodes: [
                     .attribute(named: "x1", value: width / 2, format: numberFormat),
-                    .attribute(named: "y1", value: height * headHeight, format: numberFormat),
+                    .attribute(named: "y1", value: headHeight, format: numberFormat),
                     .attribute(named: "x2", value: width / 2, format: numberFormat),
-                    .attribute(named: "y2", value: height * (0.5 + headHeight), format: numberFormat),
+                    .attribute(named: "y2", value: height * (0.5 + headRatio), format: numberFormat),
                     .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
                     .attribute(named: "stroke", value: fill),
                 ]
@@ -245,9 +246,9 @@ extension strumvg {
                     .attribute(
                         named: "points",
                         value: [
-                            "0,\(height * headHeight)",
+                            "0,\(headHeight)",
                             "\(width / 2),0",
-                            "\(width),\(height * headHeight)",
+                            "\(width),\(headHeight)",
                         ].joined(separator: " ")
                     ),
                     .attribute(named: "stroke-width", value: "0"),
@@ -261,7 +262,7 @@ extension strumvg {
             )
             
         case .arpeggio:
-            let offsetY = height * headHeight * 0.9
+            let offsetY = headHeight * 0.9
             let numWaves = 6
             let amplitude = 6
             // let offsetX = amplitude * 2;
@@ -273,7 +274,7 @@ extension strumvg {
                 attributes: [
                     .attribute(
                         named: "d",
-                        value: "M\(0),\(height * headHeight)l\(width / 2),\(-height * headHeight)l\(width / 2),\(height * headHeight)"
+                        value: "M\(0),\(headHeight)l\(width / 2),\(-headHeight)l\(width / 2),\(headHeight)"
                     ),
                     .attribute(named: "stroke-width", value: "0")
                 ]
@@ -312,7 +313,7 @@ extension strumvg {
 //                attributes: [
 //                    .attribute(
 //                        named: "d",
-//                        value: "m0,\(height * headHeight)l\(width / 2),\(-height * headHeight)l\(width / 2),\(height * headHeight)l\((-width * (1 - newStrokeWidth)) / 2),0l0,\(height / 2)l\(-width * newStrokeWidth),0l0,\(-height / 2)l\(-width / 4),0z"
+//                        value: "m0,\(headHeight)l\(width / 2),\(-headHeight)l\(width / 2),\(headHeight)l\((-width * (1 - newStrokeWidth)) / 2),0l0,\(height / 2)l\(-width * newStrokeWidth),0l0,\(-height / 2)l\(-width / 4),0z"
 //                    ),
 //                    .attribute(named: "stroke-width", value: "0")
 //                ]
@@ -326,7 +327,7 @@ extension strumvg {
                         named: "d",
                         value: [
                             // bottom of the line
-                            "M\(width / 2),\(height * (headHeight + 0.5))",
+                            "M\(width / 2),\(height * (headRatio + 0.5))",
                             // draw up
                             // TODO: check why this isn't longer than half the height
                             "l0,\(-height / 2)",
@@ -340,7 +341,7 @@ extension strumvg {
                     named: "d",
                     value: [
                         "M\(width / 2),0",
-                        "l0,\(height * headHeight * 2)",
+                        "l0,\(headHeight * 2)",
                     ].joined()
                 ),
                 .attribute(
@@ -383,7 +384,7 @@ extension strumvg {
             
         case .rest:
             let scaleFactor: CGFloat = 2 / 3
-            let partialHeight = height * (headHeight + 0.5)
+            let partialHeight = height * (headRatio + 0.5)
             
             let w = width * scaleFactor
             let h = partialHeight * scaleFactor
