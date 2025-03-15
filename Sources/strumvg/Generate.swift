@@ -223,8 +223,8 @@ extension strumvg {
         let strokeRatio: CGFloat = 0.2
         let strokeWidth: CGFloat = width * strokeRatio
         let headRatio: CGFloat = 0.2
-        let headHeight: CGFloat = height * headHeight
         
+        let headHeight: CGFloat = height * headRatio
         
         switch variant {
         case .normal:
