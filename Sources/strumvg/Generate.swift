@@ -270,7 +270,7 @@ extension strumvg {
             let wavelength = height / CGFloat(numWaves) / CGFloat(2)
             
             // Squiggle
-            let pathEl2 = Node<SVG.DocumentContext>.element(
+            let squigglePath = Node<SVG.DocumentContext>.element(
                 named: "path",
                 attributes: [
                     .attribute(
@@ -292,7 +292,7 @@ extension strumvg {
                 ]
             )
 
-            return .element(named: "g", nodes: [triangle(), pathEl2])
+            return .element(named: "g", nodes: [triangle(), squigglePath])
 
 //        case .accent:
 //            let newStrokeWidth = min(1, strokeRatio * 2)
