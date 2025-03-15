@@ -25,8 +25,6 @@ jobs:
         run: lipo -create -output "strumvg" ".build/arm64-apple-macosx/release/strumvg" ".build/x86_64-apple-macosx/release/strumvg"
       - name: Set Permissions on Binary to Allow Run
         run: chmod 755 strumvg
-      - name: Remove Quarantine Attribute from Binary
-        run: xattr -d com.apple.quarantine strumvg
       - name: Rename Binary
         run: mv "strumvg" "strumvg-macos"
       - name: 'Upload macOS Build Artifact'
