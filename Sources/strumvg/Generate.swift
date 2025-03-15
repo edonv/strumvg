@@ -294,20 +294,6 @@ extension strumvg {
 
             return .element(named: "g", nodes: [triangle(), squigglePath])
 
-//        case .accent:
-//            let newStrokeWidth = min(1, strokeRatio * 2)
-//
-//            return Node<XML.DocumentContext>.element(
-//                named: "path",
-//                attributes: [
-//                    .attribute(
-//                        named: "d",
-//                        value: "m0,\(headHeight)l\(width / 2),\(-headHeight)l\(width / 2),\(headHeight)l\((-width * (1 - newStrokeWidth)) / 2),0l0,\(height / 2)l\(-width * newStrokeWidth),0l0,\(-height / 2)l\(-width / 4),0z"
-//                    ),
-//                    .attribute(named: "stroke-width", value: "0")
-//                ]
-//            )
-            
         case .muted:
             return Node<SVG.DocumentContext>.element(
                 named: "path",
