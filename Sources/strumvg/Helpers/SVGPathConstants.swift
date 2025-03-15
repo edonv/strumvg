@@ -15,7 +15,7 @@ internal func quarterRestNode() -> Node<SVG.DocumentContext> {
         named: "svg",
         nodes: [
             // SVG attributes
-            .attribute(named: "id", value: "quarterRest"),
+            .attribute(named: "id", value: NoteDuration.quarter.restPathReuseID),
             .attribute(named: "width", value: "5.297"),
             .attribute(named: "height", value: "14.277"),
             .attribute(named: "viewBox", value: "0 0 5.297 14.277"),
@@ -38,7 +38,7 @@ internal func eighthRestNode() -> Node<SVG.DocumentContext> {
         named: "svg",
         nodes: [
             // SVG attributes
-            .attribute(named: "id", value: "eighthRest"),
+            .attribute(named: "id", value: NoteDuration.eighth.restPathReuseID),
             .attribute(named: "width", value: "1.012"),
             .attribute(named: "height", value: "1.86"),
             .attribute(named: "viewBox", value: "0 0 1.012 1.86"),
@@ -61,7 +61,7 @@ internal func sixteenthRestNode() -> Node<SVG.DocumentContext> {
         named: "svg",
         nodes: [
             // SVG attributes
-            .attribute(named: "id", value: "sixteenthRest"),
+            .attribute(named: "id", value: NoteDuration.sixteenth.restPathReuseID),
             .attribute(named: "width", value: "1.304"),
             .attribute(named: "height", value: "2.860"),
             .attribute(named: "viewBox", value: "0 0 1.304 2.860"),

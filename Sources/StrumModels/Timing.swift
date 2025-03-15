@@ -19,6 +19,14 @@ public enum NoteDuration: Int {
         case .sixteenth: 2
         }
     }
+    
+    package var restPathReuseID: String {
+        switch self {
+        case .quarter: "quarterRest"
+        case .eighth: "eighthRest"
+        case .sixteenth: "sixteenthRest"
+        }
+    }
 }
 
 public struct Timing {
