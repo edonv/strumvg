@@ -43,3 +43,4 @@ Examples:
 - [ ] Allow specifying JSON file for configuration options, rather than having to use command-line options for everything.   
 - [ ] Add font customizing, also maybe classes/CSS/`<style>` for styling SVG.
 - [ ] Allow `|` to be used as a barline to reset beat counting.
+- [ ] Add to `homebrew`/equivalents?
