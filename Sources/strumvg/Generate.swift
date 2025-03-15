@@ -518,7 +518,7 @@ extension strumvg {
         // This seems weird but it seems to work
         let beamLength = (width * (quantityFloat - 1)) / quantityFloat
         
-        let stemBeams = Node<SVG.DocumentContext>.element(
+        let stemBeamsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
                 .attribute(named: "d", value: (0..<horizontalStrokes).map { i in
@@ -540,7 +540,7 @@ extension strumvg {
                 ),
                 .attribute(named: "stroke-linecap", value: "square"),
                 stemLinesPath,
-                stemBeams,
+                stemBeamsPath,
             ]
         )
         
