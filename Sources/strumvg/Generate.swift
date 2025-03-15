@@ -198,7 +198,7 @@ extension strumvg {
             named: "text",
             nodes: [
                 .text("\(content)"),
-                .attribute(named: "key", value: "head\(index)"),
+                .attribute(named: "key", value: "\(rhythmText ? "count" : "head")\(index)"),
                 .attribute(named: "fill", value: fill),
                 .attribute(named: "x", value: x, format: numberFormat),
                 .attribute(named: "y", value: yBase + height * fontSize, format: numberFormat),
