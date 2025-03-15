@@ -219,7 +219,9 @@ extension strumvg {
         let height = options.strumSizes.height /*?? 100*/
         let width = options.strumSizes.width /*?? 50*/
         let fill = options.colors.arrows
-        let strokeWidth: CGFloat = 0.2
+        
+        let strokeRatio: CGFloat = 0.2
+        let strokeWidth: CGFloat = width * strokeRatio
         let headHeight: CGFloat = 0.2
         
         
@@ -232,7 +234,7 @@ extension strumvg {
                     .attribute(named: "y1", value: height * headHeight, format: numberFormat),
                     .attribute(named: "x2", value: width / 2, format: numberFormat),
                     .attribute(named: "y2", value: height * (0.5 + headHeight), format: numberFormat),
-                    .attribute(named: "stroke-width", value: width * strokeWidth, format: numberFormat),
+                    .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
                     .attribute(named: "stroke", value: fill),
                 ]
             )
@@ -292,7 +294,7 @@ extension strumvg {
                     ),
                     .attribute(
                         named: "stroke-width",
-                        value: width * strokeWidth,
+                        value: strokeWidth,
                         format: numberFormat
                     ),
                     .attribute(named: "fill", value: "none"),
@@ -303,8 +305,8 @@ extension strumvg {
             return .element(named: "g", nodes: [pathEl1, pathEl2])
 
 //        case .accent:
-//            let newStrokeWidth = min(1, strokeWidth * 2)
-//            
+//            let newStrokeWidth = min(1, strokeRatio * 2)
+//
 //            return Node<XML.DocumentContext>.element(
 //                named: "path",
 //                attributes: [
@@ -367,7 +369,7 @@ extension strumvg {
                     .attribute(named: "stroke", value: options.colors.arrows),
                     .attribute(
                         named: "stroke-width",
-                        value: width * strokeWidth,
+                        value: strokeWidth,
                         format: numberFormat
                     ),
                     pathEl,
