@@ -12,7 +12,6 @@ public enum Variant {
     case muted
     case arpeggio
     case rest
-//    case accent
     case space
     case other(Character)
     
@@ -24,7 +23,6 @@ public enum Variant {
         case (.muted, .up): "m"
         case (.arpeggio, .down): "A"
         case (.arpeggio, .up): "a"
-//        case (.accent, _):
         case (.space, _): " "
         case (.rest, _): "r"
         case (.other(let c), _): c
