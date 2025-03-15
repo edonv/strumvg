@@ -499,34 +499,28 @@ extension strumvg {
             ]
         ) : nil
         
-        let stemLinesPath = Node<SVG.DocumentContext>.element(
-            named: "path",
-            attributes: [
-                .attribute(
-                    named: "d",
-                    // For each stem, create a pair of commands that moves the path to the start
-                    // and draws a relative line vertically
-                    value: (0..<quantity).map { i in
-                        "M\((width * CGFloat(i)) / quantityFloat),0v\(options.beamSizes.stemHeight)"
-                    }.joined()
-                )
-            ]
-        )
+        // For each stem, create a pair of commands that moves the path to the start
+        // and draws a relative line vertically
+        let stemLinePathCommands = (0..<quantity).map { i in
+            "M\((width * CGFloat(i)) / quantityFloat),0v\(options.beamSizes.stemHeight)"
+        }.joined()
         
         // Space out horizontal strokes by 1.5*strokeWidth, or 1 (whichever is larger)
         let horizontalStrokeGap = max(1.5 * options.beamSizes.strokeWidth, 1)
         // This seems weird but it seems to work
         let beamLength = (width * (quantityFloat - 1)) / quantityFloat
         
-        let stemBeamsPath = Node<SVG.DocumentContext>.element(
+        let stemBeamPathCommands = (0..<horizontalStrokes).map { i in
+            let strokeY = options.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
+            return "M0,\(strokeY)h\(beamLength)"
+        }.joined()
+        
+        let noteBeamsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
                 .attribute(
                     named: "d",
-                    value: (0..<horizontalStrokes).map { i in
-                        let strokeY = options.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
-                        return "M0,\(strokeY)h\(beamLength)"
-                    }.joined()
+                    value: stemLinePathCommands + stemBeamPathCommands
                 )
             ]
         )
@@ -542,8 +536,7 @@ extension strumvg {
                     format: numberFormat
                 ),
                 .attribute(named: "stroke-linecap", value: "square"),
-                stemLinesPath,
-                stemBeamsPath,
+                noteBeamsPath,
             ]
         )
         
