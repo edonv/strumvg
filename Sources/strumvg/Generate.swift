@@ -17,6 +17,17 @@ private let numberFormat = FloatingPointFormatStyle<CGFloat>()
 private let FIX_FACTOR: CGFloat = 0.8
 
 extension strumvg {
+    private var defsNode: Node<SVG.DocumentContext> {
+        .element(
+            named: "defs",
+            nodes: [
+                quarterRestNode(),
+                eighthRestNode(),
+                sixteenthRestNode(),
+            ]
+        )
+    }
+    
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
         let allStrums = pattern.groups
             .flatMap(\.strums)
@@ -41,7 +52,7 @@ extension strumvg {
         let arrows = allStrums
             .enumerated()
             .map { i, strum -> Node<SVG.DocumentContext> in
-                let arrow = createStrumArrow(strum: strum)
+                let arrow = createStrumArrow(strum: strum, duration: pattern.timing.duration)
                 let index = CGFloat(i)
                 
                 return .element(
@@ -94,6 +105,7 @@ extension strumvg {
         let svg = SVG(
             svgAttrs: svgDeclAttrs,
             [
+                [defsNode],
                 headers,
                 arrows,
                 charHeaders
@@ -200,7 +212,8 @@ extension strumvg {
     }
     
     private func createStrumArrow(
-        strum: Strum
+        strum: Strum,
+        duration: NoteDuration
     ) -> Node<SVG.DocumentContext>? {
         let variant = strum.variant
         let height = options.strumSizes.height /*?? 100*/
@@ -351,55 +364,25 @@ extension strumvg {
             return nil
             
         case .rest:
-            let h_factor: CGFloat = 3
+            let scaleFactor: CGFloat = 2 / 3
+            let partialHeight = height * (headHeight + 0.5)
             
-            let rectElAttrs: [Attribute<SVG.DocumentContext>] = [
-                .attribute(
-                    named: "y",
-                    value: (height / 4) * (1 - 1 / h_factor),
-                    format: numberFormat
-                ),
-                .attribute(
-                    named: "width",
-                    value: width / 4,
-                    format: numberFormat
-                ),
-                .attribute(
-                    named: "height",
-                    value: height / h_factor,
-                    format: numberFormat
-                ),
-            ]
-            
-            rectEl1 = Node<SVG.DocumentContext>.element(
-                named: "rect",
-                attributes: [
-                    rectElAttrs,
-                    [.attribute(
-                        named: "x",
-                        value: 0 + width / 8,
-                        format: numberFormat
-                    )]
-                ].flatMap { $0 }
-            )
-            
-            rectEl2 = Node<SVG.DocumentContext>.element(
-                named: "rect",
-                attributes: [
-                    rectElAttrs,
-                    [.attribute(
-                        named: "x",
-                        value: width / 2 + width / 8,
-                        format: numberFormat
-                    )]
-                ].flatMap { $0 }
-            )
+            let w = width * scaleFactor
+            let h = partialHeight * scaleFactor
+            let cx = (width - w) / 2
+            let cy = (partialHeight - h) / 2
             
             return Node<SVG.DocumentContext>.element(
                 named: "g",
                 nodes: [
-                    rectEl1,
-                    rectEl2,
+                    .element(named: "use", nodes: [
+                        .attribute(named: "href", value: "#\(duration.restPathReuseID)"),
+                        .attribute(named: "width", value: w, format: numberFormat),
+                        .attribute(named: "height", value: h, format: numberFormat),
+                        .attribute(named: "transform", value: "translate(\(cx) \(cy))"),
+                        .attribute(named: "transform-origin", value: "center"),
+                        .attribute(named: "fill", value: fill),
+                    ]),
                 ]
             )
             
