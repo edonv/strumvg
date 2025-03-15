@@ -521,10 +521,13 @@ extension strumvg {
         let stemBeamsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
-                .attribute(named: "d", value: (0..<horizontalStrokes).map { i in
-                    let strokeY = options.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
-                    return "M0,\(strokeY)h\(beamLength)"
-                }.joined())
+                .attribute(
+                    named: "d",
+                    value: (0..<horizontalStrokes).map { i in
+                        let strokeY = options.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
+                        return "M0,\(strokeY)h\(beamLength)"
+                    }.joined()
+                )
             ]
         )
         
