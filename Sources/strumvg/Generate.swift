@@ -130,7 +130,7 @@ extension strumvg {
             case .quarter:
                 if triplet {
                     if int % 3 == 0 {
-                        return "\(Double(i / 3 + 1))"
+                        return "\(Int(Double(i / 3 + 1)))"
                     } else {
                         return ""
                     }
@@ -141,7 +141,7 @@ extension strumvg {
             case .eighth:
                 if triplet {
                     if int % 3 == 0 {
-                        return "\(Double(i / 3 + 1))"
+                        return "\(Int(Double(i / 3 + 1)))"
                     } else {
                         return ""
                     }
