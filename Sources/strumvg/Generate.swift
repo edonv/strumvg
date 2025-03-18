@@ -17,17 +17,6 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
 private let FIX_FACTOR: CGFloat = 0.8
 
 extension strumvg {
-    private var defsNode: Node<SVG.DocumentContext> {
-        .element(
-            named: "defs",
-            nodes: [
-                quarterRestNode(),
-                eighthRestNode(),
-                sixteenthRestNode(),
-            ]
-        )
-    }
-    
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
         let allStrums = pattern.groups
             .flatMap(\.strums)
@@ -104,7 +93,6 @@ extension strumvg {
         let svg = SVG(
             svgAttrs: svgDeclAttrs,
             [
-                [defsNode],
                 headers,
                 arrows,
                 charHeaders
@@ -359,14 +347,14 @@ extension strumvg {
             return Node<SVG.DocumentContext>.element(
                 named: "g",
                 nodes: [
-                    .element(named: "use", nodes: [
-                        .attribute(named: "href", value: "#\(duration.restPathReuseID)"),
-                        .attribute(named: "width", value: w, format: numberFormat),
-                        .attribute(named: "height", value: h, format: numberFormat),
-                        .attribute(named: "transform", value: "translate(\(cx) \(cy))"),
-                        .attribute(named: "transform-origin", value: "center"),
-                        .attribute(named: "fill", value: fill),
-                    ]),
+                    restNode(
+                        duration: duration,
+                        width: w,
+                        height: h,
+                        cx: cx,
+                        cy: cy
+                    ),
+                    .attribute(named: "fill", value: fill),
                 ]
             )
             
