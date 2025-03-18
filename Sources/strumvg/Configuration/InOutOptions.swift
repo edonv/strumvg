@@ -32,6 +32,7 @@ struct InOutOptions: ParsableArguments {
     enum OutputDestination: EnumerableFlag {
         case stdout
         case log
+//        case file(String)
         
         static func name(for value: OutputDestination) -> NameSpecification {
             switch value {
@@ -39,6 +40,8 @@ struct InOutOptions: ParsableArguments {
                 return [.customShort("o"), .long]
             case .log:
                 return [.customShort("l"), .long]
+//            case .file:
+//                return [.short, .long]
             }
         }
     }
