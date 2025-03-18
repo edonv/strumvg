@@ -23,7 +23,7 @@ struct strumvg: ParsableCommand {
     var patternString: String?
     
     @OptionGroup(title: "In/Out Options")
-    var ioOptions: InOutOptions
+    var ioOptions: InOutConfiguration
     
     @OptionGroup(title: "Configuration")
     var style: StyleConfiguration

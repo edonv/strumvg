@@ -1,5 +1,5 @@
 //
-//  InOutOptions.swift
+//  InOutConfiguration.swift
 //  strumvg
 //
 //  Created by Edon Valdman on 3/3/25.
@@ -8,7 +8,7 @@
 import Foundation
 import ArgumentParser
 
-struct InOutOptions: ParsableArguments {
+struct InOutConfiguration: ParsableArguments {
     @Flag(help: "Source for input pattern string.")
     var inputSource: InputSource = .argument
     
