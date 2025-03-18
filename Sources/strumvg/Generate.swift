@@ -12,7 +12,7 @@ import Plot
 import PlotSVG
 import PlotExtensions
 
-private let numberFormat = FloatingPointFormatStyle<CGFloat>()
+internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
     .precision(.fractionLength(...4))
 private let FIX_FACTOR: CGFloat = 0.8
 
