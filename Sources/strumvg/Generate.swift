@@ -23,8 +23,8 @@ extension strumvg {
         
         let strs = createRhythmText(quantity: allStrums.count, noteLength: pattern.timing)
         
-        let calcWidth = (config.strumSizes.width + config.strumSizes.gap) * CGFloat(pattern.totalStrums) - config.strumSizes.gap
-        let calcHeight = config.strumSizes.height + config.textSizes.headerTextHeight + 2 * config.textSizes.beatTextHeight
+        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(pattern.totalStrums) - style.strumSizes.gap
+        let calcHeight = style.strumSizes.height + style.textSizes.headerTextHeight + 2 * style.textSizes.beatTextHeight
         
         // MARK: StrumHeader - P1
         let headers = allStrums
@@ -44,8 +44,8 @@ extension strumvg {
                 let arrow = createStrumArrow(strum: strum, duration: pattern.timing.duration)
                 let index = CGFloat(i)
                 
-                let translateX = (config.strumSizes.width + config.strumSizes.gap) * index
-                let translateY = config.textSizes.headerTextHeight
+                let translateX = (style.strumSizes.width + style.strumSizes.gap) * index
+                let translateY = style.textSizes.headerTextHeight
                 
                 return .element(
                     named: "g",
@@ -174,12 +174,12 @@ extension strumvg {
     ) -> Node<SVG.DocumentContext>? {
         guard let content else { return nil }
         
-        let height = rhythmText ? config.textSizes.beatTextHeight : config.textSizes.headerTextHeight
-        let width = config.strumSizes.width
-        let fill = rhythmText ? config.colors.rhythms : config.colors.headers
-        let fontSize = rhythmText ? config.textSizes.beatFontSize : config.textSizes.headerFontSize
-        let x = (config.strumSizes.width + config.strumSizes.gap) * CGFloat(index) + config.strumSizes.width / 2
-        let yBase = rhythmText ? config.textSizes.headerTextHeight + config.strumSizes.height * FIX_FACTOR : 0
+        let height = rhythmText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
+        let width = style.strumSizes.width
+        let fill = rhythmText ? style.colors.rhythms : style.colors.headers
+        let fontSize = rhythmText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
+        let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
+        let yBase = rhythmText ? style.textSizes.headerTextHeight + style.strumSizes.height * FIX_FACTOR : 0
         
         return Node<SVG.DocumentContext>.element(
             named: "text",
@@ -203,9 +203,9 @@ extension strumvg {
         duration: NoteDuration
     ) -> Node<SVG.DocumentContext>? {
         let variant = strum.variant
-        let width = config.strumSizes.width /*?? 50*/
-        let height = config.strumSizes.height /*?? 100*/
-        let fill = config.colors.arrows
+        let width = style.strumSizes.width /*?? 50*/
+        let height = style.strumSizes.height /*?? 100*/
+        let fill = style.colors.arrows
         
         let strokeRatio: CGFloat = 0.2
         let strokeWidth = width * strokeRatio
@@ -322,7 +322,7 @@ extension strumvg {
                         ].joined()
                     ),
                     .attribute(named: "fill", value: "none"),
-                    .attribute(named: "stroke", value: config.colors.arrows),
+                    .attribute(named: "stroke", value: style.colors.arrows),
                     .attribute(
                         named: "stroke-width",
                         value: strokeWidth,
@@ -408,7 +408,7 @@ extension strumvg {
         strums: [Strum],
         noteLength: Timing
     ) -> Node<SVG.DocumentContext> {
-        let y = config.textSizes.headerTextHeight + config.strumSizes.height * FIX_FACTOR + config.textSizes.beatTextHeight
+        let y = style.textSizes.headerTextHeight + style.strumSizes.height * FIX_FACTOR + style.textSizes.beatTextHeight
         
         let triplet = noteLength.triplet
         let horizontalStrokes = noteLength.duration.horizontalStrokeCount
@@ -423,9 +423,9 @@ extension strumvg {
                     quantity: subdivision,
                     triplet: triplet,
                     horizontalStrokes: horizontalStrokes,
-                    x: CGFloat(subdivision) * (config.strumSizes.width + config.strumSizes.gap) * CGFloat(i) + config.strumSizes.width / 2,
+                    x: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
                     y: y,
-                    width: CGFloat(subdivision) * (config.strumSizes.width + config.strumSizes.gap)
+                    width: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap)
                 )
             }
         )
@@ -440,7 +440,7 @@ extension strumvg {
         width: CGFloat
     ) -> Node<SVG.DocumentContext> {
         let quantityFloat = CGFloat(quantity)
-        let color = config.colors.rhythms
+        let color = style.colors.rhythms
         
         let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
             named: "text",
@@ -453,10 +453,10 @@ extension strumvg {
                 ),
                 .attribute(
                     named: "y",
-                    value: config.beamSizes.stemHeight + 16,
+                    value: style.beamSizes.stemHeight + 16,
                     format: numberFormat
                 ),
-                .attribute(named: "font-size", value: config.textSizes.tripletFontSize, format: numberFormat),
+                .attribute(named: "font-size", value: style.textSizes.tripletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
                 .attribute(named: "font-family", value: "sans-serif"),
                 .attribute(named: "fill", value: color),
@@ -466,16 +466,16 @@ extension strumvg {
         // For each stem, create a pair of commands that moves the path to the start
         // and draws a relative line vertically
         let stemLinePathCommands = (0..<quantity).map { i in
-            "M\((width * CGFloat(i)) / quantityFloat),0v\(config.beamSizes.stemHeight)"
+            "M\((width * CGFloat(i)) / quantityFloat),0v\(style.beamSizes.stemHeight)"
         }.joined()
         
         // Space out horizontal strokes by 1.5*strokeWidth, or 1 (whichever is larger)
-        let horizontalStrokeGap = max(1.5 * config.beamSizes.strokeWidth, 1)
+        let horizontalStrokeGap = max(1.5 * style.beamSizes.strokeWidth, 1)
         // This seems weird but it seems to work
         let beamLength = (width * (quantityFloat - 1)) / quantityFloat
         
         let stemBeamPathCommands = (0..<horizontalStrokes).map { i in
-            let strokeY = config.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
+            let strokeY = style.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
             return "M0,\(strokeY)h\(beamLength)"
         }.joined()
         
@@ -496,7 +496,7 @@ extension strumvg {
                 .attribute(named: "stroke", value: color),
                 .attribute(
                     named: "stroke-width",
-                    value: config.beamSizes.strokeWidth,
+                    value: style.beamSizes.strokeWidth,
                     format: numberFormat
                 ),
                 .attribute(named: "stroke-linecap", value: "square"),
