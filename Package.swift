@@ -26,10 +26,10 @@ let package = Package(
         .executableTarget(
             name: "strumvg",
             dependencies: [
-                .product(name: "Plot", package: "Plot"),
-                .product(name: "PlotSVG", package: "PlotSVG"),
                 "StrumModels",
                 "PlotExtensions",
+                .product(name: "Plot", package: "Plot"),
+                .product(name: "PlotSVG", package: "PlotSVG"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
