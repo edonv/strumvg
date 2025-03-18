@@ -105,7 +105,4 @@ struct ConfigOptions: ParsableArguments {
         )
         var stemHeight: CGFloat = 8
     }
-    
-    
-    
 }
