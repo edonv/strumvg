@@ -216,8 +216,8 @@ extension strumvg {
         duration: NoteDuration
     ) -> Node<SVG.DocumentContext>? {
         let variant = strum.variant
-        let height = config.strumSizes.height /*?? 100*/
         let width = config.strumSizes.width /*?? 50*/
+        let height = config.strumSizes.height /*?? 100*/
         let fill = config.colors.arrows
         
         let strokeRatio: CGFloat = 0.2
