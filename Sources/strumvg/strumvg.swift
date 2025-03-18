@@ -23,18 +23,18 @@ struct strumvg: ParsableCommand {
     var patternString: String?
     
     @OptionGroup(title: "In/Out Options")
-    var ioOptions: InOutConfiguration
+    var inOut: InOutConfiguration
     
     @OptionGroup(title: "Configuration")
     var style: StyleConfiguration
     
     func validate() throws {
-        if ioOptions.inputSource == .argument
+        if inOut.inputSource == .argument
             && patternString == nil {
             throw ValidationError("`inputSource` flag set to `--arg` and `patternString` argument is missing.")
         }
         
-        if ioOptions.inputSource == .stdin
+        if inOut.inputSource == .stdin
             && patternString != nil {
             throw ValidationError("`inputSource` flag set to `--stdin` and `patternString` argument is present.")
         }
@@ -43,7 +43,7 @@ struct strumvg: ParsableCommand {
     mutating func run() throws {
         let str: String
         
-        switch ioOptions.inputSource {
+        switch inOut.inputSource {
         case .stdin:
             let stdin = FileHandle.standardInput
             guard let data = try stdin.readToEnd() else {
@@ -73,7 +73,7 @@ struct strumvg: ParsableCommand {
         let svg = generate(pattern: pattern)
         let svgStr = svg.render(indentedBy: .spaces(2))
         
-        switch ioOptions.outputDestination {
+        switch inOut.outputDestination {
         case .stdout:
             guard let svgStrData = svgStr.data(using: .utf8) else {
                 print("Failed to convert SVG string content to UTF-8 data.")
