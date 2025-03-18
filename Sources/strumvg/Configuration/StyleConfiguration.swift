@@ -1,5 +1,5 @@
 //
-//  ConfigOptions.swift
+//  StyleConfiguration.swift
 //  strumvg
 //
 //  Created by Edon Valdman on 2/25/25.
@@ -8,7 +8,7 @@
 import Foundation
 import ArgumentParser
 
-struct ConfigOptions: ParsableArguments {
+struct StyleConfiguration: ParsableArguments {
     @OptionGroup(title: "Colors")
     var colors: Colors
     

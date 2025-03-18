@@ -26,7 +26,7 @@ struct strumvg: ParsableCommand {
     var ioOptions: InOutOptions
     
     @OptionGroup(title: "Configuration")
-    var config: ConfigOptions
+    var config: StyleConfiguration
     
     func validate() throws {
         if ioOptions.inputSource == .argument
