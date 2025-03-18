@@ -22,10 +22,10 @@ struct strumvg: ParsableCommand {
     @Argument(help: "The string representation of a pattern.")
     var patternString: String?
     
-    @OptionGroup(title: "In/Out Options")
+    @OptionGroup(title: "Input/Output Options")
     var inOut: InOutConfiguration
     
-    @OptionGroup(title: "Configuration")
+    @OptionGroup(title: "Styling Options")
     var style: StyleConfiguration
     
     func validate() throws {
