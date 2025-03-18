@@ -63,12 +63,8 @@ extension strumvg {
                     nodes: [
                         .attribute(named: "key", value: "strum\(i)"),
                         .attribute(
-                            named: "style",
-                            value: "transform-box: fill-box; transform-origin: center;"
-                        ),
-                        .attribute(
                             named: "transform",
-                            value: "translate(\(translateX),\(translateY))\(strum.direction == .down ? " rotate(180 0 0)" : "")"
+                            value: "translate(\(translateX),\(translateY))"
                         ),
                         arrow,
                     ].compactMap { $0 }
@@ -246,6 +242,13 @@ extension strumvg {
             )
         }
         
+        // For more accurate placement when rotation is needed,
+        // rotate around (0,0), then translate back into place
+        let arrowRotationTransformAttr = Node<SVG.DocumentContext>.attribute(
+            named: "transform",
+            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width),-\(height * (0.5 + headRatio)))" : ""
+        )
+        
         switch variant {
         case .normal:
             let line = Node<SVG.DocumentContext>.element(
@@ -262,7 +265,11 @@ extension strumvg {
             
             return .element(
                 named: "g",
-                nodes: [line, triangle()]
+                nodes: [
+                    arrowRotationTransformAttr,
+                    line,
+                    triangle()
+                ]
             )
             
         case .arpeggio:
@@ -295,12 +302,19 @@ extension strumvg {
                 ]
             )
 
-            return .element(named: "g", nodes: [triangle(), squigglePath])
+            return .element(
+                named: "g",
+                nodes: [
+                    arrowRotationTransformAttr,
+                    triangle(),
+                    squigglePath
+                ]
+            )
 
         case .muted:
             return Node<SVG.DocumentContext>.element(
                 named: "path",
-                attributes: [
+                nodes: [
                     .attribute(
                         named: "d",
                         // M 20 0 L 0 20 M 20 20 L 0 0 M 10 56 V 10
@@ -326,6 +340,7 @@ extension strumvg {
                         value: strokeWidth,
                         format: numberFormat
                     ),
+                    arrowRotationTransformAttr,
                 ]
             )
             
