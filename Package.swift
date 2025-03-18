@@ -28,9 +28,9 @@ let package = Package(
             dependencies: [
                 "StrumModels",
                 "PlotExtensions",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Plot", package: "Plot"),
                 .product(name: "PlotSVG", package: "PlotSVG"),
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
     ]
