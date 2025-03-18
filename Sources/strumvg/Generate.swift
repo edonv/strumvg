@@ -55,6 +55,9 @@ extension strumvg {
                 let arrow = createStrumArrow(strum: strum, duration: pattern.timing.duration)
                 let index = CGFloat(i)
                 
+                let translateX = (config.strumSizes.width + config.strumSizes.gap) * index
+                let translateY = config.textSizes.headerTextHeight
+                
                 return .element(
                     named: "g",
                     nodes: [
@@ -65,7 +68,7 @@ extension strumvg {
                         ),
                         .attribute(
                             named: "transform",
-                            value: "translate(\((config.strumSizes.width + config.strumSizes.gap) * index),\(config.textSizes.headerTextHeight))\(strum.direction == .down ? " rotate(180 0 0)" : "")"
+                            value: "translate(\(translateX),\(translateY))\(strum.direction == .down ? " rotate(180 0 0)" : "")"
                         ),
                         arrow,
                     ].compactMap { $0 }
