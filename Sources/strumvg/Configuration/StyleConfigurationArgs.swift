@@ -111,18 +111,26 @@ extension StyleConfiguration {
             // if there's a file path, load the file
             if let path {
                 let configFileURL = URL(filePath: path)
-                let configFileData = try Data(contentsOf: configFileURL)
-                let decoder = JSONDecoder()
+                let configFileStr = try String(contentsOf: configFileURL, encoding: .utf8)
+                    // Remove commented-out lines
+                    .replacing(
+                        /\s*\/\/.*$/.anchorsMatchLineEndings(),
+                        with: ""
+                    )
                 
-                let configFromFile = try decoder.decode(StyleConfiguration.self, from: configFileData)
+                if let configFileData = configFileStr.data(using: .utf8) {
+                    let decoder = JSONDecoder()
+                    
+                    let configFromFile = try decoder.decode(StyleConfiguration.self, from: configFileData)
                     // and it should only be included if it's specified in the file
                     // but not the command line options (CLI options take priority)
-                    .overlaying(with: self)
-                
-                return configFromFile
-            } else {
-                return .init(args: self)
+                        .overlaying(with: self)
+                    
+                    return configFromFile
+                }
             }
+            
+            return .init(args: self)
         }
     }
 }
