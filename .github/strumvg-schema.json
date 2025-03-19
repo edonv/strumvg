@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "strumvg Configuration",
+  "type": "object",
+  "properties": {
+    "colors": {
+      "type": "object",
+      "properties": {
+        "arrows": {
+          "type": "string"
+        },
+        "rhythms": {
+          "type": "string"
+        },
+        "headers": {
+          "type": "string"
+        }
+      },
+      "default": {
+        "arrows": "#000000",
+        "rhythms": "#555555",
+        "headers": "#000000"
+      }
+    },
+    "textSizes": {
+      "type": "object",
+      "properties": {
+        "beatTextHeight": {
+          "type": "number"
+        },
+        "beatFontSize": {
+          "type": "number"
+        },
+        "headerTextHeight": {
+          "type": "number"
+        },
+        "headerFontSize": {
+          "type": "number"
+        },
+        "tripletFontSize": {
+          "type": "number"
+        }
+      },
+      "default": {
+        "beatTextHeight": 30,
+        "beatFontSize": 0.8,
+        "headerTextHeight": 30,
+        "headerFontSize": 0.8,
+        "tripletFontSize": 14
+      }
+    },
+    "strumSizes": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "gap": {
+          "type": "number"
+        }
+      },
+      "default": {
+        "width": 20,
+        "height": 80,
+        "gap": 30
+      }
+    },
+    "beamSizes": {
+      "type": "object",
+      "properties": {
+        "strokeWidth": {
+          "type": "number"
+        },
+        "stemHeight": {
+          "type": "number"
+        }
+      },
+      "default": {
+        "strokeWidth": 2,
+        "stemHeight": 8
+      }
+    }
+  }
+}
