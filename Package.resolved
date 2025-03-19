@@ -1,15 +1,6 @@
 {
-  "originHash" : "99831d08726594d44aa3d394a48699be4ac440254bbb48ad4600c33766e1e2c2",
+  "originHash" : "d6db681e8faf4ec03651c6d8665422bb44bbd0336d8d36d1b16bcb37939cb5dd",
   "pins" : [
-    {
-      "identity" : "jsonvalue",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/edonv/JSONValue.git",
-      "state" : {
-        "revision" : "f9b9a3b832a853bf8c01b00c2647425e7bc38f4e",
-        "version" : "1.1.3"
-      }
-    },
     {
       "identity" : "plot",
       "kind" : "remoteSourceControl",
