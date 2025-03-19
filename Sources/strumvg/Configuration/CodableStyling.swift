@@ -77,6 +77,47 @@ struct StyleConfiguration: Codable {
             stemHeight: 8
         )
     )
+    
+    func overlaying(
+        with args: StyleConfiguration.Args
+    ) -> StyleConfiguration {
+        return .init(
+            colors: .init(
+                arrows: args.colors.arrows
+                    ?? self.colors.arrows,
+                rhythms: args.colors.rhythms
+                    ?? self.colors.rhythms,
+                headers: args.colors.headers
+                    ?? self.colors.headers
+            ),
+            textSizes: .init(
+                beatTextHeight: args.textSizes.beatTextHeight
+                    ?? self.textSizes.beatTextHeight,
+                beatFontSize: args.textSizes.beatFontSize
+                    ?? self.textSizes.beatFontSize,
+                headerTextHeight: args.textSizes.headerTextHeight
+                    ?? self.textSizes.headerTextHeight,
+                headerFontSize: args.textSizes.headerFontSize
+                    ?? self.textSizes.headerFontSize,
+                tripletFontSize: args.textSizes.tripletFontSize
+                    ?? self.textSizes.tripletFontSize
+            ),
+            strumSizes: .init(
+                width: args.strumSizes.width
+                    ?? self.strumSizes.width,
+                height: args.strumSizes.height
+                    ?? self.strumSizes.height,
+                gap: args.strumSizes.gap
+                    ?? self.strumSizes.gap
+            ),
+            beamSizes: .init(
+                strokeWidth: args.beamSizes.strokeWidth
+                    ?? self.beamSizes.strokeWidth,
+                stemHeight: args.beamSizes.stemHeight
+                    ?? self.beamSizes.stemHeight
+            )
+        )
+    }
 }
 
 // MARK: - Manual Decodable Inits
