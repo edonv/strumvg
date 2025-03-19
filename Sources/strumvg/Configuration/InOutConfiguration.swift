@@ -9,6 +9,16 @@ import Foundation
 import ArgumentParser
 
 struct InOutConfiguration: ParsableArguments {
+    @Option(
+        name: [.customLong("config"), .customShort("c")],
+        help: .init(
+            "A path to a file to use for styling configuration.",
+            discussion: "Options set as command-line options override any options set in the specified config file. Options not set in the specified config file fall back on default values."
+        ),
+        completion: .file(extensions: ["json"])
+    )
+    var configFilePath: String?
+    
     @Flag(help: "Source for input pattern string.")
     var inputSource: InputSource = .argument
     

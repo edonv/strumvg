@@ -8,101 +8,121 @@
 import Foundation
 import ArgumentParser
 
-struct StyleConfiguration: ParsableArguments {
-    @OptionGroup(title: "Colors")
-    var colors: Colors
-    
-    struct Colors: ParsableArguments {
-        @Option(
-            name: .customLong("arrow-color"),
-            help: "The color of the arrows."
-        )
-        var arrows: String = "#000000"
+extension StyleConfiguration {
+    struct Args: ParsableArguments {
+        @OptionGroup(title: "Colors")
+        var colors: Colors
         
-        @Option(
-            name: .customLong("rhythm-color"),
-            help: "The color of the rhythm text and stems below the arrows."
-        )
-        var rhythms: String = "#555555"
-        
-        @Option(
-            name: .customLong("header-color"),
-            help: "The color of the articulations and header text above the arrows."
-        )
-        var headers: String = "#000000"
-    }
-    
-    @OptionGroup(title: "Text Sizes")
-    var textSizes: TextSizes
-    
-    struct TextSizes: ParsableArguments {
-        @Option(
-            help: "The height of the space reserved for rhythm text below the arrows."
-        )
-        var beatTextHeight: CGFloat = 30
-        
-        @Option(
-            help: "The actual font-size of the rhythm text below the arrows, relative to its height."
-        )
-        var beatFontSize: CGFloat = 0.8
-        
-        @Option(
-            help: "The height of the space reserved for articulations and header text above the arrows."
-        )
-        var headerTextHeight: CGFloat = 30
-        
-        @Option(
-            help: "The actual font-size of the articulations and header text above the arrows, relative to its height."
-        )
-        var headerFontSize: CGFloat = 0.8
-        
-        @Option(
-            name: .customLong("triplet-font-size"),
-            help: "The actual font-size of the triplet label, if applicable."
-        )
-        var tripletFontSize: CGFloat = 14
-    }
-    
-    @OptionGroup(title: "Strum Sizes")
-    var strumSizes: StrumSizes
-    
-    struct StrumSizes: ParsableArguments {
-        @Option(
-            name: .customLong("strum-width"),
-            help: .init(
-                "The width of each strum arrow.",
-                discussion: "This is also the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text."
+        struct Colors: ParsableArguments {
+            @Option(
+                name: .customLong("arrow-color"),
+                help: "The color of the arrows."
             )
-        )
-        var width: CGFloat = 20
+            var arrows: String?
+            
+            @Option(
+                name: .customLong("rhythm-color"),
+                help: "The color of the rhythm text and stems below the arrows."
+            )
+            var rhythms: String?
+            
+            @Option(
+                name: .customLong("header-color"),
+                help: "The color of the articulations and header text above the arrows."
+            )
+            var headers: String?
+        }
         
-        @Option(
-            name: .customLong("strum-height"),
-            help: "The height of each strum arrow."
-        )
-        var height: CGFloat = 80
+        @OptionGroup(title: "Text Sizes")
+        var textSizes: TextSizes
         
-        @Option(
-            name: .customLong("strum-gap"),
-            help: "The horizontal space between each strum "
-        )
-        var gap: CGFloat = 30
-    }
-    
-    @OptionGroup(title: "Beam Sizes")
-    var beamSizes: BeamSizes
-    
-    struct BeamSizes: ParsableArguments {
-        @Option(
-            name: .customLong("beam-stroke-width"),
-            help: "The stroke width of the rhythm stems/beams below the arrows."
-        )
-        var strokeWidth: CGFloat = 2
+        struct TextSizes: ParsableArguments {
+            @Option(
+                help: "The height of the space reserved for rhythm text below the arrows."
+            )
+            var beatTextHeight: CGFloat?
+            
+            @Option(
+                help: "The actual font-size of the rhythm text below the arrows, relative to its height."
+            )
+            var beatFontSize: CGFloat?
+            
+            @Option(
+                help: "The height of the space reserved for articulations and header text above the arrows."
+            )
+            var headerTextHeight: CGFloat?
+            
+            @Option(
+                help: "The actual font-size of the articulations and header text above the arrows, relative to its height."
+            )
+            var headerFontSize: CGFloat?
+            
+            @Option(
+                name: .customLong("triplet-font-size"),
+                help: "The actual font-size of the triplet label, if applicable."
+            )
+            var tripletFontSize: CGFloat?
+        }
         
-        @Option(
-            name: .customLong("beam-steam-height"),
-            help: "The vertical length of the beam stems."
-        )
-        var stemHeight: CGFloat = 8
+        @OptionGroup(title: "Strum Sizes")
+        var strumSizes: StrumSizes
+        
+        struct StrumSizes: ParsableArguments {
+            @Option(
+                name: .customLong("strum-width"),
+                help: .init(
+                    "The width of each strum arrow.",
+                    discussion: "This is also the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text."
+                )
+            )
+            var width: CGFloat?
+            
+            @Option(
+                name: .customLong("strum-height"),
+                help: "The height of each strum arrow."
+            )
+            var height: CGFloat?
+            
+            @Option(
+                name: .customLong("strum-gap"),
+                help: "The horizontal space between each strum "
+            )
+            var gap: CGFloat?
+        }
+        
+        @OptionGroup(title: "Beam Sizes")
+        var beamSizes: BeamSizes
+        
+        struct BeamSizes: ParsableArguments {
+            @Option(
+                name: .customLong("beam-stroke-width"),
+                help: "The stroke width of the rhythm stems/beams below the arrows."
+            )
+            var strokeWidth: CGFloat?
+            
+            @Option(
+                name: .customLong("beam-steam-height"),
+                help: "The vertical length of the beam stems."
+            )
+            var stemHeight: CGFloat?
+        }
+        
+        func merging(withFileAt path: String?) throws -> StyleConfiguration {
+            // if there's a file path, load the file
+            if let path {
+                let configFileURL = URL(filePath: path)
+                let configFileData = try Data(contentsOf: configFileURL)
+                let decoder = JSONDecoder()
+                
+                let configFromFile = try decoder.decode(StyleConfiguration.self, from: configFileData)
+                    // and it should only be included if it's specified in the file
+                    // but not the command line options (CLI options take priority)
+                    .overlaying(with: self)
+                
+                return configFromFile
+            } else {
+                return .init(args: self)
+            }
+        }
     }
 }
