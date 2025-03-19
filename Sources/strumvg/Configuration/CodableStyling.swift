@@ -54,7 +54,7 @@ struct StyleConfiguration: Codable {
         }
     }
     
-    private static let `default` = StyleConfiguration(
+    static let `default` = StyleConfiguration(
         colors: .init(
             arrows: "#000000",
             rhythms: "#555555",
