@@ -15,18 +15,14 @@ jobs:
       - uses: swift-actions/setup-swift@v2
         with:
           swift-version: "6.0"
-      - name: Build macOS ARM64 Binary
-        run: swift build -c release --arch arm64
-      - name: Build macOS Intel Binary
-        run: swift build -c release --arch x86_64
+      - name: Build macOS Universal Binary
+        run: swift build -c release --arch arm64 --arch x86_64
       # - name: Run tests
       #   run: swift test -v
-      - name: Merge Binaries into Universal
-        run: lipo -create -output "strumvg" ".build/arm64-apple-macosx/release/strumvg" ".build/x86_64-apple-macosx/release/strumvg"
       - name: Set Permissions on Binary to Allow Run
         run: chmod 755 strumvg
       - name: Rename Binary
-        run: mv "strumvg" "strumvg-macos"
+        run: mv ".build/apple/Products/Release/strumvg" "strumvg-macos"
       - name: 'Upload macOS Build Artifact'
         uses: actions/upload-artifact@v4
         with:
