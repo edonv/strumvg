@@ -106,5 +106,23 @@ extension StyleConfiguration {
             )
             var stemHeight: CGFloat?
         }
+        
+        func merging(withFileAt path: String?) throws -> StyleConfiguration {
+            // if there's a file path, load the file
+            if let path {
+                let configFileURL = URL(filePath: path)
+                let configFileData = try Data(contentsOf: configFileURL)
+                let decoder = JSONDecoder()
+                
+                let configFromFile = try decoder.decode(StyleConfiguration.self, from: configFileData)
+                    // and it should only be included if it's specified in the file
+                    // but not the command line options (CLI options take priority)
+                    .overlaying(with: self)
+                
+                return configFromFile
+            } else {
+                return .init(args: self)
+            }
+        }
     }
 }
