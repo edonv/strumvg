@@ -8,7 +8,6 @@
 import Foundation
 import ArgumentParser
 
-enum StyleConfiguration {}
 extension StyleConfiguration {
     struct Args: ParsableArguments {
         @OptionGroup(title: "Colors")
