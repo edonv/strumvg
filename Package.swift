@@ -29,8 +29,8 @@ let package = Package(
                 "StrumModels",
                 "PlotExtensions",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                "Plot",
-                "PlotSVG",
+                .product(name: "Plot", package: "Plot"),
+                .product(name: "PlotSVG", package: "PlotSVG"),
             ]
         ),
     ]
