@@ -83,6 +83,32 @@ struct StyleConfiguration: Codable {
 // (this is to ensure default values)
 
 extension StyleConfiguration {
+    init(args: Args) {
+        self.init(
+            colors: .init(
+                arrows: args.colors.arrows ?? Self.default.colors.arrows,
+                rhythms: args.colors.rhythms ?? Self.default.colors.rhythms,
+                headers: args.colors.headers ?? Self.default.colors.headers
+            ),
+            textSizes: .init(
+                beatTextHeight: args.textSizes.beatTextHeight ?? Self.default.textSizes.beatTextHeight,
+                beatFontSize: args.textSizes.beatFontSize ?? Self.default.textSizes.beatFontSize,
+                headerTextHeight: args.textSizes.headerTextHeight ?? Self.default.textSizes.headerTextHeight,
+                headerFontSize: args.textSizes.headerFontSize ?? Self.default.textSizes.headerFontSize,
+                tripletFontSize: args.textSizes.tripletFontSize ?? Self.default.textSizes.tripletFontSize
+            ),
+            strumSizes: .init(
+                width: args.strumSizes.width ?? Self.default.strumSizes.width,
+                height: args.strumSizes.height ?? Self.default.strumSizes.height,
+                gap: args.strumSizes.gap ?? Self.default.strumSizes.gap
+            ),
+            beamSizes: .init(
+                strokeWidth: args.beamSizes.strokeWidth ?? Self.default.beamSizes.strokeWidth,
+                stemHeight: args.beamSizes.stemHeight ?? Self.default.beamSizes.stemHeight
+            )
+        )
+    }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.colors = try container.decodeIfPresent(StyleConfiguration.Colors.self, forKey: .colors) ?? .default
