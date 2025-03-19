@@ -23,8 +23,6 @@ jobs:
       #   run: swift test -v
       - name: Merge Binaries into Universal
         run: lipo -create -output "strumvg" ".build/arm64-apple-macosx/release/strumvg" ".build/x86_64-apple-macosx/release/strumvg"
-      - name: Set Permissions on Binary to Allow Run
-        run: chmod 755 strumvg
       - name: Rename Binary
         run: mv "strumvg" "strumvg-macos"
       - name: 'Upload macOS Build Artifact'
