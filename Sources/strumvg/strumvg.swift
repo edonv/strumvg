@@ -25,10 +25,14 @@ struct strumvg: ParsableCommand {
     @OptionGroup(title: "Input/Output Options")
     var inOut: InOutConfiguration
     
+    /// Style configuration specified by inline command arguments.
     @OptionGroup(title: "Styling Options")
-    var style: StyleConfiguration
+    private var styleArgs: StyleConfiguration.Args
     
-    func validate() throws {
+    /// Style configuration created by mapping ``styleArgs`` to ``StyleConfiguration``, merging with values from a file specified at ``InOutConfiguration/configFilePath`` and falling back on ``StyleConfiguration/default`` values.
+    var style: StyleConfiguration!
+    
+    mutating func validate() throws {
         if inOut.inputSource == .argument
             && patternString == nil {
             throw ValidationError("`inputSource` flag set to `--arg` and `patternString` argument is missing.")
@@ -38,6 +42,9 @@ struct strumvg: ParsableCommand {
             && patternString != nil {
             throw ValidationError("`inputSource` flag set to `--stdin` and `patternString` argument is present.")
         }
+        
+        self.style = try self.styleArgs
+            .merging(withFileAt: inOut.configFilePath)
     }
     
     mutating func run() throws {
