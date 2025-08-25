@@ -35,7 +35,7 @@ struct strumvg: ParsableCommand {
             throw ValidationError("`inputSource` flag set to `--arg` and `patternString` argument is missing.")
         }
         
-        if inOut.inputSource == .stdin
+        if inOut.inputSource != .argument
             && inOut.patternString != nil {
             throw ValidationError("`inputSource` flag set to `--stdin` and `patternString` argument is present.")
         }
