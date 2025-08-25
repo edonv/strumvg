@@ -19,10 +19,20 @@ struct InOutConfiguration: ParsableArguments {
     )
     var configFilePath: String?
     
-    @Flag(help: "Source for input pattern string.")
+    @Flag(
+        help: .init(
+            "Source for input pattern string.",
+            discussion: "-i/--stdin uses the stdin as the source of the input pattern. -a/--arg uses a command argument as the source of the input pattern."
+        )
+    )
     var inputSource: InputSource = .argument
     
-    @Flag(help: "Destination for output SVG content.")
+    @Flag(
+        help: .init(
+            "Destination for output SVG content.",
+            discussion: "-o/--stdout uses the stdout as the output destination of the generated SVG string. -l/--log outputs the generated SVG string to the console."
+        )
+    )
     var outputDestination: OutputDestination = .log
     
     enum InputSource: EnumerableFlag {
