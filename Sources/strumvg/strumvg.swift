@@ -30,6 +30,15 @@ struct strumvg: ParsableCommand {
     var style: StyleConfiguration!
     
     mutating func validate() throws {
+        // If using output to file and not argument pattern string, it will think output file path argument is patternString
+        if inOut.inputSource != .argument
+            && inOut.patternString != nil
+            && inOut.outputDestination == .file
+            && inOut.outputFilePath == nil {
+            inOut.outputFilePath = inOut.patternString
+            inOut.patternString = nil
+        }
+        
         if inOut.inputSource == .argument
             && inOut.patternString == nil {
             throw ValidationError("`inputSource` flag set to `--arg` and `patternString` argument is missing.")
@@ -38,6 +47,16 @@ struct strumvg: ParsableCommand {
         if inOut.inputSource != .argument
             && inOut.patternString != nil {
             throw ValidationError("`inputSource` flag set to `--stdin` and `patternString` argument is present.")
+        }
+        
+        if inOut.outputDestination == .file
+            && inOut.outputFilePath == nil {
+            throw ValidationError("`outputDestination` flag set to `--file` and `outputFilePath` argument is missing.")
+        }
+        
+        if inOut.outputDestination != .file
+            && inOut.outputFilePath != nil {
+            throw ValidationError("`outputDestination` flag is not set to `--file` and `outputFilePath` argument is present.")
         }
         
         self.style = try self.styleArgs
@@ -89,6 +108,15 @@ struct strumvg: ParsableCommand {
             
         case .log:
             print(svgStr)
+            
+        case .file:
+            guard let outputFilePath = inOut.outputFilePath else {
+                print("Missing output file path (`<outputFilePath>` argument.")
+                throw ExitCode(EXIT_FAILURE)
+            }
+            
+            let outputURL = URL(filePath: outputFilePath, directoryHint: .notDirectory)
+            try svgStr.write(to: outputURL, atomically: true, encoding: .utf8)
         }
     }
 }

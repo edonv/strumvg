@@ -43,6 +43,15 @@ struct InOutConfiguration: ParsableArguments {
     )
     var outputDestination: OutputDestination = .log
     
+    @Argument(
+        help: .init(
+            "A path to a file that the generated SVG string should be written to.",
+            discussion: "This argument requires the --file flag."
+        ),
+        completion: .file(extensions: ["svg"])
+    )
+    var outputFilePath: String?
+    
     enum InputSource: EnumerableFlag {
         case stdin
         case argument
@@ -60,7 +69,7 @@ struct InOutConfiguration: ParsableArguments {
     enum OutputDestination: EnumerableFlag {
         case stdout
         case log
-//        case file(String)
+        case file
         
         static func name(for value: OutputDestination) -> NameSpecification {
             switch value {
@@ -68,8 +77,8 @@ struct InOutConfiguration: ParsableArguments {
                 return [.customShort("o"), .long]
             case .log:
                 return [.customShort("l"), .long]
-//            case .file:
-//                return [.short, .long]
+            case .file:
+                return [.short, .long]
             }
         }
     }
