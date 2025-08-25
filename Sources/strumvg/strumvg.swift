@@ -29,7 +29,7 @@ struct strumvg: ParsableCommand {
     @OptionGroup(title: "Styling Options")
     private var styleArgs: StyleConfiguration.Args
     
-    /// Style configuration created by mapping ``styleArgs`` to ``StyleConfiguration``, merging with values from a file specified at ``InOutConfiguration/configFilePath`` and falling back on ``StyleConfiguration/default`` values.
+    /// Style configuration created by mapping `styleArgs` to ``StyleConfiguration``, merging with values from a file specified at ``InOutConfiguration/configFilePath`` and falling back on ``StyleConfiguration/default`` values.
     var style: StyleConfiguration!
     
     mutating func validate() throws {
