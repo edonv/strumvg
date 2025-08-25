@@ -27,6 +27,14 @@ struct InOutConfiguration: ParsableArguments {
     )
     var inputSource: InputSource = .argument
     
+    @Argument(
+        help: .init(
+            "The string representation of a pattern.",
+            discussion: "This argument requires the --argument flag."
+        )
+    )
+    var patternString: String?
+    
     @Flag(
         help: .init(
             "Destination for output SVG content.",
