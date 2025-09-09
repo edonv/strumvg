@@ -5,8 +5,8 @@
 The first time you run `strumvg` on macOS, you'll need to call the following command to give your computer permission:
 
 ```shell
-chmod 755 strumvg
-xattr -d com.apple.quarantine strumvg
+chmod 755 strumvg-macos
+xattr -d com.apple.quarantine strumvg-macos
 ```
 
 ### Help
