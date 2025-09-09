@@ -114,7 +114,7 @@ extension StyleConfiguration {
                 let configFileStr = try String(contentsOf: configFileURL, encoding: .utf8)
                     // Remove commented-out lines
                     .replacing(
-                        /\s*\/\/.*$/.anchorsMatchLineEndings(),
+                        /^\s*\/\/.*$\n/.anchorsMatchLineEndings(),
                         with: ""
                     )
                 
