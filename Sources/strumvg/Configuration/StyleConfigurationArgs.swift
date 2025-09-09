@@ -122,8 +122,8 @@ extension StyleConfiguration {
                     let decoder = JSONDecoder()
                     
                     let configFromFile = try decoder.decode(StyleConfiguration.self, from: configFileData)
-                    // and it should only be included if it's specified in the file
-                    // but not the command line options (CLI options take priority)
+                        // and it should only be included if it's specified in the file
+                        // but not the command line options (CLI options take priority)
                         .overlaying(with: self)
                     
                     return configFromFile
