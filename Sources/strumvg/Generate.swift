@@ -36,6 +36,11 @@ extension strumvg {
                     rhythmText: false
                 )
             }
+        let headersGroup = Node<SVG.DocumentContext>.element(
+            named: "g",
+            nodes: CollectionOfOne(.attribute(named: "key", value: "heads"))
+                + headers
+        )
         
         // MARK: StrumArrow
         let arrows = allStrums
@@ -59,6 +64,11 @@ extension strumvg {
                     ].compactMap { $0 }
                 )
             }
+        let arrowsGroup = Node<SVG.DocumentContext>.element(
+            named: "g",
+            nodes: CollectionOfOne(.attribute(named: "key", value: "strums"))
+                + arrows
+        )
         
         // MARK: Char StrumHeader
         let countChars = strs
@@ -70,7 +80,13 @@ extension strumvg {
                     rhythmText: true
                 )
             }
+        let countCharsGroup = Node<SVG.DocumentContext>.element(
+            named: "g",
+            nodes: CollectionOfOne(.attribute(named: "key", value: "counts"))
+                + countChars.compactMap { $0 }
+        )
         
+        // MARK: Note Groups
         let noteGroupsGroup = createNoteGroups(
             strums: allStrums,
             noteLength: pattern.timing
@@ -93,12 +109,11 @@ extension strumvg {
         let svg = SVG(
             svgAttrs: svgDeclAttrs,
             [
-                headers,
-                arrows,
-                countChars
-                    .compactMap { $0 },
-                [noteGroupsGroup],
-            ].flatMap { $0 }
+                headersGroup,
+                arrowsGroup,
+                countCharsGroup,
+                noteGroupsGroup,
+            ]
         )
         
         return svg
