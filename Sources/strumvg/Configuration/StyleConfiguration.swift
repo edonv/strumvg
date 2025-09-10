@@ -276,10 +276,10 @@ extension StyleConfiguration.Fonts {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        var strumHeader: Styling = .default
-        var arrowText: Styling = .default
-        var countChar: Styling = .default
-        var tripletText: Styling = .default
+        var strumHeader: Styling = StyleConfiguration.default.fonts.strumHeader
+        var arrowText: Styling = StyleConfiguration.default.fonts.arrowText
+        var countChar: Styling = StyleConfiguration.default.fonts.countChar
+        var tripletText: Styling = StyleConfiguration.default.fonts.tripletText
         
         let keys: Set<CodingKeys> = [.strumHeader, .arrowText, .countChar, .tripletText]
         for key in keys {
