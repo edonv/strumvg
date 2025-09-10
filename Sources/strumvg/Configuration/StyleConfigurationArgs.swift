@@ -43,7 +43,7 @@ extension StyleConfiguration {
             var beatTextHeight: CGFloat?
             
             @Option(
-                help: "The actual font-size of the rhythm text below the arrows, relative to its height."
+                help: "The relative font-size of the rhythm text below the arrows, as a fraction of its height."
             )
             var beatFontSize: CGFloat?
             
@@ -53,7 +53,7 @@ extension StyleConfiguration {
             var headerTextHeight: CGFloat?
             
             @Option(
-                help: "The actual font-size of the articulations and header text above the arrows, relative to its height."
+                help: "The relative font-size of the articulations and header text above the arrows, as a fraction of its height."
             )
             var headerFontSize: CGFloat?
             
