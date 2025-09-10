@@ -26,7 +26,7 @@ extension strumvg {
         let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(pattern.totalStrums) - style.strumSizes.gap
         let calcHeight = style.strumSizes.height + style.textSizes.headerTextHeight + 2 * style.textSizes.beatTextHeight
         
-        // MARK: StrumHeader - P1
+        // MARK: Header Text
         let headers = allStrums
             .enumerated()
             .compactMap { i, strum in
@@ -42,7 +42,7 @@ extension strumvg {
                 + headers
         )
         
-        // MARK: StrumArrow
+        // MARK: Strum Arrows
         let arrows = allStrums
             .enumerated()
             .map { i, strum -> Node<SVG.DocumentContext> in
@@ -70,7 +70,7 @@ extension strumvg {
                 + arrows
         )
         
-        // MARK: Char StrumHeader
+        // MARK: Count Characters
         let countChars = strs
             .enumerated()
             .map { i, str in
