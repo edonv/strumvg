@@ -12,6 +12,7 @@ struct StyleConfiguration: Codable {
     let textSizes: TextSizes
     let strumSizes: StrumSizes
     let beamSizes: BeamSizes
+    let fonts: Fonts
     
     struct Colors: Codable {
         /// ``StyleConfiguration/Args/Colors-swift.struct/arrows``
@@ -67,6 +68,46 @@ struct StyleConfiguration: Codable {
         }
     }
     
+    struct Fonts: Codable {
+        let strumHeader: Styling
+        /// This refers to the fonts for any text used in place of an arrow.
+        let arrowText: Styling
+        let countChar: Styling
+        let tripletText: Styling
+        
+        struct Styling: Codable {
+            let family: String
+            let weight: String
+            let style: String
+            
+            static var `default`: Styling {
+                .init(
+                    family: "sans-serif",
+                    weight: "normal",
+                    style: "normal"
+                )
+            }
+            
+            var bold: Styling {
+                .init(
+                    family: family,
+                    weight: "bold",
+                    style: "normal"
+                )
+            }
+            
+            fileprivate enum CodingKeys: CodingKey {
+                case family
+                case weight
+                case style
+            }
+        }
+        
+        static var `default`: Fonts {
+            StyleConfiguration.default.fonts
+        }
+    }
+    
     static let `default` = StyleConfiguration(
         colors: .init(
             arrows: "#000000",
@@ -88,6 +129,12 @@ struct StyleConfiguration: Codable {
         beamSizes: .init(
             strokeWidth: 2,
             stemHeight: 8
+        ),
+        fonts: .init(
+            strumHeader: .default.bold,
+            arrowText: .default.bold,
+            countChar: .default.bold,
+            tripletText: .default
         )
     )
     
@@ -128,6 +175,12 @@ struct StyleConfiguration: Codable {
                     ?? self.beamSizes.strokeWidth,
                 stemHeight: args.beamSizes.stemHeight
                     ?? self.beamSizes.stemHeight
+            ),
+            fonts: .init(
+                strumHeader: self.fonts.strumHeader,
+                arrowText: self.fonts.arrowText,
+                countChar: self.fonts.countChar,
+                tripletText: self.fonts.tripletText
             )
         )
     }
@@ -159,6 +212,12 @@ extension StyleConfiguration {
             beamSizes: .init(
                 strokeWidth: args.beamSizes.strokeWidth ?? Self.default.beamSizes.strokeWidth,
                 stemHeight: args.beamSizes.stemHeight ?? Self.default.beamSizes.stemHeight
+            ),
+            fonts: .init(
+                strumHeader: Self.default.fonts.strumHeader,
+                arrowText: Self.default.fonts.arrowText,
+                countChar: Self.default.fonts.countChar,
+                tripletText: Self.default.fonts.tripletText
             )
         )
     }
@@ -169,6 +228,7 @@ extension StyleConfiguration {
         self.textSizes = try container.decodeIfPresent(StyleConfiguration.TextSizes.self, forKey: .textSizes) ?? .default
         self.strumSizes = try container.decodeIfPresent(StyleConfiguration.StrumSizes.self, forKey: .strumSizes) ?? .default
         self.beamSizes = try container.decodeIfPresent(StyleConfiguration.BeamSizes.self, forKey: .beamSizes) ?? .default
+        self.fonts = try container.decodeIfPresent(StyleConfiguration.Fonts.self, forKey: .fonts) ?? .default
     }
 }
 
@@ -206,5 +266,58 @@ extension StyleConfiguration.BeamSizes {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.strokeWidth = try container.decodeIfPresent(CGFloat.self, forKey: .strokeWidth) ?? Self.default.strokeWidth
         self.stemHeight = try container.decodeIfPresent(CGFloat.self, forKey: .stemHeight) ?? Self.default.stemHeight
+    }
+}
+
+extension StyleConfiguration.Fonts {
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        var strumHeader: Styling = .default
+        var arrowText: Styling = .default
+        var countChar: Styling = .default
+        var tripletText: Styling = .default
+        
+        let keys: Set<CodingKeys> = [.strumHeader, .arrowText, .countChar, .tripletText]
+        for key in keys {
+            let nestedContainer = try container.nestedContainer(keyedBy: Styling.CodingKeys.self, forKey: key)
+            
+            let family = try nestedContainer.decodeIfPresent(String.self, forKey: .family)
+            let weight = try nestedContainer.decodeIfPresent(String.self, forKey: .weight)
+            let style = try nestedContainer.decodeIfPresent(String.self, forKey: .style)
+            
+            switch key {
+            case .strumHeader:
+                strumHeader = .init(
+                    family: family ?? StyleConfiguration.default.fonts.strumHeader.family,
+                    weight: weight ?? StyleConfiguration.default.fonts.strumHeader.weight,
+                    style: style ?? StyleConfiguration.default.fonts.strumHeader.style
+                )
+            case .arrowText:
+                arrowText = .init(
+                    family: family ?? StyleConfiguration.default.fonts.arrowText.family,
+                    weight: weight ?? StyleConfiguration.default.fonts.arrowText.weight,
+                    style: style ?? StyleConfiguration.default.fonts.arrowText.style
+                )
+            case .countChar:
+                countChar = .init(
+                    family: family ?? StyleConfiguration.default.fonts.countChar.family,
+                    weight: weight ?? StyleConfiguration.default.fonts.countChar.weight,
+                    style: style ?? StyleConfiguration.default.fonts.countChar.style
+                )
+            case .tripletText:
+                tripletText = .init(
+                    family: family ?? StyleConfiguration.default.fonts.tripletText.family,
+                    weight: weight ?? StyleConfiguration.default.fonts.tripletText.weight,
+                    style: style ?? StyleConfiguration.default.fonts.tripletText.style
+                )
+                
+            }
+        }
+        
+        self.strumHeader = strumHeader
+        self.arrowText = arrowText
+        self.countChar = countChar
+        self.tripletText = tripletText
     }
 }
