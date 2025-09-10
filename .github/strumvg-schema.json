@@ -26,18 +26,23 @@
       "type": "object",
       "properties": {
         "beatTextHeight": {
+          "description": "The height of the space reserved for rhythm text below the arrows.",
           "type": "number"
         },
         "beatFontSize": {
+          "description": "The relative font-size of the rhythm text below the arrows, as a fraction of its height (`beatTextHeight`).",
           "type": "number"
         },
         "headerTextHeight": {
+          "description": "The height of the space reserved for articulations and header text above the arrows.",
           "type": "number"
         },
         "headerFontSize": {
+          "description": "The relative font-size of the articulations and header text above the arrows, as a fraction of its height (`headerFontSize`).",
           "type": "number"
         },
         "tripletFontSize": {
+          "description": "The actual font-size of the triplet label, if applicable.",
           "type": "number"
         }
       },
