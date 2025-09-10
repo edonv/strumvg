@@ -283,6 +283,8 @@ extension StyleConfiguration.Fonts {
         
         let keys: Set<CodingKeys> = [.strumHeader, .arrowText, .countChar, .tripletText]
         for key in keys {
+            guard container.contains(key) else { continue }
+            
             let nestedContainer = try container.nestedContainer(keyedBy: Styling.CodingKeys.self, forKey: key)
             
             let family = try nestedContainer.decodeIfPresent(String.self, forKey: .family)
