@@ -95,6 +95,89 @@
         "strokeWidth": 2,
         "stemHeight": 8
       }
+    },
+    "fonts": {
+      "type": "object",
+      "properties": {
+        "strumHeader": {
+          "description": "Font styling for header text.",
+          "$ref": "#/definitions/font"
+        },
+        "arrowText": {
+          "description": "Font styling for text inserted in place of arrows.",
+          "$ref": "#/definitions/font"
+        },
+        "countChar": {
+          "description": "Font styling for rhythm count text.",
+          "$ref": "#/definitions/font"
+        },
+        "tripletText": {
+          "description": "Font styling for triplet labels (\"3\"), if applicable.",
+          "$ref": "#/definitions/font"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "font-family": {
+      "type": "string",
+      "examples": [
+        "sans-serif",
+        "serif",
+        "monospace",
+        "cursive",
+        "sans-serif",
+        "sans-serif"
+      ]
+    },
+    "font-weight": {
+      "oneOf": [
+        {
+          "enum": [
+            "normal",
+            "bold",
+            "bolder",
+            "lighter"
+          ]
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      ],
+      "examples": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900
+      ]
+    },
+    "font-style": {
+      "enum": [
+        "normal",
+        "italic",
+        "oblique"
+      ]
+    },
+    "font": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "$ref": "#/definitions/font-family"
+        },
+        "weight": {
+          "$ref": "#/definitions/font-weight"
+        },
+        "style": {
+          "$ref": "#/definitions/font-style"
+        }
+      }
     }
   }
 }
