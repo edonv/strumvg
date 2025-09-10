@@ -107,7 +107,7 @@ Examples:
 
 - [x] Make capitalized strums DOWN (because they're on beat).
 - [x] Allow specifying JSON file for configuration options, rather than having to use command-line options for everything.   
-- [ ] Add font customizing, also maybe classes/CSS/`<style>` for styling SVG.
+- [x] Add font customizing, also maybe classes/CSS/`<style>` for styling SVG.
 - [ ] Allow `|` to be used as a barline to reset beat counting.
 - [ ] Add to `homebrew`/equivalents?
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
