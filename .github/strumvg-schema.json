@@ -7,12 +7,15 @@
       "type": "object",
       "properties": {
         "arrows": {
+          "description": "The color of the arrows.",
           "type": "string"
         },
         "rhythms": {
+          "description": "The color of the rhythm text and stems below the arrows.",
           "type": "string"
         },
         "headers": {
+          "description": "The color of the articulations and header text above the arrows.",
           "type": "string"
         }
       },
@@ -58,12 +61,15 @@
       "type": "object",
       "properties": {
         "width": {
+          "description": "The width of each strum arrow.\nThis is also the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text.",
           "type": "number"
         },
         "height": {
+          "description": "The height of each strum arrow.",
           "type": "number"
         },
         "gap": {
+          "description": "The horizontal space between each strum ",
           "type": "number"
         }
       },
@@ -77,9 +83,11 @@
       "type": "object",
       "properties": {
         "strokeWidth": {
+          "description": "The stroke width of the rhythm stems/beams below the arrows.",
           "type": "number"
         },
         "stemHeight": {
+          "description": "The vertical length of the beam stems.",
           "type": "number"
         }
       },
