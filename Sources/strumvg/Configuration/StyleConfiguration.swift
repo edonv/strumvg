@@ -14,8 +14,11 @@ struct StyleConfiguration: Codable {
     let beamSizes: BeamSizes
     
     struct Colors: Codable {
+        /// ``StyleConfiguration/Args/Colors-swift.struct/arrows``
         let arrows: String
+        /// ``StyleConfiguration/Args/Colors-swift.struct/rhythms``
         let rhythms: String
+        /// ``StyleConfiguration/Args/Colors-swift.struct/headers``
         let headers: String
         
         static var `default`: Self {
@@ -24,10 +27,15 @@ struct StyleConfiguration: Codable {
     }
     
     struct TextSizes: Codable {
+        /// ``StyleConfiguration/Args/TextSizes-swift.struct/beatTextHeight``
         let beatTextHeight: CGFloat
+        /// ``StyleConfiguration/Args/TextSizes-swift.struct/beatFontSize``
         let beatFontSize: CGFloat
+        /// ``StyleConfiguration/Args/TextSizes-swift.struct/headerTextHeight``
         let headerTextHeight: CGFloat
+        /// ``StyleConfiguration/Args/TextSizes-swift.struct/headerFontSize``
         let headerFontSize: CGFloat
+        /// ``StyleConfiguration/Args/TextSizes-swift.struct/tripletFontSize``
         let tripletFontSize: CGFloat
         
         static var `default`: Self {
@@ -36,8 +44,11 @@ struct StyleConfiguration: Codable {
     }
     
     struct StrumSizes: Codable {
+        /// ``StyleConfiguration/Args/StrumSizes-swift.struct/width``
         let width: CGFloat
+        /// ``StyleConfiguration/Args/StrumSizes-swift.struct/height``
         let height: CGFloat
+        /// ``StyleConfiguration/Args/StrumSizes-swift.struct/gap``
         let gap: CGFloat
         
         static var `default`: Self {
@@ -46,7 +57,9 @@ struct StyleConfiguration: Codable {
     }
     
     struct BeamSizes: Codable {
+        /// ``StyleConfiguration/Args/BeamSizes-swift.struct/strokeWidth``
         let strokeWidth: CGFloat
+        /// ``StyleConfiguration/Args/BeamSizes-swift.struct/stemHeight``
         let stemHeight: CGFloat
         
         static var `default`: Self {
