@@ -61,7 +61,7 @@ extension strumvg {
             }
         
         // MARK: Char StrumHeader
-        let charHeaders = strs
+        let countChars = strs
             .enumerated()
             .map { i, str in
                 return createStrumHeader(
@@ -95,7 +95,7 @@ extension strumvg {
             [
                 headers,
                 arrows,
-                charHeaders
+                countChars
                     .compactMap { $0 },
                 [noteGroupsGroup],
             ].flatMap { $0 }
