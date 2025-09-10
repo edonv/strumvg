@@ -220,8 +220,9 @@ extension strumvg {
                 value: style.textSizes.headerTextHeight * style.textSizes.headerFontSize,
                 format: numberFormat
             ),
-            .attribute(named: "font-family", value: "sans-serif"),
-            .attribute(named: "font-weight", value: "bold"),
+            .attribute(named: "font-family", value: style.fonts.strumHeader.family),
+            .attribute(named: "font-weight", value: style.fonts.strumHeader.weight),
+            .attribute(named: "font-style", value: style.fonts.strumHeader.style),
         ] + strumHeaderAndCountTextSharedAttrs
     }
     
@@ -234,8 +235,9 @@ extension strumvg {
                 value: style.textSizes.beatTextHeight * style.textSizes.beatFontSize,
                 format: numberFormat
             ),
-            .attribute(named: "font-family", value: "sans-serif"),
-            .attribute(named: "font-weight", value: "bold"),
+            .attribute(named: "font-family", value: style.fonts.countChar.family),
+            .attribute(named: "font-weight", value: style.fonts.countChar.weight),
+            .attribute(named: "font-style", value: style.fonts.countChar.style),
         ] + strumHeaderAndCountTextSharedAttrs
     }
     
@@ -431,14 +433,9 @@ extension strumvg {
                 named: "text-anchor",
                 value: "middle"
             ),
-            .attribute(
-                named: "font-family",
-                value: "sans-serif"
-            ),
-            .attribute(
-                named: "font-weight",
-                value: "bold"
-            ),
+            .attribute(named: "font-family", value: style.fonts.arrowText.family),
+            .attribute(named: "font-weight", value: style.fonts.arrowText.weight),
+            .attribute(named: "font-style", value: style.fonts.arrowText.style),
             .attribute(
                 named: "textLength",
                 value: style.strumSizes.width,
@@ -476,7 +473,9 @@ extension strumvg {
                 ),
                 .attribute(named: "font-size", value: style.textSizes.tripletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
-                .attribute(named: "font-family", value: "sans-serif"),
+                .attribute(named: "font-family", value: style.fonts.tripletText.family),
+                .attribute(named: "font-weight", value: style.fonts.tripletText.weight),
+                .attribute(named: "font-style", value: style.fonts.tripletText.style),
             ] + (0..<quantity).map { i in
                 return createNoteGroup(
                     quantity: subdivision,
