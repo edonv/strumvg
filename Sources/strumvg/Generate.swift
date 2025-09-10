@@ -38,8 +38,7 @@ extension strumvg {
             }
         let headersGroup = Node<SVG.DocumentContext>.element(
             named: "g",
-            nodes: CollectionOfOne(.attribute(named: "key", value: "heads"))
-                + headers
+            nodes: strumHeaderTextStaticAttrs + headers
         )
         
         // MARK: Strum Arrows
@@ -66,8 +65,7 @@ extension strumvg {
             }
         let arrowsGroup = Node<SVG.DocumentContext>.element(
             named: "g",
-            nodes: CollectionOfOne(.attribute(named: "key", value: "strums"))
-                + arrows
+            nodes: arrowsStaticAttrs + arrows
         )
         
         // MARK: Count Characters
@@ -82,8 +80,7 @@ extension strumvg {
             }
         let countCharsGroup = Node<SVG.DocumentContext>.element(
             named: "g",
-            nodes: CollectionOfOne(.attribute(named: "key", value: "counts"))
-                + countChars.compactMap { $0 }
+            nodes: countCharStaticAttrs + countChars.compactMap { $0 }
         )
         
         // MARK: Note Groups
@@ -191,7 +188,6 @@ extension strumvg {
         
         let height = rhythmText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
         let width = style.strumSizes.width
-        let fill = rhythmText ? style.colors.rhythms : style.colors.headers
         let fontSize = rhythmText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
         let yBase = rhythmText ? style.textSizes.headerTextHeight + style.strumSizes.height * FIX_FACTOR : 0
@@ -201,16 +197,46 @@ extension strumvg {
             nodes: [
                 .text("\(content)"),
                 .attribute(named: "key", value: "\(rhythmText ? "count" : "head")\(index)"),
-                .attribute(named: "fill", value: fill),
                 .attribute(named: "x", value: x, format: numberFormat),
                 .attribute(named: "y", value: yBase + height * fontSize, format: numberFormat),
-                .attribute(named: "font-size", value: height * fontSize, format: numberFormat),
                 .attribute(named: "textLength", value: width, format: numberFormat),
-                .attribute(named: "text-anchor", value: "middle"),
-                .attribute(named: "font-family", value: "sans-serif"),
-                .attribute(named: "font-weight", value: "bold"),
             ]
         )
+    }
+    
+    private var strumHeaderAndCountTextSharedAttrs: [Node<SVG.DocumentContext>] {
+        [
+            .attribute(named: "text-anchor", value: "middle"),
+            .attribute(named: "stroke", value: "none"),
+        ]
+    }
+    
+    private var strumHeaderTextStaticAttrs: [Node<SVG.DocumentContext>] {
+        [
+            .attribute(named: "key", value: "heads"),
+            .attribute(named: "fill", value: style.colors.headers),
+            .attribute(
+                named: "font-size",
+                value: style.textSizes.headerTextHeight * style.textSizes.headerFontSize,
+                format: numberFormat
+            ),
+            .attribute(named: "font-family", value: "sans-serif"),
+            .attribute(named: "font-weight", value: "bold"),
+        ] + strumHeaderAndCountTextSharedAttrs
+    }
+    
+    private var countCharStaticAttrs: [Node<SVG.DocumentContext>] {
+        [
+            .attribute(named: "key", value: "counts"),
+            .attribute(named: "fill", value: style.colors.rhythms),
+            .attribute(
+                named: "font-size",
+                value: style.textSizes.beatTextHeight * style.textSizes.beatFontSize,
+                format: numberFormat
+            ),
+            .attribute(named: "font-family", value: "sans-serif"),
+            .attribute(named: "font-weight", value: "bold"),
+        ] + strumHeaderAndCountTextSharedAttrs
     }
     
     private func createStrumArrow(
@@ -220,7 +246,6 @@ extension strumvg {
         let variant = strum.variant
         let width = style.strumSizes.width /*?? 50*/
         let height = style.strumSizes.height /*?? 100*/
-        let fill = style.colors.arrows
         
         let strokeRatio: CGFloat = 0.2
         let strokeWidth = width * strokeRatio
@@ -239,8 +264,7 @@ extension strumvg {
                             "\(width),\(headHeight)",
                         ].joined(separator: " ")
                     ),
-                    .attribute(named: "stroke-width", value: "0"),
-                    .attribute(named: "fill", value: fill),
+                    .attribute(named: "stroke", value: "none"),
                 ]
             )
         }
@@ -262,7 +286,6 @@ extension strumvg {
                     .attribute(named: "x2", value: width / 2, format: numberFormat),
                     .attribute(named: "y2", value: height * (0.5 + headRatio), format: numberFormat),
                     .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
-                    .attribute(named: "stroke", value: fill),
                 ]
             )
             
@@ -301,7 +324,6 @@ extension strumvg {
                         format: numberFormat
                     ),
                     .attribute(named: "fill", value: "none"),
-                    .attribute(named: "stroke", value: fill /*?? ""*/)
                 ]
             )
 
@@ -337,7 +359,6 @@ extension strumvg {
                         ].joined()
                     ),
                     .attribute(named: "fill", value: "none"),
-                    .attribute(named: "stroke", value: style.colors.arrows),
                     .attribute(
                         named: "stroke-width",
                         value: strokeWidth,
@@ -369,7 +390,6 @@ extension strumvg {
                         cx: cx,
                         cy: cy
                     ),
-                    .attribute(named: "fill", value: fill),
                 ]
             )
             
@@ -388,35 +408,47 @@ extension strumvg {
                         format: numberFormat
                     ),
                     .attribute(
-                        named: "font-size",
-                        value: height / 2,
-                        format: numberFormat
-                    ),
-                    .attribute(
-                        named: "text-anchor",
-                        value: "middle"
-                    ),
-                    .attribute(
-                        named: "font-family",
-                        value: "sans-serif"
-                    ),
-                    .attribute(
-                        named: "font-weight",
-                        value: "bold"
-                    ),
-                    .attribute(
-                        named: "textLength",
-                        value: width,
-                        format: numberFormat
-                    ),
-                    .attribute(
-                        named: "lengthAdjust",
-                        value: "spacingAndGlyphs"
+                        named: "stroke",
+                        value: "none"
                     ),
                     .text(String(char)),
                 ]
             )
         }
+    }
+    
+    private var arrowsStaticAttrs: [Node<SVG.DocumentContext>] {
+        [
+            .attribute(named: "key", value: "strums"),
+            .attribute(named: "fill", value: style.colors.arrows),
+            .attribute(named: "stroke", value: style.colors.arrows),
+            .attribute(
+                named: "font-size",
+                value: style.strumSizes.height / 2,
+                format: numberFormat
+            ),
+            .attribute(
+                named: "text-anchor",
+                value: "middle"
+            ),
+            .attribute(
+                named: "font-family",
+                value: "sans-serif"
+            ),
+            .attribute(
+                named: "font-weight",
+                value: "bold"
+            ),
+            .attribute(
+                named: "textLength",
+                value: style.strumSizes.width,
+                format: numberFormat
+            ),
+            .attribute(
+                named: "lengthAdjust",
+                value: "spacingAndGlyphs"
+            ),
+        ]
     }
     
     private func createNoteGroups(
@@ -433,7 +465,19 @@ extension strumvg {
         
         return .element(
             named: "g",
-            nodes: (0..<quantity).map { i in
+            nodes: [
+                .attribute(named: "key", value: "rhythms"),
+                .attribute(named: "fill", value: style.colors.rhythms),
+                .attribute(named: "stroke", value: style.colors.rhythms),
+                .attribute(
+                    named: "stroke-width",
+                    value: style.beamSizes.strokeWidth,
+                    format: numberFormat
+                ),
+                .attribute(named: "font-size", value: style.textSizes.tripletFontSize, format: numberFormat),
+                .attribute(named: "text-anchor", value: "middle"),
+                .attribute(named: "font-family", value: "sans-serif"),
+            ] + (0..<quantity).map { i in
                 return createNoteGroup(
                     quantity: subdivision,
                     triplet: triplet,
@@ -455,7 +499,6 @@ extension strumvg {
         width: CGFloat
     ) -> Node<SVG.DocumentContext> {
         let quantityFloat = CGFloat(quantity)
-        let color = style.colors.rhythms
         
         let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
             named: "text",
@@ -471,10 +514,7 @@ extension strumvg {
                     value: style.beamSizes.stemHeight + 16,
                     format: numberFormat
                 ),
-                .attribute(named: "font-size", value: style.textSizes.tripletFontSize, format: numberFormat),
-                .attribute(named: "text-anchor", value: "middle"),
-                .attribute(named: "font-family", value: "sans-serif"),
-                .attribute(named: "fill", value: color),
+                .attribute(named: "stroke", value: "none"),
             ]
         ) : nil
         
@@ -508,12 +548,6 @@ extension strumvg {
             named: "g",
             nodes: [
                 .attribute(named: "fill", value: "none"),
-                .attribute(named: "stroke", value: color),
-                .attribute(
-                    named: "stroke-width",
-                    value: style.beamSizes.strokeWidth,
-                    format: numberFormat
-                ),
                 .attribute(named: "stroke-linecap", value: "square"),
                 noteBeamsPath,
             ]
