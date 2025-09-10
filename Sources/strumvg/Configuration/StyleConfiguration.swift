@@ -69,10 +69,13 @@ struct StyleConfiguration: Codable {
     }
     
     struct Fonts: Codable {
+        /// Font styling for header text.
         let strumHeader: Styling
-        /// This refers to the fonts for any text used in place of an arrow.
+        /// Font styling for text inserted in place of arrows.
         let arrowText: Styling
+        /// Font styling for rhythm count text.
         let countChar: Styling
+        /// Font styling for triplet labels (`"3"`), if applicable.
         let tripletText: Styling
         
         struct Styling: Codable {
