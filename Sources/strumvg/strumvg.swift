@@ -91,7 +91,9 @@ struct strumvg: ParsableCommand {
         let pattern = Pattern(rawValue: str)
 //        print(pattern?.rawValue)
         
-        guard let pattern else { return }
+        guard let pattern else {
+            throw ValidationError("Invalid pattern string.")
+        }
         
         let svg = generate(pattern: pattern)
         let svgStr = svg.render(indentedBy: .spaces(2))
