@@ -26,7 +26,7 @@ public struct Pattern: RawRepresentable {
         // Strums
         
         let groupStrumsByRhythm = rawValue
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: .newlines)
             // 1/4
             .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1})(?=.*-4$)/) { match in
                 return "\(match.output.1)\n"
