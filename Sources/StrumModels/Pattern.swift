@@ -22,6 +22,7 @@ public struct Pattern: RawRepresentable {
         self.timing = timing
     }
     
+    /// - Returns: A validated `Pattern`, or `nil` if the `timing` component is missing.
     public init?(rawValue: String) {
         // Strums
         
