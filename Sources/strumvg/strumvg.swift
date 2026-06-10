@@ -92,7 +92,7 @@ struct strumvg: ParsableCommand {
 //        print(pattern?.rawValue)
         
         guard let pattern else {
-            throw ValidationError("Invalid pattern string.")
+            throw ValidationError("Invalid pattern string, missing timing/note length component at the end.")
         }
         
         let svg = generate(pattern: pattern)
