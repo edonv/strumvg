@@ -53,7 +53,7 @@ public struct Pattern: RawRepresentable {
             .replacing(/([^\{\}\n])(?!.*\})(?=.*$)/.anchorsMatchLineEndings()) { match in
                 return "{\(match.output.1)}"
             }
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: .newlines)
         
 //        print(groupStrumsByRhythm)
         
