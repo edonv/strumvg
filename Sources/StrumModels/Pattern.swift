@@ -27,6 +27,7 @@ public struct Pattern: RawRepresentable {
         // Strums
         
         let groupStrumsByRhythm = rawValue
+            // In case there is intentional leading whitespace in the strums
             .trimmingCharacters(in: .newlines)
             // 1/4
             .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1})(?=.*-4$)/) { match in
@@ -53,6 +54,7 @@ public struct Pattern: RawRepresentable {
             .replacing(/([^\{\}\n])(?!.*\})(?=.*$)/.anchorsMatchLineEndings()) { match in
                 return "{\(match.output.1)}"
             }
+            // In case there is intentional leading whitespace in the strums
             .trimmingCharacters(in: .newlines)
         
 //        print(groupStrumsByRhythm)
