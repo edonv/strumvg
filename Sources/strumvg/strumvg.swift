@@ -88,7 +88,7 @@ struct strumvg: ParsableCommand {
         }
         
 //        let string = "{xD} D u uD u-16t"
-        let pattern = Measure(rawValue: str)
+        let pattern = Pattern(rawValue: str)
 //        print(pattern?.rawValue)
         
         guard let pattern else {
