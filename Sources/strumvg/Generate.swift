@@ -17,13 +17,13 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
 private let FIX_FACTOR: CGFloat = 0.8
 
 extension strumvg {
-    func generate(pattern: Measure, size: CGSize? = nil) -> SVG {
-        let allStrums = pattern.groups
+    func generate(measure: Measure, size: CGSize? = nil) -> SVG {
+        let allStrums = measure.groups
             .flatMap(\.strums)
         
-        let strs = createRhythmText(quantity: allStrums.count, noteLength: pattern.timing)
+        let strs = createRhythmText(quantity: allStrums.count, noteLength: measure.timing)
         
-        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(pattern.totalStrums) - style.strumSizes.gap
+        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(measure.totalStrums) - style.strumSizes.gap
         let calcHeight = style.strumSizes.height + style.textSizes.headerTextHeight + 2 * style.textSizes.beatTextHeight
         
         // MARK: Header Text
@@ -45,7 +45,7 @@ extension strumvg {
         let arrows = allStrums
             .enumerated()
             .map { i, strum -> Node<SVG.DocumentContext> in
-                let arrow = createStrumArrow(strum: strum, duration: pattern.timing.duration)
+                let arrow = createStrumArrow(strum: strum, duration: measure.timing.duration)
                 let index = CGFloat(i)
                 
                 let translateX = (style.strumSizes.width + style.strumSizes.gap) * index
@@ -86,7 +86,7 @@ extension strumvg {
         // MARK: Note Groups
         let noteGroupsGroup = createNoteGroups(
             strums: allStrums,
-            noteLength: pattern.timing
+            noteLength: measure.timing
         )
         
         let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
