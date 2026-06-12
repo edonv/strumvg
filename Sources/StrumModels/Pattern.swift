@@ -60,7 +60,7 @@ public struct Pattern: RawRepresentable {
         
 //        print(groupStrumsByRhythm)
         
-        // Split by inserted new lines to get each strum separately
+        // Split by inserted new lines to get each group separately
         self.groups = groupStrumsByRhythm
             .components(separatedBy: "\n")
             // .components(separatedBy:) can result in empty items
