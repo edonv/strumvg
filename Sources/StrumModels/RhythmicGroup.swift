@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// A group of strums.
+///
+/// One group is rendered with shared stems.
 public struct RhythmicGroup: RawRepresentable {
     public let strums: [Strum]
     
