@@ -95,7 +95,7 @@ struct strumvg: ParsableCommand {
             throw ValidationError("Invalid pattern string, missing timing/note length component at the end.")
         }
         
-        let svg = generate(pattern: pattern)
+        let svg = generate(measure: pattern.measures[0])
         let svgStr = svg.render(indentedBy: .spaces(2))
         
         switch inOut.outputDestination {
