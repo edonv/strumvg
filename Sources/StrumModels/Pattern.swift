@@ -7,8 +7,6 @@
 
 import Foundation
 
-import RegexBuilder
-
 public struct Pattern: RawRepresentable {
     public let groups: [RhythmicGroup]
     public let timing: Timing
