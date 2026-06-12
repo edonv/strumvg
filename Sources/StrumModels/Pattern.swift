@@ -22,30 +22,20 @@ public struct Pattern: RawRepresentable {
     
     /// - Returns: A validated `Pattern`, or `nil` if the `timing` component is missing.
     public init?(rawValue: String) {
+        // Timing
+        
+        guard let timing = Timing(rawValue: rawValue) else { return nil }
+        self.timing = timing
+        
         // Strums
         
         /// Each strum element on their own lines
         let groupStrumsByRhythm = rawValue
             // Trim only newlines in case there is intentional leading whitespace in the strums
             .trimmingCharacters(in: .newlines)
-            // 1/4
-            .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1})(?=.*-4$)/) { match in
-                return "\(match.output.1)\n"
-            }
-            // 1/8
-//            .replace(/((?:(?:[^\{\}])|(?:\{.\})){1,2})(?=.*(-8)$)/g, '{$1}$2\n')
-            .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1,2})(?=.*-8$)/) { match in
-                return "\(match.output.1)\n"
-            }
-            // 1/16
-//            .replace(/((?:(?:[^\{\}])|(?:\{.\})){1,4})(?=.*(-16)$)/g, '{$1}$2\n')
-            .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1,4})(?=.*-16$)/) { match in
-                return "\(match.output.1)\n"
-            }
-            // 1/4t, 1/8t, 1/16t
-//            .replace(/((?:(?:[^\{\}])|(?:\{.\})){1,3})(?=.*(-(?:4|8|16)t)$)/g, '{$1}$2\n');
-            .replacing(/((?:(?:[^\{\}])|(?:\{.{2}\})){1,3})(?=.*-(?:4|8|16)t$)/) { match in
-                return "\(match.output.1)\n"
+            // Regex for whatever `timing` is
+            .replacing(timing.rhythmicGroupingRegex) { match in
+                "\(match.output.1)\n"
             }
             // remove original trailing noteLength
             .replacing(/\n-(?:4|8|16)t?$/, with: "")
@@ -64,11 +54,6 @@ public struct Pattern: RawRepresentable {
             // .components(separatedBy:) can result in empty items
             .filter { !$0.isEmpty }
             .compactMap(RhythmicGroup.init(rawValue:))
-        
-        // Timing
-        
-        guard let timing = Timing(rawValue: rawValue) else { return nil }
-        self.timing = timing
     }
     
     public var rawValue: String {
