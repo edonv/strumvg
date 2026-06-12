@@ -8,6 +8,9 @@
 import Foundation
 import RegexBuilder
 
+/// A measure (or bar) of strumming.
+///
+/// Raw value: `[pattern]-[noteLength]`
 public struct Measure: RawRepresentable {
     /// An array of rhythmic groupings.
     public let groups: [RhythmicGroup]
