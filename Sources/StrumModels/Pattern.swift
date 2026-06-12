@@ -68,6 +68,6 @@ public struct Pattern: RawRepresentable {
             .flatMap(\.strums)
             .map(\.rawValue)
             .joined()
-        + "-\(timing.duration.rawValue)\(timing.triplet ? "t" : "")"
+        + "\(timing.rawValue)"
     }
 }
