@@ -17,14 +17,44 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
 private let FIX_FACTOR: CGFloat = 0.8
 
 extension strumvg {
-    func generate(measure: Measure, size: CGSize? = nil) -> SVG {
+    func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
+        let totalStrumCount = pattern.measures
+            .reduce(into: 0) { $0 += $1.totalStrums }
+        
+        #warning("TODO: implement adding in barline widths and gaps")
+        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount) - style.strumSizes.gap
+        let calcHeight = style.strumSizes.height + style.textSizes.headerTextHeight + 2 * style.textSizes.beatTextHeight
+        
+        let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
+            size
+                .map(\.width)
+                .map { .width(.number($0)) },
+            size
+                .map(\.height)
+                .map { .height(.number($0)) },
+            .viewBox(
+                width: calcWidth,
+                height: calcHeight
+            ),
+            .attribute(named: "overflow", value: "visible")
+        ].compactMap { $0 }
+        
+        let nodes = self.generateNodes(in: pattern.measures[0])
+        
+        let svg = SVG(
+            svgAttrs: svgDeclAttrs,
+            nodes
+        )
+        
+        return svg
+    }
+    
+    private func generateNodes(in measure: Measure) -> [Node<SVG.DocumentContext>] {
+        #warning("TEMP")
         let allStrums = measure.groups
             .flatMap(\.strums)
         
         let strs = createRhythmText(quantity: allStrums.count, noteLength: measure.timing)
-        
-        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(measure.totalStrums) - style.strumSizes.gap
-        let calcHeight = style.strumSizes.height + style.textSizes.headerTextHeight + 2 * style.textSizes.beatTextHeight
         
         // MARK: Header Text
         let headers = allStrums
@@ -89,31 +119,12 @@ extension strumvg {
             noteLength: measure.timing
         )
         
-        let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
-            size
-                .map(\.width)
-                .map { .width(.number($0)) },
-            size
-                .map(\.height)
-                .map { .height(.number($0)) },
-            .viewBox(
-                width: calcWidth,
-                height: calcHeight
-            ),
-            .attribute(named: "overflow", value: "visible")
-        ].compactMap { $0 }
-        
-        let svg = SVG(
-            svgAttrs: svgDeclAttrs,
-            [
-                headersGroup,
-                arrowsGroup,
-                countCharsGroup,
-                noteGroupsGroup,
-            ]
-        )
-        
-        return svg
+        return [
+            headersGroup,
+            arrowsGroup,
+            countCharsGroup,
+            noteGroupsGroup,
+        ]
     }
     
     private func createRhythmText(
