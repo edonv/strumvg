@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RegexBuilder
 
 public struct Pattern: RawRepresentable {
     public let groups: [RhythmicGroup]
@@ -38,7 +39,11 @@ public struct Pattern: RawRepresentable {
                 "\(match.output.1)\n"
             }
             // remove original trailing noteLength
-            .replacing(/\n-(?:4|8|16)t?$/, with: "")
+            .replacing {
+                "\n"
+                Timing.regex
+                Anchor.endOfSubject
+            } with: { _ in "" }
             // group all individual strum chars in curly braces
             .replacing(/([^\{\}\n])(?!.*\})(?=.*$)/.anchorsMatchLineEndings()) { match in
                 return "{\(match.output.1)}"
