@@ -9,7 +9,9 @@ import Foundation
 import RegexBuilder
 
 public struct Pattern: RawRepresentable {
+    /// An array of rhythmic groupings.
     public let groups: [RhythmicGroup]
+    /// A specification describing how the groups' timings should be grouped.
     public let timing: Timing
     
     public var totalStrums: Int {
