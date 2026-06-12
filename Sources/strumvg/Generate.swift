@@ -17,7 +17,7 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
 private let FIX_FACTOR: CGFloat = 0.8
 
 extension strumvg {
-    func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
+    func generate(pattern: Measure, size: CGSize? = nil) -> SVG {
         let allStrums = pattern.groups
             .flatMap(\.strums)
         

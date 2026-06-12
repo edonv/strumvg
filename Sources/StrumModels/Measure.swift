@@ -1,5 +1,5 @@
 //
-//  Pattern.swift
+//  Measure.swift
 //  strumvg
 //
 //  Created by Edon Valdman on 2/23/25.
@@ -8,7 +8,7 @@
 import Foundation
 import RegexBuilder
 
-public struct Pattern: RawRepresentable {
+public struct Measure: RawRepresentable {
     /// An array of rhythmic groupings.
     public let groups: [RhythmicGroup]
     /// A specification describing how the groups' timings should be grouped.
@@ -23,7 +23,7 @@ public struct Pattern: RawRepresentable {
         self.timing = timing
     }
     
-    /// - Returns: A validated `Pattern`, or `nil` if the `timing` component is missing.
+    /// - Returns: A validated `Measure`, or `nil` if the `timing` component is missing.
     public init?(rawValue: String) {
         // Timing
         
