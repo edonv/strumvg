@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RegexBuilder
 
 public enum NoteDuration: Int {
     case quarter = 4
@@ -55,5 +56,45 @@ public struct Timing: RawRepresentable {
     
     internal static var regex: Regex<(Substring, time: Substring, triplet: Substring?)> {
         /-(?<time>4|8|16)(?<triplet>t)?/
+    }
+    
+    private var rhythmGroupingRegexCountRange: ClosedRange<Int> {
+        switch self.triplet {
+        case true:
+            1...3
+        case false:
+            switch duration {
+            case .quarter: 1...1
+            case .eighth: 1...2
+            case .sixteenth: 1...4
+            }
+        }
+    }
+    
+    internal var rhythmicGroupingRegex: Regex<(Substring, Substring)> {
+        Regex {
+            Capture {
+                Repeat(self.rhythmGroupingRegexCountRange) {
+                    ChoiceOf {
+                        CharacterClass.anyOf("{}")
+                            .inverted
+                        Regex {
+                            "{"
+                            CharacterClass.anyNonNewline
+                            "}"
+                        }
+                    }
+                }
+            }
+            
+            Lookahead {
+                // /.*-4$/
+                ZeroOrMore(CharacterClass.anyNonNewline)
+                
+                self.rawValue
+                
+                Anchor.endOfSubject
+            }
+        }
     }
 }
