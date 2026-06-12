@@ -54,6 +54,7 @@ public struct Timing: RawRepresentable {
         "-\(duration.rawValue)\(triplet ? "t" : "")"
     }
     
+    /// `/-(?<time>4|8|16)(?<triplet>t)?/`
     internal static var regex: Regex<(Substring, time: Substring, triplet: Substring?)> {
         /-(?<time>4|8|16)(?<triplet>t)?/
     }
