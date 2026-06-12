@@ -26,6 +26,7 @@ public struct Pattern: RawRepresentable {
     public init?(rawValue: String) {
         // Strums
         
+        /// Each strum element on their own lines
         let groupStrumsByRhythm = rawValue
             // Trim only newlines in case there is intentional leading whitespace in the strums
             .trimmingCharacters(in: .newlines)
@@ -59,6 +60,7 @@ public struct Pattern: RawRepresentable {
         
 //        print(groupStrumsByRhythm)
         
+        // Split by inserted new lines to get each strum separately
         self.groups = groupStrumsByRhythm
             .components(separatedBy: "\n")
             .compactMap(RhythmicGroup.init(rawValue:))
