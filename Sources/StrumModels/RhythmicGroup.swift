@@ -35,4 +35,8 @@ public struct RhythmicGroup: RawRepresentable {
             .map(\.rawValue)
             .joined()
     }
+    
+    package var containsHeaderText: Bool {
+        strums.contains { $0.headingChar != nil }
+    }
 }
