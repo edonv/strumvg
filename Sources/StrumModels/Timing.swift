@@ -40,7 +40,7 @@ public struct Timing: RawRepresentable {
     
     /// `rawValue` can include other content, but will initialize from first match of a valid pattern.
     public init?(rawValue: String) {
-        let timingRegex = /-(?<time>\d+)(?<triplet>t)?/
+        let timingRegex = Timing.regex
         
         guard let timingMatch = try? timingRegex.firstMatch(in: rawValue)?.output,
               let durationInt = Int(timingMatch.time),
@@ -51,5 +51,9 @@ public struct Timing: RawRepresentable {
     
     public var rawValue: String {
         "-\(duration.rawValue)\(triplet ? "t" : "")"
+    }
+    
+    internal static var regex: Regex<(Substring, time: Substring, triplet: Substring?)> {
+        /-(?<time>4|8|16)(?<triplet>t)?/
     }
 }
