@@ -63,6 +63,8 @@ public struct Pattern: RawRepresentable {
         // Split by inserted new lines to get each strum separately
         self.groups = groupStrumsByRhythm
             .components(separatedBy: "\n")
+            // .components(separatedBy:) can result in empty items
+            .filter { !$0.isEmpty }
             .compactMap(RhythmicGroup.init(rawValue:))
         
         // Timing
