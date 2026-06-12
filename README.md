@@ -111,3 +111,4 @@ Examples:
 - [ ] Allow `|` to be used as a barline to reset beat counting.
 - [ ] Add to `homebrew`/equivalents?
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
+- [ ] Refactored config stuff to use https://github.com/apple/swift-configuration
