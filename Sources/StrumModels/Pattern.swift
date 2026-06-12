@@ -67,13 +67,8 @@ public struct Pattern: RawRepresentable {
         
         // Timing
         
-        let timingRegex = /-(?<time>\d+)(?<triplet>t)?$/
-        
-        guard let timingMatch = try? timingRegex.firstMatch(in: rawValue)?.output,
-              let durationInt = Int(timingMatch.time),
-              let duration = NoteDuration(rawValue: durationInt) else { return nil }
-        
-        self.timing = .init(duration: duration, triplet: timingMatch.triplet != nil)
+        guard let timing = Timing(rawValue: rawValue) else { return nil }
+        self.timing = timing
     }
     
     public var rawValue: String {

@@ -29,7 +29,27 @@ public enum NoteDuration: Int {
     }
 }
 
-public struct Timing {
+public struct Timing: RawRepresentable {
     public let duration: NoteDuration
     public let triplet: Bool
+    
+    public init(duration: NoteDuration, triplet: Bool) {
+        self.duration = duration
+        self.triplet = triplet
+    }
+    
+    /// `rawValue` can include other content, as long as it ends with a valid `Timing` string format.
+    public init?(rawValue: String) {
+        let timingRegex = /-(?<time>\d+)(?<triplet>t)?$/
+        
+        guard let timingMatch = try? timingRegex.firstMatch(in: rawValue)?.output,
+              let durationInt = Int(timingMatch.time),
+              let duration = NoteDuration(rawValue: durationInt) else { return nil }
+        
+        self.init(duration: duration, triplet: timingMatch.triplet != nil)
+    }
+    
+    public var rawValue: String {
+        "-\(duration.rawValue)\(triplet ? "t" : "")"
+    }
 }
