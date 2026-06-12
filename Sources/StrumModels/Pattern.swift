@@ -16,7 +16,7 @@ public struct Pattern: RawRepresentable {
         groups.flatMap(\.strums).count
     }
     
-    init(groups: [RhythmicGroup], timing: Timing) {
+    public init(groups: [RhythmicGroup], timing: Timing) {
         self.groups = groups
         self.timing = timing
     }
