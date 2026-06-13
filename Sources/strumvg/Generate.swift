@@ -482,6 +482,7 @@ extension strumvg {
             named: "g",
             nodes: [
                 .attribute(named: "key", value: "rhythms"),
+                .attribute(named: "transform", value: "translate(0 \(y))"),
                 .attribute(named: "fill", value: style.colors.rhythms),
                 .attribute(named: "stroke", value: style.colors.rhythms),
                 .attribute(
@@ -500,7 +501,6 @@ extension strumvg {
                     triplet: triplet,
                     horizontalStrokes: horizontalStrokes,
                     x: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
-                    y: y,
                     width: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap)
                 )
             }
@@ -512,7 +512,6 @@ extension strumvg {
         triplet: Bool,
         horizontalStrokes: Int,
         x: CGFloat,
-        y: CGFloat,
         width: CGFloat
     ) -> Node<SVG.DocumentContext> {
         let quantityFloat = CGFloat(quantity)
@@ -575,7 +574,7 @@ extension strumvg {
             nodes: [
                 [.attribute(
                     named: "transform",
-                    value: "translate(\(x.formatted(numberFormat)) \(y.formatted(numberFormat)))"
+                    value: "translate(\(x.formatted(numberFormat)))"
                 )],
                 [beamsGroup, textEl]
                     .compactMap { $0 },
