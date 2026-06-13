@@ -36,6 +36,10 @@ public struct RhythmicGroup: RawRepresentable, Sendable, Hashable {
             .joined()
     }
     
+    internal func appending(strums: [Strum]) -> RhythmicGroup {
+        .init(strums: self.strums + strums)
+    }
+    
     package var containsHeaderText: Bool {
         strums.contains { $0.headingChar != nil }
     }
