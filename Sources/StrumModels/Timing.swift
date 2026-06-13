@@ -54,6 +54,19 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
         "-\(duration.rawValue)\(triplet ? "t" : "")"
     }
     
+    /// The (maximum) number of note stems per group, depending on the type of `Timing`.
+    public var stemsPerGroup: Int {
+        switch self.triplet {
+        case true: 3
+        case false:
+            switch duration {
+            case .quarter: 1
+            case .eighth: 2
+            case .sixteenth: 4
+            }
+        }
+    }
+    
     /// `/-(?<time>4|8|16)(?<triplet>t)?/`
     internal static var regex: Regex<(Substring, time: Substring, triplet: Substring?)> {
         /-(?<time>4|8|16)(?<triplet>t)?/
