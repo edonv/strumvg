@@ -59,11 +59,26 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
 //        print(groupStrumsByRhythm)
         
         // Split by inserted new lines to get each group separately
-        self.groups = groupStrumsByRhythm
+        var groupsTemp = groupStrumsByRhythm
             .components(separatedBy: "\n")
             // .components(separatedBy:) can result in empty items
             .filter { !$0.isEmpty }
             .compactMap(RhythmicGroup.init(rawValue:))
+        
+        // If the measure doesn't have the correct number of strums for the appropriate `timing`,
+        // add extra spaces to fill it out
+        if !groupsTemp.isEmpty,
+           let lastGroup = groupsTemp.last,
+           lastGroup.strums.count < timing.stemsPerGroup {
+            groupsTemp[groupsTemp.count - 1] = lastGroup.appending(
+                strums: .init(
+                    repeating: .init(kind: .space),
+                    count: timing.stemsPerGroup - lastGroup.strums.count
+                )
+            )
+        }
+        
+        self.groups = groupsTemp
     }
     
     public var rawValue: String {
