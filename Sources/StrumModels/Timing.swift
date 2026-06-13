@@ -60,9 +60,11 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
         case true: 3
         case false:
             switch duration {
-            case .quarter: 1
+            #warning("TODO: this should be 1, but currently, if there's an odd number of strums, the last one won't have a stem. currently, it gets padded to have an odd number")
+            case .quarter: 2
             case .eighth: 2
-            case .sixteenth: 4
+            #warning("TODO: this should be 4, but currently, if there's an odd number of strums, the last one won't have a stem. currently, it gets padded to have an even number. sets of 4 should be rendered linked")
+            case .sixteenth: 2
             }
         }
     }
@@ -78,9 +80,9 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
             1...stemsPerGroup
         case false:
             switch duration {
-            case .quarter: 1...stemsPerGroup
-            case .eighth: 1...stemsPerGroup
-            case .sixteenth: 1...stemsPerGroup
+            case .quarter: 1...1
+            case .eighth: 1...2
+            case .sixteenth: 1...4
             }
         }
     }
