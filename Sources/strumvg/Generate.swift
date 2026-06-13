@@ -252,11 +252,6 @@ extension strumvg {
         ] + strumHeaderAndCountTextSharedAttrs
     }
     
-    private var strumStrokeWidth: CGFloat {
-        let strokeRatio: CGFloat = 0.2
-        return style.strumSizes.width * strokeRatio
-    }
-    
     private func createStrumArrow(
         strum: Strum,
         duration: NoteDuration
@@ -265,7 +260,7 @@ extension strumvg {
         let width = style.strumSizes.width /*?? 50*/
         let height = style.strumSizes.height /*?? 100*/
         
-        let strokeWidth = strumStrokeWidth
+        let strokeWidth = style.strumSizes.strokeWidth
         let headRatio: CGFloat = 0.2
         let headHeight: CGFloat = height * headRatio
         

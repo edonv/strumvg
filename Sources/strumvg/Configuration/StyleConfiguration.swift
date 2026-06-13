@@ -52,6 +52,11 @@ struct StyleConfiguration: Codable {
         /// ``StyleConfiguration/Args/StrumSizes-swift.struct/gap``
         let gap: CGFloat
         
+        private let strokeWidthRatio: CGFloat = 0.2
+        var strokeWidth: CGFloat {
+            width * strokeWidthRatio
+        }
+        
         static var `default`: Self {
             StyleConfiguration.default.strumSizes
         }
