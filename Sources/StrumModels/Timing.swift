@@ -75,12 +75,12 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
     private var rhythmGroupingRegexCountRange: ClosedRange<Int> {
         switch self.triplet {
         case true:
-            1...3
+            1...stemsPerGroup
         case false:
             switch duration {
-            case .quarter: 1...1
-            case .eighth: 1...2
-            case .sixteenth: 1...4
+            case .quarter: 1...stemsPerGroup
+            case .eighth: 1...stemsPerGroup
+            case .sixteenth: 1...stemsPerGroup
             }
         }
     }
