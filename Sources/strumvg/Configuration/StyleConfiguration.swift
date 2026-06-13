@@ -63,6 +63,11 @@ struct StyleConfiguration: Codable {
             width * strokeWidthRatio
         }
         
+        /// Used as the `font-size` for characters inserts as strums.
+        var charStrumTextSize: CGFloat {
+            height / 2
+        }
+        
         static var `default`: Self {
             StyleConfiguration.default.strumSizes
         }
