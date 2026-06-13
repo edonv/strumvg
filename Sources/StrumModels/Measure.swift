@@ -50,7 +50,7 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
                 Anchor.endOfSubject
             } with: { _ in "" }
             // group all individual strum chars in curly braces
-            .replacing(/([^\{\}\n])(?!.*\})(?=.*$)/.anchorsMatchLineEndings()) { match in
+            .replacing(/([^\{\}\n])(?![^\{\}\n]?\})(?=.*$)/.anchorsMatchLineEndings()) { match in
                 return "{\(match.output.1)}"
             }
             // Trim only newlines in case there is intentional leading whitespace in the strums
