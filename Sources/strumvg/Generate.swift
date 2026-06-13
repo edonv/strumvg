@@ -528,7 +528,7 @@ extension strumvg {
                 ),
                 .attribute(
                     named: "y",
-                    value: style.beamSizes.stemHeight + 16,
+                    value: style.beamSizes.stemHeight + style.textSizes.triplet3TextOffsetY,
                     format: numberFormat
                 ),
                 .attribute(named: "stroke", value: "none"),
