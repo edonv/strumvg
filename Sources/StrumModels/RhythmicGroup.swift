@@ -25,9 +25,6 @@ public struct RhythmicGroup: RawRepresentable, Sendable, Hashable {
             .map { $0.trimmingPrefix("{") }
             .map(String.init)
             .compactMap { Strum(rawValue: $0) }
-//        let strumStrs: [String] = rawValue.reduce(into: []) { partial, char in
-//            <#code#>
-//        }
     }
     
     public var rawValue: String {
