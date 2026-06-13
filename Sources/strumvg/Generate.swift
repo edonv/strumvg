@@ -20,6 +20,8 @@ extension strumvg {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
         let totalStrumCount = pattern.measures
             .reduce(into: 0) { $0 += $1.totalStrums }
+        let patternContainsHeaderText = pattern.measures
+            .contains { $0.groups.contains(where: \.containsHeaderText) }
         
         #warning("TODO: implement adding in barline widths and gaps")
         let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount) - style.strumSizes.gap
