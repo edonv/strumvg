@@ -21,6 +21,11 @@ public struct StrumKind: RawRepresentable {
 //    case rest
 //    case other(Character)
     
+    internal init(direction: Direction?, variant: Variant) {
+        self.direction = direction
+        self.variant = variant
+    }
+    
     public init(rawValue: Character) {
         switch rawValue {
         case "D", "d":
