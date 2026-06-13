@@ -85,7 +85,7 @@ extension StyleConfiguration {
             
             @Option(
                 name: .customLong("strum-gap"),
-                help: "The horizontal space between each strum "
+                help: "The horizontal space between each strum."
             )
             var gap: CGFloat?
         }
