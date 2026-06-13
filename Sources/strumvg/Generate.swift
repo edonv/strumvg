@@ -87,7 +87,7 @@ extension strumvg {
                         .attribute(named: "key", value: "strum\(i)"),
                         .attribute(
                             named: "transform",
-                            value: "translate(\(translateX),\(translateY))"
+                            value: "translate(\(translateX) \(translateY))"
                         ),
                         arrow,
                     ].compactMap { $0 }
@@ -285,7 +285,7 @@ extension strumvg {
         // rotate around (0,0), then translate back into place
         let arrowRotationTransformAttr = Node<SVG.DocumentContext>.attribute(
             named: "transform",
-            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width),-\(height * (0.5 + headRatio)))" : ""
+            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width) -\(height * (0.5 + headRatio)))" : ""
         )
         
         switch variant {
@@ -567,7 +567,7 @@ extension strumvg {
             nodes: [
                 [.attribute(
                     named: "transform",
-                    value: "translate(\(x.formatted(numberFormat)),\(y.formatted(numberFormat)))"
+                    value: "translate(\(x.formatted(numberFormat)) \(y.formatted(numberFormat)))"
                 )],
                 [beamsGroup, textEl]
                     .compactMap { $0 },
