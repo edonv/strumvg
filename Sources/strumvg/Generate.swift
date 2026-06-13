@@ -208,7 +208,6 @@ extension strumvg {
         let width = style.strumSizes.width
         let fontSize = rhythmText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
-        let yBase = rhythmText ? style.strumSizes.height * FIX_FACTOR : 0
         
         return Node<SVG.DocumentContext>.element(
             named: "text",
@@ -216,7 +215,7 @@ extension strumvg {
                 .text("\(content)"),
                 .attribute(named: "key", value: "\(rhythmText ? "count" : "head")\(index)"),
                 .attribute(named: "x", value: x, format: numberFormat),
-                .attribute(named: "y", value: yBase + height * fontSize, format: numberFormat),
+                .attribute(named: "y", value: height * fontSize, format: numberFormat),
                 .attribute(named: "textLength", value: width, format: numberFormat),
             ]
         )
@@ -248,6 +247,7 @@ extension strumvg {
     private var countCharStaticAttrs: [Node<SVG.DocumentContext>] {
         [
             .attribute(named: "key", value: "counts"),
+            .attribute(named: "transform", value: "translate(0 \(style.strumSizes.height * FIX_FACTOR))"),
             .attribute(named: "fill", value: style.colors.rhythms),
             .attribute(
                 named: "font-size",
