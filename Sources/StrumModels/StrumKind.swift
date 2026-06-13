@@ -61,6 +61,19 @@ public struct StrumKind: RawRepresentable, Sendable, Hashable {
     public var rawValue: Character {
         self.variant.character(for: self.direction)
     }
+    
+    public static let down = StrumKind(direction: .down, variant: .normal)
+    public static let up = StrumKind(direction: .up, variant: .normal)
+    public static let space = StrumKind(direction: nil, variant: .space)
+    public static let downMuted = StrumKind(direction: .down, variant: .muted)
+    public static let upMuted = StrumKind(direction: .up, variant: .muted)
+    public static let downArpeggio = StrumKind(direction: .down, variant: .arpeggio)
+    public static let upArpeggio = StrumKind(direction: .up, variant: .arpeggio)
+    public static let rest = StrumKind(direction: nil, variant: .rest)
+    
+    public static func other(_ char: Character) -> StrumKind {
+        StrumKind(direction: nil, variant: .other(char))
+    }
 }
 
 /**
