@@ -96,7 +96,7 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
                             .inverted
                         Regex {
                             "{"
-                            CharacterClass.anyNonNewline
+                            Repeat(CharacterClass.anyNonNewline, 1...2)
                             "}"
                         }
                     }
