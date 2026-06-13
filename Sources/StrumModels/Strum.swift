@@ -21,7 +21,7 @@ public struct Strum: RawRepresentable, Sendable, Hashable {
         kind.variant
     }
     
-    public init(kind: Kind, heading: Character?) {
+    public init(kind: Kind, heading: Character? = nil) {
         self.kind = kind
         self.headingChar = heading
     }
