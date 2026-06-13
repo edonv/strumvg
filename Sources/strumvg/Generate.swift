@@ -24,8 +24,12 @@ extension strumvg {
             .contains { $0.groups.contains(where: \.containsHeaderText) }
         
         #warning("TODO: implement adding in barline widths and gaps")
+        /// `(number of strums) * (width + gap) - (1 gap)`
         let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount) - style.strumSizes.gap
-        let calcHeight = style.strumSizes.height + style.textSizes.headerTextHeight + 2 * style.textSizes.beatTextHeight
+        /// `(strum array height) + (<conditional> header text height) + (2 x beat text height)`
+        ///
+        /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
+        let calcHeight = style.strumSizes.height + (patternContainsHeaderText ? style.textSizes.headerTextHeight : 0) + 2 * style.textSizes.beatTextHeight
         
         let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
             size
@@ -35,6 +39,8 @@ extension strumvg {
                 .map(\.height)
                 .map { .height(.number($0)) },
             .viewBox(
+                // extend viewBox to include header text in the negatives, if there is header text
+                minY: patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0,
                 width: calcWidth,
                 height: calcHeight
             ),
@@ -81,7 +87,6 @@ extension strumvg {
                 let index = CGFloat(i)
                 
                 let translateX = (style.strumSizes.width + style.strumSizes.gap) * index
-                let translateY = style.textSizes.headerTextHeight
                 
                 return .element(
                     named: "g",
@@ -89,7 +94,7 @@ extension strumvg {
                         .attribute(named: "key", value: "strum\(i)"),
                         .attribute(
                             named: "transform",
-                            value: "translate(\(translateX) \(translateY))"
+                            value: "translate(\(translateX))"
                         ),
                         arrow,
                     ].compactMap { $0 }
@@ -203,7 +208,7 @@ extension strumvg {
         let width = style.strumSizes.width
         let fontSize = rhythmText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
-        let yBase = rhythmText ? style.textSizes.headerTextHeight + style.strumSizes.height * FIX_FACTOR : 0
+        let yBase = rhythmText ? style.strumSizes.height * FIX_FACTOR : 0
         
         return Node<SVG.DocumentContext>.element(
             named: "text",
@@ -227,6 +232,7 @@ extension strumvg {
     private var strumHeaderTextStaticAttrs: [Node<SVG.DocumentContext>] {
         [
             .attribute(named: "key", value: "heads"),
+            .attribute(named: "transform", value: "translate(0 -\(style.textSizes.headerTextHeight))"),
             .attribute(named: "fill", value: style.colors.headers),
             .attribute(
                 named: "font-size",
@@ -464,7 +470,7 @@ extension strumvg {
         strums: [Strum],
         noteLength: Timing
     ) -> Node<SVG.DocumentContext> {
-        let y = style.textSizes.headerTextHeight + style.strumSizes.height * FIX_FACTOR + style.textSizes.beatTextHeight
+        let y = style.strumSizes.height * FIX_FACTOR + style.textSizes.beatTextHeight
         
         let triplet = noteLength.triplet
         let horizontalStrokes = noteLength.duration.horizontalStrokeCount
