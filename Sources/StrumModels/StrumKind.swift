@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct StrumKind: RawRepresentable {
+public struct StrumKind: RawRepresentable, Sendable, Hashable {
     public let direction: Direction?
     public let variant: Variant
     

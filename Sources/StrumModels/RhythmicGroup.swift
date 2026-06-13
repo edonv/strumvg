@@ -10,7 +10,7 @@ import Foundation
 /// A group of strums.
 ///
 /// One group is rendered with shared stems.
-public struct RhythmicGroup: RawRepresentable {
+public struct RhythmicGroup: RawRepresentable, Sendable, Hashable {
     public let strums: [Strum]
     
     public init(strums: [Strum]) {

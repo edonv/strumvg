@@ -11,7 +11,7 @@ import RegexBuilder
 /// A measure (or bar) of strumming.
 ///
 /// Raw value: `[pattern]-[noteLength]`
-public struct Measure: RawRepresentable {
+public struct Measure: RawRepresentable, Sendable, Hashable {
     /// An array of rhythmic groupings.
     public let groups: [RhythmicGroup]
     /// A specification describing how the groups' timings should be grouped.

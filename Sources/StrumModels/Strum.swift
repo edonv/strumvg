@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Strum: RawRepresentable {
+public struct Strum: RawRepresentable, Sendable, Hashable {
     public typealias Kind = StrumKind
     
     public let kind: Kind

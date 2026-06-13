@@ -7,6 +7,6 @@
 
 import Foundation
 
-public enum Direction {
+public enum Direction: Sendable, Hashable {
     case down, up
 }

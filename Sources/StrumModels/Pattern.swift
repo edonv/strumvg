@@ -13,7 +13,7 @@ import RegexBuilder
 /// Raw value: `[measure]+` (separated by `"|"`), each measure can end with `-[timing]`
 ///
 /// Can also have a timing identifier at the end of the full string to represent for the full pattern.
-public struct Pattern: RawRepresentable {
+public struct Pattern: RawRepresentable, Sendable, Hashable {
     public let measures: [Measure]
     
     public init(measures: [Measure]) {

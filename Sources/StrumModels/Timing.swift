@@ -8,7 +8,7 @@
 import Foundation
 import RegexBuilder
 
-public enum NoteDuration: Int {
+public enum NoteDuration: Int, Sendable, Hashable {
     case quarter = 4
     case eighth = 8
     case sixteenth = 16
@@ -30,7 +30,7 @@ public enum NoteDuration: Int {
     }
 }
 
-public struct Timing: RawRepresentable {
+public struct Timing: RawRepresentable, Sendable, Hashable {
     public let duration: NoteDuration
     public let triplet: Bool
     
