@@ -444,7 +444,7 @@ extension strumvg {
             .attribute(named: "stroke", value: style.colors.arrows),
             .attribute(
                 named: "font-size",
-                value: style.strumSizes.height / 2,
+                value: style.strumSizes.charStrumTextSize,
                 format: numberFormat
             ),
             .attribute(
