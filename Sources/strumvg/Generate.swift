@@ -269,8 +269,8 @@ extension strumvg {
         let height = style.strumSizes.height /*?? 100*/
         
         let strokeWidth = style.strumSizes.strokeWidth
-        let headRatio: CGFloat = 0.2
-        let headHeight: CGFloat = height * headRatio
+        let lineLength = style.strumSizes.arrowLineHeight
+        let headHeight = style.strumSizes.arrowHeadHeight
         
         let triangle: Node<SVG.DocumentContext> = .element(
             named: "polygon",
@@ -291,7 +291,7 @@ extension strumvg {
         // rotate around (0,0), then translate back into place
         let arrowRotationTransformAttr = Node<SVG.DocumentContext>.attribute(
             named: "transform",
-            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width) -\(height * (0.5 + headRatio)))" : ""
+            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width) -\(lineLength))" : ""
         )
         
         switch variant {
@@ -302,7 +302,7 @@ extension strumvg {
                     .attribute(named: "x1", value: width / 2, format: numberFormat),
                     .attribute(named: "y1", value: headHeight, format: numberFormat),
                     .attribute(named: "x2", value: width / 2, format: numberFormat),
-                    .attribute(named: "y2", value: height * (0.5 + headRatio), format: numberFormat),
+                    .attribute(named: "y2", value: lineLength, format: numberFormat),
                     .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
                 ]
             )
@@ -371,7 +371,7 @@ extension strumvg {
                             // draw to top left of X
                             "L 0 0",
                             // move to bottom of line
-                            "M \(width / 2) \(height * (headRatio + 0.5))",
+                            "M \(width / 2) \(lineLength)",
                             // draw to top of line
                             "V \(width / 2)",
                         ].joined()
@@ -391,7 +391,7 @@ extension strumvg {
             
         case .rest:
             let scaleFactor: CGFloat = 2 / 3
-            let partialHeight = height * (headRatio + 0.5)
+            let partialHeight = lineLength
             
             let w = width * scaleFactor
             let h = partialHeight * scaleFactor
