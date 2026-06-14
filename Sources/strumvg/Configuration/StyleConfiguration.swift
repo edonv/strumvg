@@ -63,6 +63,14 @@ struct StyleConfiguration: Codable {
             width * strokeWidthRatio
         }
         
+        private let arrowHeadHeightRatio: CGFloat = 0.2
+        var arrowLineHeight: CGFloat {
+            height * (1 - arrowHeadHeightRatio)
+        }
+        var arrowHeadHeight: CGFloat {
+            height * arrowHeadHeightRatio
+        }
+        
         /// Used as the `font-size` for characters inserts as strums.
         var charStrumTextSize: CGFloat {
             height / 2
