@@ -317,11 +317,14 @@ extension strumvg {
             )
             
         case .arpeggio:
-            let offsetY = headHeight * 0.9
             let numWaves = 6
-            let amplitude = 6
-            // let offsetX = amplitude * 2;
-            let wavelength = height / CGFloat(numWaves) / CGFloat(2)
+            
+            let startingY = headHeight / 2
+            let squiggleStartingY = headHeight * 0.85
+            let squiggleHeight = lineLength - squiggleStartingY
+            let wavelength = squiggleHeight / CGFloat(numWaves)
+            
+            let amplitude = wavelength / 2
             
             // Squiggle
             let squigglePath = Node<SVG.DocumentContext>.element(
@@ -329,12 +332,9 @@ extension strumvg {
                 attributes: [
                     .attribute(
                         named: "d",
-                        value: "M\(width / 2) , \(offsetY / 2)l0 \(offsetY / 2)" +
-                        (0..<numWaves)
-                            .map { i in
-                                "q\(i % 2 == 0 ? -amplitude : amplitude) \(wavelength / 2) , \(0) \(wavelength)"
-                            }
-                            .joined(separator: ", ")
+                        value: "M\(width / 2) \(startingY)l0 \(squiggleStartingY - startingY)q\(-amplitude) \(amplitude) "
+                            + Array(repeating: "0 \(wavelength)", count: numWaves)
+                                .joined(separator: "t")
                     ),
                     .attribute(
                         named: "stroke-width",
