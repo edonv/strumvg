@@ -47,6 +47,7 @@ extension strumvg {
             .attribute(named: "overflow", value: "visible")
         ].compactMap { $0 }
         
+        #warning("TEMP")
         let nodes = self.generateNodes(in: pattern.measures[0])
         
         let svg = SVG(
@@ -58,7 +59,6 @@ extension strumvg {
     }
     
     private func generateNodes(in measure: Measure) -> [Node<SVG.DocumentContext>] {
-        #warning("TEMP")
         let allStrums = measure.groups
             .flatMap(\.strums)
         
