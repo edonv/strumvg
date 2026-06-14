@@ -272,22 +272,20 @@ extension strumvg {
         let headRatio: CGFloat = 0.2
         let headHeight: CGFloat = height * headRatio
         
-        let triangle = { () -> Node<SVG.DocumentContext> in
-            .element(
-                named: "polygon",
-                nodes: [
-                    .attribute(
-                        named: "points",
-                        value: [
-                            "0,\(headHeight)",
-                            "\(width / 2),0",
-                            "\(width),\(headHeight)",
-                        ].joined(separator: " ")
-                    ),
-                    .attribute(named: "stroke", value: "none"),
-                ]
-            )
-        }
+        let triangle: Node<SVG.DocumentContext> = .element(
+            named: "polygon",
+            nodes: [
+                .attribute(
+                    named: "points",
+                    value: [
+                        "0,\(headHeight)",
+                        "\(width / 2),0",
+                        "\(width),\(headHeight)",
+                    ].joined(separator: " ")
+                ),
+                .attribute(named: "stroke", value: "none"),
+            ]
+        )
         
         // For more accurate placement when rotation is needed,
         // rotate around (0,0), then translate back into place
@@ -314,7 +312,7 @@ extension strumvg {
                 nodes: [
                     arrowRotationTransformAttr,
                     line,
-                    triangle()
+                    triangle
                 ]
             )
             
@@ -351,7 +349,7 @@ extension strumvg {
                 named: "g",
                 nodes: [
                     arrowRotationTransformAttr,
-                    triangle(),
+                    triangle,
                     squigglePath
                 ]
             )
