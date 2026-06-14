@@ -47,7 +47,7 @@ extension strumvg {
             .attribute(named: "overflow", value: "visible")
         ].compactMap { $0 }
         
-        #warning("TEMP")
+        #warning("TEMP: need to update to support multiple measures")
         let nodes = self.generateNodes(in: pattern.measures[0])
         
         let svg = SVG(
