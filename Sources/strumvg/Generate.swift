@@ -344,7 +344,7 @@ extension strumvg {
                     .attribute(named: "fill", value: "none"),
                 ]
             )
-
+            
             return .element(
                 named: "g",
                 nodes: [
@@ -353,7 +353,7 @@ extension strumvg {
                     squigglePath
                 ]
             )
-
+            
         case .muted:
             return Node<SVG.DocumentContext>.element(
                 named: "path",
