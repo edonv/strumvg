@@ -187,11 +187,11 @@ extension strumvg {
             case .sixteenth:
                 if triplet {
                     if int % 3 == 0 {
-                        let v = Int(i / 3 + 1)
-                        if v.isMultiple(of: 2) {
-                            return "&"
-                        } else {
+                        let v = Int(i / 6 + 1)
+                        if int.isMultiple(of: 2) {
                             return "\(v)"
+                        } else {
+                            return "&"
                         }
                     } else {
                         return ""
