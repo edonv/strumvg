@@ -10,24 +10,31 @@ import Plot
 import PlotSVG
 import StrumModels
 
+/// - Parameters:
+///   - duration: Rest duration
+///   - width: Width of strum space
+///   - height: Height of strum space
 internal func restNode(
     duration: NoteDuration,
     width: CGFloat,
-    height: CGFloat,
-    cx: CGFloat,
-    cy: CGFloat
+    height: CGFloat
 ) -> Node<SVG.DocumentContext> {
+    let scaleFactor: CGFloat = 2 / 3
+    let scaledWidth = width * scaleFactor
+    let scaledHeight = height * scaleFactor
+    
     let originalSize = restOriginalSize(for: duration)
-    let heightToWidthRatio = originalSize.height / originalSize.width
-    let scaledHeight = width * heightToWidthRatio
+    
+    let x = (width / 2) - (scaledWidth / 2)
+    let y = (height / 2) - (scaledHeight / 2)
     
     return .element(
         named: "svg",
         nodes: [
             // SVG attributes
-            .attribute(named: "x", value: (width / 2) - cx, format: numberFormat),
-            .attribute(named: "y", value: (height / 2) - cy + ((height - scaledHeight) / 2), format: numberFormat),
-            .attribute(named: "width", value: width, format: numberFormat),
+            .attribute(named: "x", value: x, format: numberFormat),
+            .attribute(named: "y", value: y, format: numberFormat),
+            .attribute(named: "width", value: scaledWidth, format: numberFormat),
             .attribute(named: "height", value: scaledHeight, format: numberFormat),
             restViewBoxNode(with: originalSize),
             

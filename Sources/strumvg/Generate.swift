@@ -388,23 +388,13 @@ extension strumvg {
             return nil
             
         case .rest:
-            let scaleFactor: CGFloat = 2 / 3
-            let partialHeight = lineLength
-            
-            let w = width * scaleFactor
-            let h = partialHeight * scaleFactor
-            let cx = (width - w) / 2
-            let cy = (partialHeight - h) / 2
-            
             return Node<SVG.DocumentContext>.element(
                 named: "g",
                 nodes: [
                     restNode(
                         duration: duration,
-                        width: w,
-                        height: h,
-                        cx: cx,
-                        cy: cy
+                        width: width,
+                        height: height
                     ),
                 ]
             )
