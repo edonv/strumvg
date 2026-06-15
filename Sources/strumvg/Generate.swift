@@ -203,7 +203,7 @@ extension strumvg {
     ) -> Node<SVG.DocumentContext>? {
         guard let content else { return nil }
         
-        let fontSize = countText ? style.textSizes.beatFontSizeActual : style.textSizes.headerFontSizeActual
+        let height = countText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
         
         return Node<SVG.DocumentContext>.element(
@@ -212,7 +212,8 @@ extension strumvg {
                 .text("\(content)"),
                 .attribute(named: "key", value: "\(countText ? "count" : "head")\(index)"),
                 .attribute(named: "x", value: x, format: numberFormat),
-                .attribute(named: "y", value: fontSize, format: numberFormat),
+                .attribute(named: "y", value: height / 2, format: numberFormat),
+                .attribute(named: "dominant-baseline", value: "central"),
             ]
         )
     }
