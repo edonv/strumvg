@@ -414,6 +414,10 @@ extension strumvg {
                         format: numberFormat
                     ),
                     .attribute(
+                        named: "dominant-baseline",
+                        value: "central"
+                    ),
+                    .attribute(
                         named: "stroke",
                         value: "none"
                     ),
