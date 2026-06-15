@@ -454,8 +454,8 @@ extension strumvg {
         let triplet = noteLength.triplet
         let horizontalStrokes = noteLength.duration.horizontalStrokeCount
         
-        let subdivision = triplet ? 3 : 2
-        let quantity = Int(floor(Double(strums.count) / Double(subdivision)))
+        let beatsPerGroup = triplet ? 3 : 2
+        let quantity = Int(floor(Double(strums.count) / Double(beatsPerGroup)))
         
         return .element(
             named: "g",
@@ -476,11 +476,11 @@ extension strumvg {
                 .attribute(named: "font-style", value: style.fonts.tripletText.style),
             ] + (0..<quantity).map { i in
                 return createNoteGroup(
-                    quantity: subdivision,
+                    quantity: beatsPerGroup,
                     triplet: triplet,
                     horizontalStrokes: horizontalStrokes,
-                    x: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
-                    width: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap)
+                    x: CGFloat(beatsPerGroup) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
+                    width: CGFloat(beatsPerGroup) * (style.strumSizes.width + style.strumSizes.gap)
                 )
             }
         )
