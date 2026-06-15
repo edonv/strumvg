@@ -55,7 +55,7 @@ private func restOriginalSize(for duration: NoteDuration) -> CGSize {
     case .eighth:
         return .init(width: 1.012, height: 1.86)
     case .sixteenth:
-        return .init(width: 1.304, height: 2.860)
+        return .init(width: 1.304, height: 2.86)
     }
 }
 
