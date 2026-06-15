@@ -39,6 +39,14 @@ struct StyleConfiguration: Codable {
         /// ``StyleConfiguration/Args/TextSizes-swift.struct/tripletFontSize``
         let tripletFontSize: CGFloat
         
+        var beatFontSizeActual: CGFloat {
+            beatTextHeight * beatFontSize
+        }
+        
+        var headerFontSizeActual: CGFloat {
+            headerTextHeight * headerFontSize
+        }
+        
         /// The vertical space between a triplet beam and the `3` text.
         private let triplet3TextGap: CGFloat = 2
         var triplet3TextOffsetY: CGFloat {
