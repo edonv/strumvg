@@ -53,7 +53,7 @@ private func restOriginalSize(for duration: NoteDuration) -> CGSize {
     case .quarter:
         return .init(width: 5.297, height: 14.277)
     case .eighth:
-        return .init(width: 1.012, height: 1.86)
+        return .init(width: 5.019001, height: 9.259301)
     case .sixteenth:
         return .init(width: 6.477, height: 14.248)
     }
@@ -76,7 +76,7 @@ private func restPathNode(for duration: NoteDuration) -> Node<SVG.DocumentContex
             nodes: [
                 .attribute(named: "stroke", value: "none"),
                 .attribute(named: "stroke-linejoin", value: "round"),
-                .attribute(named: "d", value: "M.3 1.82a.17.17 0 00.112.04.16.16 0 00.108-.04L1.012.14C.992.092.924.092.9.14.872.2.72.392.656.392.54.392.556.268.516.156.484.06.392 0 .292 0A.29.29 0 000 .288C0 .472.164.604.348.604A1.3 1.3 0 00.768.516L.3 1.82Z"),
+                .attribute(named: "d", value: "m1.137.0363c-.52.098-.918.457-1.098.953-.039.16-.039.199-.039.418 0 .301.019.461.16.699.199.399.617.719 1.094.836.5.141 1.336.02 2.293-.297l.238-.082-1.176 3.25-1.156 3.246s.039.02.102.063c.117.078.316.137.457.137.238 0 .539-.137.578-.258 0-.039.558-1.934 1.234-4.184l1.195-4.125-.039-.058c-.097-.121-.296-.16-.418-.063-.039.039-.101.121-.14.18-.18.301-.637.836-.875 1.035-.219.18-.34.199-.539.121-.18-.098-.239-.199-.36-.738-.117-.535-.257-.778-.558-.977-.278-.179-.637-.238-.953-.156z"),
             ]
         )
     case .sixteenth:
