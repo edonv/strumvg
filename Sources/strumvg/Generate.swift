@@ -21,14 +21,28 @@ extension strumvg {
             .reduce(into: 0) { $0 += $1.totalStrums }
         let patternContainsHeaderText = pattern.measures
             .contains { $0.groups.contains(where: \.containsHeaderText) }
+        let patternContainsAnyTriplets = pattern.measures
+            .contains(where: \.timing.triplet)
         
         #warning("TODO: implement adding in barline widths and gaps")
         /// `(number of strums) * (width + gap) - (1 gap)`
         let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount) - style.strumSizes.gap
-        /// `(<conditional> header text height) + (strum array height) + (2 x beat text height)`
+        /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> triplet text height, including padding above it)`
         ///
         /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
-        let calcHeight = (patternContainsHeaderText ? style.textSizes.headerTextHeight : 0) + style.strumSizes.height + 2 * style.textSizes.beatTextHeight
+        var calcHeight = style.strumSizes.height
+            + style.textSizes.beatTextHeight
+            + style.beamSizes.stemHeight
+        if patternContainsHeaderText {
+            calcHeight += style.textSizes.headerTextHeight
+        }
+        if patternContainsAnyTriplets {
+            calcHeight += style.textSizes.triplet3TextOffsetY
+        } else if pattern.measures.contains(where: { $0.timing.duration != .quarter }) {
+            // add beam stroke width so its thickness isn't outside the viewBox
+            // if it's quarter notes, then it won't be jutting out anyway
+            calcHeight += style.beamSizes.strokeWidth / 2
+        }
         
         let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
             size
