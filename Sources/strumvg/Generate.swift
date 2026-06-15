@@ -203,8 +203,7 @@ extension strumvg {
     ) -> Node<SVG.DocumentContext>? {
         guard let content else { return nil }
         
-        let height = countText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
-        let fontSize = countText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
+        let fontSize = countText ? style.textSizes.beatFontSizeActual : style.textSizes.headerFontSizeActual
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
         
         return Node<SVG.DocumentContext>.element(
@@ -213,7 +212,7 @@ extension strumvg {
                 .text("\(content)"),
                 .attribute(named: "key", value: "\(countText ? "count" : "head")\(index)"),
                 .attribute(named: "x", value: x, format: numberFormat),
-                .attribute(named: "y", value: height * fontSize, format: numberFormat),
+                .attribute(named: "y", value: fontSize, format: numberFormat),
             ]
         )
     }
@@ -232,7 +231,7 @@ extension strumvg {
             .attribute(named: "fill", value: style.colors.headers),
             .attribute(
                 named: "font-size",
-                value: style.textSizes.headerTextHeight * style.textSizes.headerFontSize,
+                value: style.textSizes.headerFontSizeActual,
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.strumHeader.family),
@@ -248,7 +247,7 @@ extension strumvg {
             .attribute(named: "fill", value: style.colors.rhythms),
             .attribute(
                 named: "font-size",
-                value: style.textSizes.beatTextHeight * style.textSizes.beatFontSize,
+                value: style.textSizes.beatFontSizeActual,
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.countChar.family),
