@@ -266,7 +266,6 @@ extension strumvg {
         let height = style.strumSizes.height
         
         let strokeWidth = style.strumSizes.strokeWidth
-        let lineLength = style.strumSizes.arrowLineHeight
         let headHeight = style.strumSizes.arrowHeadHeight
         
         let triangle: Node<SVG.DocumentContext> = .element(
