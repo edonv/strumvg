@@ -485,6 +485,11 @@ extension strumvg {
         )
     }
     
+    /// - Parameters:
+    ///   - groupNum: The index of the note group in the measure.
+    ///   - beatCount: The number of strums in the group.
+    ///   - triplet: Whether or not the group is a triplet.
+    ///   - beamBarCount: The number of beams/flags to draw for the group.
     private func createNoteGroup(
         groupNum: Int,
         beatCount: Int,
@@ -492,8 +497,10 @@ extension strumvg {
         beamBarCount: Int
     ) -> Node<SVG.DocumentContext> {
         let beatCountFloat = CGFloat(beatCount)
+        /// Full group width, from left edge of first strum to right edge of last strum (including gap after)
         let fullWidth = CGFloat(beatCountFloat) * (style.strumSizes.width + style.strumSizes.gap)
         
+        /// `fullWidth` - (0.5 of strum space width on each end, which equals 1 full width)
         let beamWidth: CGFloat = fullWidth - style.strumSizes.width - style.strumSizes.gap
         
         let tripletTextElementY = style.beamSizes.stemHeight + style.textSizes.triplet3TextOffsetY
