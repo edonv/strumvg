@@ -476,7 +476,7 @@ extension strumvg {
                 .attribute(named: "font-style", value: style.fonts.tripletText.style),
             ] + (0..<quantity).map { i in
                 return createNoteGroup(
-                    quantity: beatsPerGroup,
+                    beatCount: beatsPerGroup,
                     triplet: triplet,
                     beamBarCount: beamBarCount,
                     x: CGFloat(beatsPerGroup) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
@@ -487,13 +487,13 @@ extension strumvg {
     }
     
     private func createNoteGroup(
-        quantity: Int,
+        beatCount: Int,
         triplet: Bool,
         beamBarCount: Int,
         x: CGFloat,
         width: CGFloat
     ) -> Node<SVG.DocumentContext> {
-        let quantityFloat = CGFloat(quantity)
+        let beatCountFloat = CGFloat(beatCount)
         
         let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
             named: "text",
@@ -501,7 +501,7 @@ extension strumvg {
                 .text("3"), // triplet label
                 .attribute(
                     named: "x",
-                    value: (width * (quantityFloat - 1)) / quantityFloat / 2,
+                    value: (width * (beatCountFloat - 1)) / beatCountFloat / 2,
                     format: numberFormat
                 ),
                 .attribute(
@@ -515,14 +515,14 @@ extension strumvg {
         
         // For each stem, create a pair of commands that moves the path to the start
         // and draws a relative line vertically
-        let stemLinePathCommands = (0..<quantity).map { i in
-            "M\((width * CGFloat(i)) / quantityFloat),0v\(style.beamSizes.stemHeight)"
+        let stemLinePathCommands = (0..<beatCount).map { i in
+            "M\((width * CGFloat(i)) / beatCountFloat),0v\(style.beamSizes.stemHeight)"
         }.joined()
         
         // Space out horizontal strokes by 1.5*strokeWidth, or 1 (whichever is larger)
         let horizontalStrokeGap = max(1.5 * style.beamSizes.strokeWidth, 1)
         // This seems weird but it seems to work
-        let beamLength = (width * (quantityFloat - 1)) / quantityFloat
+        let beamLength = (width * (beatCountFloat - 1)) / beatCountFloat
         
         let stemBeamPathCommands = (0..<beamBarCount).map { i in
             let strokeY = style.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
