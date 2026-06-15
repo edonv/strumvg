@@ -524,25 +524,64 @@ extension strumvg {
         
         // M0,0 [v8 h50 V0]+
         let beamLength = beamWidth / (beatCountFloat - 1)
+        // Add first path node
+        var noteBeamsPathAttr = "M0,0"
+        
+        // Construct repeat segments
+        var pathSegment = "v\(style.beamSizes.stemHeight)"
+        // If at least 8th notes, draw first beam bar
+        if beamBarCount > 0 {
+            pathSegment += " h\(beamLength)"
+        } else {
+            // Otherwise, just move node to next stem
+            pathSegment += " m\(beamLength),0"
+        }
+        pathSegment += " V0 "
+        
+        // Append path string with repeating nodes
+        noteBeamsPathAttr += Array(
+            repeating: pathSegment,
+            count: beatCount - 1
+        )
+        .joined(separator: " ")
+        
         let noteBeamsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
                 .attribute(
                     named: "d",
-                    value: (
-                        CollectionOfOne("M0,0")
-                        + Array(repeating: "v\(style.beamSizes.stemHeight) h\(beamLength) V0", count: beatCount - 1)
-                    ).joined(separator: " ")
+                    value: noteBeamsPathAttr
                 )
             ]
         )
+        
+        let extraBeamBars = beamBarCount - 1
+        var extraBeamPaths = [Node<SVG.DocumentContext>]()
+        if extraBeamBars > 0 {
+            // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
+            let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
+            
+            extraBeamPaths = (0..<extraBeamBars).map { i in
+                // <line x1="0" y1="4" x2="50" y2="4"></line>
+                let y = style.beamSizes.stemHeight - CGFloat(i + 1) * beamStrokeVerticalGap
+                return .element(
+                    named: "line",
+                    attributes: [
+                        .attribute(named: "x1", value: "0"),
+                        .attribute(named: "y1", value: y, format: numberFormat),
+                        .attribute(named: "x2", value: beamWidth, format: numberFormat),
+                        .attribute(named: "y2", value: y, format: numberFormat),
+                    ]
+                )
+            }
+        }
         
         let beamsGroup = Node<SVG.DocumentContext>.element(
             named: "g",
             nodes: [
                 .attribute(named: "fill", value: "none"),
                 noteBeamsPath,
-            ]
+            ] + extraBeamPaths
         )
         
         let x = CGFloat(groupNum) * fullWidth
