@@ -553,10 +553,16 @@ extension strumvg {
         return Node<SVG.DocumentContext>.element(
             named: "g",
             nodes: [
-                [.attribute(
-                    named: "transform",
-                    value: "translate(\(x.formatted(numberFormat)))"
-                )],
+                [
+                    .attribute(
+                        named: "key",
+                        value: "group\(groupNum)"
+                    ),
+                    .attribute(
+                        named: "transform",
+                        value: "translate(\(x.formatted(numberFormat)))"
+                    )
+                ],
                 [beamsGroup, textEl]
                     .compactMap { $0 },
             ].flatMap { $0 }
