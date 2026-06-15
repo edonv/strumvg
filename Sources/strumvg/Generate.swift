@@ -476,6 +476,7 @@ extension strumvg {
                 .attribute(named: "font-style", value: style.fonts.tripletText.style),
             ] + (0..<quantity).map { i in
                 return createNoteGroup(
+                    groupNum: i,
                     beatCount: beatsPerGroup,
                     triplet: triplet,
                     beamBarCount: beamBarCount,
@@ -487,6 +488,7 @@ extension strumvg {
     }
     
     private func createNoteGroup(
+        groupNum: Int,
         beatCount: Int,
         triplet: Bool,
         beamBarCount: Int,
