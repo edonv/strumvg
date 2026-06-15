@@ -205,7 +205,6 @@ extension strumvg {
         guard let content else { return nil }
         
         let height = rhythmText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
-        let width = style.strumSizes.width
         let fontSize = rhythmText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
         
@@ -216,7 +215,6 @@ extension strumvg {
                 .attribute(named: "key", value: "\(rhythmText ? "count" : "head")\(index)"),
                 .attribute(named: "x", value: x, format: numberFormat),
                 .attribute(named: "y", value: height * fontSize, format: numberFormat),
-                .attribute(named: "textLength", value: width, format: numberFormat),
             ]
         )
     }
@@ -452,15 +450,6 @@ extension strumvg {
             .attribute(named: "font-family", value: style.fonts.arrowText.family),
             .attribute(named: "font-weight", value: style.fonts.arrowText.weight),
             .attribute(named: "font-style", value: style.fonts.arrowText.style),
-            .attribute(
-                named: "textLength",
-                value: style.strumSizes.width,
-                format: numberFormat
-            ),
-            .attribute(
-                named: "lengthAdjust",
-                value: "spacingAndGlyphs"
-            ),
         ]
     }
     
