@@ -191,7 +191,7 @@ extension strumvg {
                         if int.isMultiple(of: 2) {
                             return "\(v)"
                         } else {
-                            return "&"
+                            return "+"
                         }
                     } else {
                         return ""
