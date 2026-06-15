@@ -14,7 +14,6 @@ import PlotExtensions
 
 internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
     .precision(.fractionLength(...4))
-private let FIX_FACTOR: CGFloat = 0.8
 
 extension strumvg {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
@@ -245,7 +244,7 @@ extension strumvg {
     private var countCharStaticAttrs: [Node<SVG.DocumentContext>] {
         [
             .attribute(named: "key", value: "counts"),
-            .attribute(named: "transform", value: "translate(0 \(style.strumSizes.height * FIX_FACTOR))"),
+            .attribute(named: "transform", value: "translate(0 \(style.strumSizes.height))"),
             .attribute(named: "fill", value: style.colors.rhythms),
             .attribute(
                 named: "font-size",
@@ -289,7 +288,7 @@ extension strumvg {
         // rotate around (0,0), then translate back into place
         let arrowRotationTransformAttr = Node<SVG.DocumentContext>.attribute(
             named: "transform",
-            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width) -\(lineLength))" : ""
+            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width) -\(height))" : ""
         )
         
         switch variant {
@@ -300,7 +299,7 @@ extension strumvg {
                     .attribute(named: "x1", value: width / 2, format: numberFormat),
                     .attribute(named: "y1", value: headHeight, format: numberFormat),
                     .attribute(named: "x2", value: width / 2, format: numberFormat),
-                    .attribute(named: "y2", value: lineLength, format: numberFormat),
+                    .attribute(named: "y2", value: height, format: numberFormat),
                     .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
                 ]
             )
@@ -319,7 +318,7 @@ extension strumvg {
             
             let startingY = headHeight / 2
             let squiggleStartingY = headHeight * 0.85
-            let squiggleHeight = lineLength - squiggleStartingY
+            let squiggleHeight = height - squiggleStartingY
             let wavelength = squiggleHeight / CGFloat(numWaves)
             
             let amplitude = wavelength / 2
@@ -369,7 +368,7 @@ extension strumvg {
                             // draw to top left of X
                             "L 0 0",
                             // move to bottom of line
-                            "M \(width / 2) \(lineLength)",
+                            "M \(width / 2) \(height)",
                             // draw to top of line
                             "V \(width / 2)",
                         ].joined()
@@ -451,7 +450,7 @@ extension strumvg {
         strums: [Strum],
         noteLength: Timing
     ) -> Node<SVG.DocumentContext> {
-        let y = style.strumSizes.height * FIX_FACTOR + style.textSizes.beatTextHeight
+        let y = style.strumSizes.height + style.textSizes.beatTextHeight
         
         let triplet = noteLength.triplet
         let horizontalStrokes = noteLength.duration.horizontalStrokeCount
