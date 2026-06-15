@@ -25,10 +25,10 @@ extension strumvg {
         #warning("TODO: implement adding in barline widths and gaps")
         /// `(number of strums) * (width + gap) - (1 gap)`
         let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount) - style.strumSizes.gap
-        /// `(strum array height) + (<conditional> header text height) + (2 x beat text height)`
+        /// `(<conditional> header text height) + (strum array height) + (2 x beat text height)`
         ///
         /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
-        let calcHeight = style.strumSizes.height + (patternContainsHeaderText ? style.textSizes.headerTextHeight : 0) + 2 * style.textSizes.beatTextHeight
+        let calcHeight = (patternContainsHeaderText ? style.textSizes.headerTextHeight : 0) + style.strumSizes.height + 2 * style.textSizes.beatTextHeight
         
         let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
             size
