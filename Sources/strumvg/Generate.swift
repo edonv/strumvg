@@ -160,9 +160,14 @@ extension strumvg {
             switch noteLength.duration {
             case .quarter:
                 if triplet {
-                    if int % 3 == 0 {
+                    switch int % 3 {
+                    case 0:
                         return "\(Int(Double(i / 3 + 1)))"
-                    } else {
+                    case 1:
+                        return "+"
+                    case 2:
+                        return "a"
+                    default:
                         return ""
                     }
                 } else {
@@ -171,9 +176,14 @@ extension strumvg {
                 
             case .eighth:
                 if triplet {
-                    if int % 3 == 0 {
+                    switch int % 3 {
+                    case 0:
                         return "\(Int(Double(i / 3 + 1)))"
-                    } else {
+                    case 1:
+                        return "+"
+                    case 2:
+                        return "a"
+                    default:
                         return ""
                     }
                 } else {
@@ -197,14 +207,17 @@ extension strumvg {
                         return ""
                     }
                 } else {
-                    let odd = int % 2 != 0
-                    let halfOdd = Int(i / 2) % 2 != 0
-                    if odd {
-                        return ""
-                    } else if halfOdd {
+                    switch int % 4 {
+                    case 0:
+                        return "\(Int((Double(i) / 4).rounded()))"
+                    case 1:
+                        return "e"
+                    case 2:
                         return "+"
-                    } else {
-                        return "\(Int((Double(i) / 4).rounded() + 1))"
+                    case 3:
+                        return "a"
+                    default:
+                        return ""
                     }
                 }
             }
