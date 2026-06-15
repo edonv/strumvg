@@ -479,9 +479,7 @@ extension strumvg {
                     groupNum: i,
                     beatCount: beatsPerGroup,
                     triplet: triplet,
-                    beamBarCount: beamBarCount,
-                    x: CGFloat(beatsPerGroup) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
-                    fullWidth: CGFloat(beatsPerGroup) * (style.strumSizes.width + style.strumSizes.gap)
+                    beamBarCount: beamBarCount
                 )
             }
         )
@@ -491,52 +489,43 @@ extension strumvg {
         groupNum: Int,
         beatCount: Int,
         triplet: Bool,
-        beamBarCount: Int,
-        x: CGFloat,
-        fullWidth: CGFloat
+        beamBarCount: Int
     ) -> Node<SVG.DocumentContext> {
         let beatCountFloat = CGFloat(beatCount)
+        let fullWidth = CGFloat(beatCountFloat) * (style.strumSizes.width + style.strumSizes.gap)
         
+        let beamWidth: CGFloat = fullWidth - style.strumSizes.width - style.strumSizes.gap
+        
+        let tripletTextElementY = style.beamSizes.stemHeight + style.textSizes.triplet3TextOffsetY
         let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
             named: "text",
             nodes: [
                 .text("3"), // triplet label
                 .attribute(
                     named: "x",
-                    value: (fullWidth * (beatCountFloat - 1)) / beatCountFloat / 2,
+                    value: beamWidth / 2,
                     format: numberFormat
                 ),
                 .attribute(
                     named: "y",
-                    value: style.beamSizes.stemHeight + style.textSizes.triplet3TextOffsetY,
+                    value: tripletTextElementY,
                     format: numberFormat
                 ),
                 .attribute(named: "stroke", value: "none"),
             ]
         ) : nil
         
-        // For each stem, create a pair of commands that moves the path to the start
-        // and draws a relative line vertically
-        let stemLinePathCommands = (0..<beatCount).map { i in
-            "M\((fullWidth * CGFloat(i)) / beatCountFloat),0v\(style.beamSizes.stemHeight)"
-        }.joined()
-        
-        // Space out horizontal strokes by 1.5*strokeWidth, or 1 (whichever is larger)
-        let horizontalStrokeGap = max(1.5 * style.beamSizes.strokeWidth, 1)
-        // This seems weird but it seems to work
-        let beamLength = (fullWidth * (beatCountFloat - 1)) / beatCountFloat
-        
-        let stemBeamPathCommands = (0..<beamBarCount).map { i in
-            let strokeY = style.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
-            return "M0,\(strokeY)h\(beamLength)"
-        }.joined()
-        
+        // M0,0 [v8 h50 V0]+
+        let beamLength = beamWidth / (beatCountFloat - 1)
         let noteBeamsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
                 .attribute(
                     named: "d",
-                    value: stemLinePathCommands + stemBeamPathCommands
+                    value: (
+                        CollectionOfOne("M0,0")
+                        + Array(repeating: "v\(style.beamSizes.stemHeight) h\(beamLength) V0", count: beatCount - 1)
+                    ).joined(separator: " ")
                 )
             ]
         )
@@ -545,10 +534,12 @@ extension strumvg {
             named: "g",
             nodes: [
                 .attribute(named: "fill", value: "none"),
-                .attribute(named: "stroke-linecap", value: "square"),
                 noteBeamsPath,
             ]
         )
+        
+        let x = CGFloat(groupNum) * fullWidth
+        let translateX = x + style.strumSizes.width / 2
         
         return Node<SVG.DocumentContext>.element(
             named: "g",
@@ -560,7 +551,7 @@ extension strumvg {
                     ),
                     .attribute(
                         named: "transform",
-                        value: "translate(\(x.formatted(numberFormat)))"
+                        value: "translate(\(translateX.formatted(numberFormat)))"
                     )
                 ],
                 [beamsGroup, textEl]
