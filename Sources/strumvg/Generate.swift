@@ -460,7 +460,7 @@ extension strumvg {
         return .element(
             named: "g",
             nodes: [
-                .attribute(named: "key", value: "rhythms"),
+                .attribute(named: "key", value: "rhythmGroups"),
                 .attribute(named: "transform", value: "translate(0 \(y))"),
                 .attribute(named: "fill", value: style.colors.rhythms),
                 .attribute(named: "stroke", value: style.colors.rhythms),
