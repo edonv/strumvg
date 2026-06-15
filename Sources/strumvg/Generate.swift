@@ -71,7 +71,7 @@ extension strumvg {
                 createStrumHeader(
                     content: strum.headingChar.map(String.init),
                     index: i,
-                    rhythmText: false
+                    countText: false
                 )
             }
         let headersGroup = Node<SVG.DocumentContext>.element(
@@ -112,7 +112,7 @@ extension strumvg {
                 return createStrumHeader(
                     content: str,
                     index: i,
-                    rhythmText: true
+                    countText: true
                 )
             }
         let countCharsGroup = Node<SVG.DocumentContext>.element(
@@ -200,19 +200,19 @@ extension strumvg {
     private func createStrumHeader(
         content: String?,
         index: Int,
-        rhythmText: Bool
+        countText: Bool
     ) -> Node<SVG.DocumentContext>? {
         guard let content else { return nil }
         
-        let height = rhythmText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
-        let fontSize = rhythmText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
+        let height = countText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
+        let fontSize = countText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
         
         return Node<SVG.DocumentContext>.element(
             named: "text",
             nodes: [
                 .text("\(content)"),
-                .attribute(named: "key", value: "\(rhythmText ? "count" : "head")\(index)"),
+                .attribute(named: "key", value: "\(countText ? "count" : "head")\(index)"),
                 .attribute(named: "x", value: x, format: numberFormat),
                 .attribute(named: "y", value: height * fontSize, format: numberFormat),
             ]
