@@ -452,7 +452,7 @@ extension strumvg {
         let y = style.strumSizes.height + style.textSizes.beatTextHeight
         
         let triplet = noteLength.triplet
-        let horizontalStrokes = noteLength.duration.horizontalStrokeCount
+        let beamBarCount = noteLength.duration.beamBarCount
         
         let beatsPerGroup = triplet ? 3 : 2
         let quantity = Int(floor(Double(strums.count) / Double(beatsPerGroup)))
@@ -478,7 +478,7 @@ extension strumvg {
                 return createNoteGroup(
                     quantity: beatsPerGroup,
                     triplet: triplet,
-                    horizontalStrokes: horizontalStrokes,
+                    beamBarCount: beamBarCount,
                     x: CGFloat(beatsPerGroup) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
                     width: CGFloat(beatsPerGroup) * (style.strumSizes.width + style.strumSizes.gap)
                 )
@@ -489,7 +489,7 @@ extension strumvg {
     private func createNoteGroup(
         quantity: Int,
         triplet: Bool,
-        horizontalStrokes: Int,
+        beamBarCount: Int,
         x: CGFloat,
         width: CGFloat
     ) -> Node<SVG.DocumentContext> {
@@ -524,7 +524,7 @@ extension strumvg {
         // This seems weird but it seems to work
         let beamLength = (width * (quantityFloat - 1)) / quantityFloat
         
-        let stemBeamPathCommands = (0..<horizontalStrokes).map { i in
+        let stemBeamPathCommands = (0..<beamBarCount).map { i in
             let strokeY = style.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
             return "M0,\(strokeY)h\(beamLength)"
         }.joined()

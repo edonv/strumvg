@@ -13,7 +13,7 @@ public enum NoteDuration: Int, Sendable, Hashable {
     case eighth = 8
     case sixteenth = 16
     
-    public var horizontalStrokeCount: Int {
+    public var beamBarCount: Int {
         switch self {
         case .quarter: 0
         case .eighth: 1
