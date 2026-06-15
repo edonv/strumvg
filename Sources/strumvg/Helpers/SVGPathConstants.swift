@@ -19,7 +19,7 @@ internal func restNode(
     width: CGFloat,
     height: CGFloat
 ) -> Node<SVG.DocumentContext> {
-    let scaleFactor: CGFloat = 2 / 3
+    let scaleFactor: CGFloat = 0.75
     let scaledWidth = width * scaleFactor
     let scaledHeight = height * scaleFactor
     
