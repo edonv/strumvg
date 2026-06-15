@@ -14,6 +14,7 @@ import PlotExtensions
 
 internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
     .precision(.fractionLength(...4))
+    .grouping(.never)
 
 extension strumvg {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
