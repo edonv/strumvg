@@ -265,8 +265,8 @@ extension strumvg {
         duration: NoteDuration
     ) -> Node<SVG.DocumentContext>? {
         let variant = strum.variant
-        let width = style.strumSizes.width /*?? 50*/
-        let height = style.strumSizes.height /*?? 100*/
+        let width = style.strumSizes.width
+        let height = style.strumSizes.height
         
         let strokeWidth = style.strumSizes.strokeWidth
         let lineLength = style.strumSizes.arrowLineHeight
