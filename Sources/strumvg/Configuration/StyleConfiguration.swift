@@ -95,6 +95,11 @@ struct StyleConfiguration: Codable {
         /// ``StyleConfiguration/Args/BeamSizes-swift.struct/stemHeight``
         let stemHeight: CGFloat
         
+        /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
+        var beamStrokeVerticalGap: CGFloat {
+            max(1.5 * strokeWidth, 1)
+        }
+        
         static var `default`: Self {
             StyleConfiguration.default.beamSizes
         }
