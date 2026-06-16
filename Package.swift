@@ -9,7 +9,7 @@ let package = Package(
         .macOS(.v15),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.8.2"),
         .package(url: "https://github.com/JohnSundell/Plot.git", from: "0.14.0"),
         .package(url: "https://github.com/edonv/PlotSVG.git", exact: "0.0.0"),
     ],
