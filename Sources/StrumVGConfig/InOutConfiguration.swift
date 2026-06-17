@@ -19,7 +19,7 @@ public struct InOutConfiguration: ParsableArguments {
             "A path to a file to use for styling configuration.",
             discussion: "Options set as command-line options override any options set in the specified config file. Options not set in the specified config file fall back on default values."
         ),
-        completion: .file(extensions: ["json"])
+        completion: .file(extensions: ["json", "yml", "yaml"])
     )
     public var configFilePath: String?
     
