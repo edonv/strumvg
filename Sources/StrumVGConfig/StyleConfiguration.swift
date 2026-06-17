@@ -53,20 +53,20 @@ public struct StyleConfiguration: Codable {
         /// The height of the space reserved for rhythm text below the arrows.
         public let beatTextHeight: CGFloat
         /// The relative font-size of the rhythm text below the arrows, as a fraction of its height.
-        public let beatFontSize: CGFloat
+        public let beatFontSizeRatio: CGFloat
         /// The height of the space reserved for articulations and header text above the arrows.
         public let headerTextHeight: CGFloat
         /// The relative font-size of the articulations and header text above the arrows, as a fraction of its height.
-        public let headerFontSize: CGFloat
+        public let headerFontSizeRatio: CGFloat
         /// The actual font-size of the triplet label, if applicable.
         public let tripletFontSize: CGFloat
         
-        package var beatFontSizeActual: CGFloat {
-            beatTextHeight * beatFontSize
+        package var beatFontSize: CGFloat {
+            beatTextHeight * beatFontSizeRatio
         }
         
-        package var headerFontSizeActual: CGFloat {
-            headerTextHeight * headerFontSize
+        package var headerFontSize: CGFloat {
+            headerTextHeight * headerFontSizeRatio
         }
         
         /// The vertical space between a triplet beam and the `3` text.
@@ -83,9 +83,9 @@ public struct StyleConfiguration: Codable {
             tripletFontSize: CGFloat
         ) {
             self.beatTextHeight = beatTextHeight
-            self.beatFontSize = beatFontSize
+            self.beatFontSizeRatio = beatFontSize
             self.headerTextHeight = headerTextHeight
-            self.headerFontSize = headerFontSize
+            self.headerFontSizeRatio = headerFontSize
             self.tripletFontSize = tripletFontSize
         }
         
