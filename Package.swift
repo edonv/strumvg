@@ -37,6 +37,7 @@ let package = Package(
         .executableTarget(
             name: "strumvg",
             dependencies: [
+                "StrumVGConfig",
                 "StrumModels",
                 "PlotExtensions",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
