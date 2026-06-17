@@ -19,35 +19,88 @@ struct InOutConfiguration: ParsableArguments {
     )
     var configFilePath: String?
     
-    @Flag(
-        help: .init(
-            "Source for input pattern string.",
-            discussion: "-i/--stdin uses the stdin as the source of the input pattern. -a/--arg uses a command argument as the source of the input pattern."
-        )
-    )
-    var inputSource: InputSource = .argument
+    @OptionGroup(title: "Input")
+    var input: Input
     
-    enum InputSource: EnumerableFlag {
-        case stdin
-        case argument
+    struct Input: ParsableArguments {
+        @Flag(
+            help: .init(
+                "Source for input pattern string.",
+                discussion: "This option is mutually exclusive with the --file option."
+            )
+        )
+        private var sourceType: SourceType?
         
-        static func name(for value: InputSource) -> NameSpecification {
-            switch value {
-            case .stdin:
-                return [.customShort("i"), .long]
-            case .argument:
-                return [.customShort("a"), .customLong("arg")]
+        @Option(
+            name: [
+                .customShort("a"),
+                .customLong("arg")
+            ],
+            help: .init(
+                "Uses a comman argument as the source of the input pattern.",
+                discussion: "This option is mutually exclusive with the --stdin flag."
+            )
+        )
+        private var patternString: String? = nil
+        
+        enum CodingKeys: CodingKey {
+            case sourceType
+            case patternString
+        }
+        
+        private(set) var source: Source!
+        
+        mutating func validate() throws {
+            // Apply default value
+            if sourceType == nil
+                && patternString == nil {
+                self.sourceType = .stdin
+            }
+            
+            switch sourceType {
+            case .stdin where patternString == nil:
+                self.source = .stdin
+                return
+            case nil:
+                if let patternString {
+                    self.source = .argument(pattern: patternString)
+                    return
+                }
+            default:
+                // sourceType != nil
+                // both non-nil
+                if patternString != nil {
+                    throw ValidationError("Both a `sourceType` flag and `--arg` option are present. They are mutually exclusive.")
+                }
+            }
+            
+            // both nil
+            throw ValidationError("Neither a `sourceType` flag nor the `--arg` option is present. One of them must be present.")
+        }
+        
+        private enum SourceType: EnumerableFlag {
+            case stdin
+            
+            static func name(for value: SourceType) -> NameSpecification {
+                switch value {
+                case .stdin:
+                    return [.customShort("i"), .long]
+                }
+            }
+            
+            static func help(for value: SourceType) -> ArgumentHelp? {
+                switch value {
+                case .stdin:
+                    return "Uses the stdin as the source of the input pattern."
+                }
             }
         }
+        
+        enum Source {
+            case stdin
+            case argument(pattern: String)
+        }
     }
-    
-    @Argument(
-        help: .init(
-            "The string representation of a pattern.",
-            discussion: "This argument requires the --argument flag."
-        )
-    )
-    var patternString: String?
     
     @OptionGroup(title: "Output")
     var output: Output
