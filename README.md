@@ -22,7 +22,8 @@ ARGUMENTS:
   <pattern-string>        The string representation of a pattern.
 
 INPUT/OUTPUT OPTIONS:
-  -i, --stdin/-a, --arg   Source for input pattern string. (default: --stdin)
+  -i, --stdin/-a, --arg=<pattern>
+                          Source for input pattern string. (default: --stdin)
   -o, --stdout/-l, --log/-f, --file=<file-path>.svg
                           Destination for output SVG content. (default: --stdout)
 
