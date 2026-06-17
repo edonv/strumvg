@@ -18,8 +18,7 @@ public struct StyleConfiguration: Codable {
     
     public struct Colors: Codable {
         /// The color of the arrows.
-        ///
-        /// Default value: `#000000` (black)
+        /// > Default: `#000000` (black)
         public let arrows: String
         /// The color of the rhythm text and stems below the arrows.
         public let rhythms: String
