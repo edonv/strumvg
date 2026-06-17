@@ -34,6 +34,7 @@ extension strumvg {
         var calcHeight = style.strumSizes.height
             + style.textSizes.beatTextHeight
             + style.beamSizes.stemHeight
+        
         if patternContainsHeaderText {
             calcHeight += style.textSizes.headerTextHeight
         }
