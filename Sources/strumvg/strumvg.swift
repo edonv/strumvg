@@ -79,7 +79,7 @@ struct strumvg: ParsableCommand {
         let svg = generate(pattern: pattern)
         let svgStr = svg.render(indentedBy: .spaces(2))
         
-        switch inOut.outputDestination {
+        switch inOut.output.destination! {
         case .stdout:
             guard let svgStrData = svgStr.data(using: .utf8) else {
                 print("Failed to convert SVG string content to UTF-8 data.")
@@ -92,13 +92,8 @@ struct strumvg: ParsableCommand {
         case .log:
             print(svgStr)
             
-        case .file:
-            guard let outputFilePath = inOut.outputFilePath else {
-                print("Missing output file path (`<outputFilePath>` argument.")
-                throw ExitCode(EXIT_FAILURE)
-            }
-            
-            let outputURL = URL(filePath: outputFilePath, directoryHint: .notDirectory)
+        case .file(let path):
+            let outputURL = URL(filePath: path, directoryHint: .notDirectory)
             try svgStr.write(to: outputURL, atomically: true, encoding: .utf8)
         }
     }
