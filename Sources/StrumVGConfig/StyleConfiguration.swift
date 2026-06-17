@@ -13,6 +13,7 @@ public struct StyleConfiguration: Codable {
     public let textSizes: TextSizes
     public let strumSizes: StrumSizes
     public let beamSizes: BeamSizes
+    public let barlineSizes: BarlineSizes
     public let fonts: Fonts
     
     public struct Colors: Codable {
@@ -210,6 +211,42 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    public struct BarlineSizes: Codable {
+        /// The stroke width of the barlines.
+        /// > Default: `2`
+        public let strokeWidth: CGFloat
+        /// The relative height of a barline, as a fraction of ``StyleConfiguration/StrumSizes/height``.
+        /// > Default: `1.25`
+        public let heightRatio: CGFloat
+        /// The relative width of a gap between a barline and adjacent \"rhythmic columns\", as a fraction of ``StyleConfiguration/StrumSizes/gap``.
+        /// > Default: `0.5`
+        public let gapRatio: CGFloat
+        
+        /// Computed height of a barline, using ``StyleConfiguration/StrumSizes`` as a reference point.
+        package func height(withStrumSizes strumSizes: StrumSizes) -> CGFloat {
+            strumSizes.height * heightRatio
+        }
+        
+        /// Computed gap width on either side of a barline, using ``StyleConfiguration/StrumSizes`` as a reference point.
+        package func gap(withStrumSizes strumSizes: StrumSizes) -> CGFloat {
+            strumSizes.gap * gapRatio
+        }
+        
+        public init(strokeWidth: CGFloat, heightRatio: CGFloat, gapRatio: CGFloat) {
+            self.strokeWidth = strokeWidth
+            self.heightRatio = heightRatio
+            self.gapRatio = gapRatio
+        }
+        
+        public init(config: ConfigReader) {
+            self.init(
+                strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 2),
+                heightRatio: config.cgFloat(forKey: "heightRatio", default: 1.25),
+                gapRatio: config.cgFloat(forKey: "gapRatio", default: 0.5)
+            )
+        }
+    }
+    
     public struct Fonts: Codable {
         /// Font styling for header text.
         public let strumHeader: Styling
@@ -327,6 +364,7 @@ extension StyleConfiguration {
             textSizes: .init(config: config.scoped(to: "textSizes")),
             strumSizes: .init(config: config.scoped(to: "strumSizes")),
             beamSizes: .init(config: config.scoped(to: "beamSizes")),
+            barlineSizes: .init(config: config.scoped(to: "barlineSizes")),
             fonts: .init(config: config.scoped(to: "fonts"))
         )
     }
