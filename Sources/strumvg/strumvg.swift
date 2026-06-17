@@ -6,6 +6,8 @@
 
 import Foundation
 import ArgumentParser
+
+import StrumVGConfig
 import StrumModels
 
 import Plot
