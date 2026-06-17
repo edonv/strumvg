@@ -30,6 +30,7 @@ let package = Package(
             name: "StrumVGConfig",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Configuration", package: "swift-configuration"),
             ]
         ),
         // Targets are the basic building blocks of a package, defining a module or a test suite.
