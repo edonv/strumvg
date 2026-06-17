@@ -6,6 +6,7 @@
 
 import Foundation
 import ArgumentParser
+import Configuration
 
 import StrumVGConfig
 import StrumModels
@@ -14,7 +15,7 @@ import Plot
 import PlotSVG
 
 @main
-struct strumvg: ParsableCommand {
+struct strumvg: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "A command for generating an SVG of a strumming pattern.",
         discussion: "Any SVG-compatible value can be used for any configuration option.",
@@ -24,19 +25,50 @@ struct strumvg: ParsableCommand {
     @OptionGroup(title: "Input/Output Options")
     var inOut: InOutConfiguration
     
-    /// Style configuration specified by inline command arguments.
-    @OptionGroup(title: "Styling Options")
-    private var styleArgs: StyleConfiguration.Args
+    @Argument(
+        parsing: .allUnrecognized,
+        help: .init(visibility: .private)
+    )
+    var otherArgs: [String] = []
     
-    /// Style configuration created by mapping `styleArgs` to ``StyleConfiguration``, merging with values from a file specified at ``InOutConfiguration/configFilePath`` and falling back on ``StyleConfiguration/default`` values.
+    /// Style configuration created by reading command-line arguments, followed by a specified config file, then falling back on default values.
+    ///
+    /// Command-line arguments for styling are read from ``otherArgs``.
     var style: StyleConfiguration!
     
     mutating func validate() throws {
-        self.style = try self.styleArgs
-            .merging(withFileAt: inOut.configFilePath)
+        // add an extra arg to the start because `CommandLineArgumentsProvider`
+        // drops the first arg automatically (it assumes its the program name)
+        otherArgs.insert("", at: 0)
     }
     
-    mutating func run() throws {
+    private mutating func initStyle() async throws -> StyleConfiguration {
+        var jsonProvider: FileProvider<JSONSnapshot>? = nil
+        if let configPath = inOut.configFilePath {
+            if configPath.hasSuffix(".json") {
+                jsonProvider = try await FileProvider<JSONSnapshot>(
+                    filePath: .init(configPath),
+                    allowMissing: true
+                )
+            }
+        }
+        
+        let providers: [(any ConfigProvider)?] = [
+            CommandLineArgumentsProvider(arguments: otherArgs),
+            jsonProvider,
+        ]
+        
+        let config = ConfigReader(
+            providers: providers
+                .compactMap(\.self)
+        )
+        
+        return .init(config: config)
+    }
+    
+    mutating func run() async throws {
+        self.style = try await self.initStyle()
+        
         let str: String
         
         switch inOut.input.source! {
