@@ -37,7 +37,7 @@ struct strumvg: ParsableCommand {
     mutating func run() throws {
         let str: String
         
-        switch inOut.inputSource {
+        switch inOut.input.source! {
         case .stdin:
             let stdin = FileHandle.standardInput
             guard let data = try stdin.readToEnd() else {
@@ -50,12 +50,8 @@ struct strumvg: ParsableCommand {
             }
             str = dataStr
             
-        case .argument:
-            guard let patternString = inOut.patternString else {
-                throw ValidationError("`inputSource` flag set to `--arg` and the `patternString` argument is missing.")
-            }
-            
-            str = patternString
+        case .argument(let pattern):
+            str = pattern
         }
         
 //        let string = "{xD} D u uD u-16t"
