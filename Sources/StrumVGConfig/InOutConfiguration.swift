@@ -8,8 +8,8 @@
 import Foundation
 import ArgumentParser
 
-package struct InOutConfiguration: ParsableArguments {
-    package init() {
+public struct InOutConfiguration: ParsableArguments {
+    public init() {
         
     }
     
@@ -21,13 +21,13 @@ package struct InOutConfiguration: ParsableArguments {
         ),
         completion: .file(extensions: ["json"])
     )
-    package var configFilePath: String?
+    public var configFilePath: String?
     
     @OptionGroup(title: "Input")
-    package var input: Input
+    public var input: Input
     
-    package struct Input: ParsableArguments {
-        package init() {
+    public struct Input: ParsableArguments {
+        public init() {
             
         }
         
@@ -51,14 +51,14 @@ package struct InOutConfiguration: ParsableArguments {
         )
         private var patternString: String? = nil
         
-        package enum CodingKeys: CodingKey {
+        public enum CodingKeys: CodingKey {
             case sourceType
             case patternString
         }
         
-        package private(set) var source: Source!
+        public private(set) var source: Source!
         
-        package mutating func validate() throws {
+        public mutating func validate() throws {
             // Apply default value
             if sourceType == nil
                 && patternString == nil {
@@ -104,17 +104,17 @@ package struct InOutConfiguration: ParsableArguments {
             }
         }
         
-        package enum Source {
+        public enum Source {
             case stdin
             case argument(pattern: String)
         }
     }
     
     @OptionGroup(title: "Output")
-    package var output: Output
+    public var output: Output
     
-    package struct Output: ParsableArguments {
-        package init() {
+    public struct Output: ParsableArguments {
+        public init() {
             
         }
         
@@ -144,9 +144,9 @@ package struct InOutConfiguration: ParsableArguments {
             case fileOutput
         }
         
-        package private(set) var destination: Destination!
+        public private(set) var destination: Destination!
         
-        package mutating func validate() throws {
+        public mutating func validate() throws {
             // Apply default value
             if destinationType == nil
                 && fileOutput == nil {
@@ -200,7 +200,7 @@ package struct InOutConfiguration: ParsableArguments {
             }
         }
         
-        package enum Destination {
+        public enum Destination {
             case stdout
             case log
             case file(path: String)
