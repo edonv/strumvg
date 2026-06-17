@@ -27,6 +27,20 @@ struct InOutConfiguration: ParsableArguments {
     )
     var inputSource: InputSource = .argument
     
+    enum InputSource: EnumerableFlag {
+        case stdin
+        case argument
+        
+        static func name(for value: InputSource) -> NameSpecification {
+            switch value {
+            case .stdin:
+                return [.customShort("i"), .long]
+            case .argument:
+                return [.customShort("a"), .customLong("arg")]
+            }
+        }
+    }
+    
     @Argument(
         help: .init(
             "The string representation of a pattern.",
@@ -51,20 +65,6 @@ struct InOutConfiguration: ParsableArguments {
         completion: .file(extensions: ["svg"])
     )
     var outputFilePath: String?
-    
-    enum InputSource: EnumerableFlag {
-        case stdin
-        case argument
-        
-        static func name(for value: InputSource) -> NameSpecification {
-            switch value {
-            case .stdin:
-                return [.customShort("i"), .long]
-            case .argument:
-                return [.customShort("a"), .customLong("arg")]
-            }
-        }
-    }
     
     enum OutputDestination: EnumerableFlag {
         case stdout
