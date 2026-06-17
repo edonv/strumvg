@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Variant {
+public enum Variant: Sendable, Hashable {
     case normal
     case muted
     case arpeggio

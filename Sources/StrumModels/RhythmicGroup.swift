@@ -7,7 +7,10 @@
 
 import Foundation
 
-public struct RhythmicGroup: RawRepresentable {
+/// A group of strums.
+///
+/// One group is rendered with shared stems.
+public struct RhythmicGroup: RawRepresentable, Sendable, Hashable {
     public let strums: [Strum]
     
     public init(strums: [Strum]) {
@@ -22,14 +25,19 @@ public struct RhythmicGroup: RawRepresentable {
             .map { $0.trimmingPrefix("{") }
             .map(String.init)
             .compactMap { Strum(rawValue: $0) }
-//        let strumStrs: [String] = rawValue.reduce(into: []) { partial, char in
-//            <#code#>
-//        }
     }
     
     public var rawValue: String {
         strums
             .map(\.rawValue)
             .joined()
+    }
+    
+    internal func appending(strums: [Strum]) -> RhythmicGroup {
+        .init(strums: self.strums + strums)
+    }
+    
+    package var containsHeaderText: Bool {
+        strums.contains { $0.headingChar != nil }
     }
 }

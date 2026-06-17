@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Strum: RawRepresentable {
+public struct Strum: RawRepresentable, Sendable, Hashable {
     public typealias Kind = StrumKind
     
     public let kind: Kind
@@ -21,7 +21,7 @@ public struct Strum: RawRepresentable {
         kind.variant
     }
     
-    public init(kind: Kind, heading: Character?) {
+    public init(kind: Kind, heading: Character? = nil) {
         self.kind = kind
         self.headingChar = heading
     }

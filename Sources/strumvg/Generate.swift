@@ -14,17 +14,69 @@ import PlotExtensions
 
 internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
     .precision(.fractionLength(...4))
-private let FIX_FACTOR: CGFloat = 0.8
+    .grouping(.never)
 
 extension strumvg {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
-        let allStrums = pattern.groups
+        let totalStrumCount = pattern.measures
+            .reduce(into: 0) { $0 += $1.totalStrums }
+        let patternContainsHeaderText = pattern.measures
+            .contains { $0.groups.contains(where: \.containsHeaderText) }
+        let patternContainsAnyTriplets = pattern.measures
+            .contains(where: \.timing.triplet)
+        
+        #warning("TODO: implement adding in barline widths and gaps")
+        /// `(number of strums) * (width + gap) - (1 gap)`
+        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount) - style.strumSizes.gap
+        /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> triplet text height, including padding above it)`
+        ///
+        /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
+        var calcHeight = style.strumSizes.height
+            + style.textSizes.beatTextHeight
+            + style.beamSizes.stemHeight
+        if patternContainsHeaderText {
+            calcHeight += style.textSizes.headerTextHeight
+        }
+        if patternContainsAnyTriplets {
+            calcHeight += style.textSizes.triplet3TextOffsetY
+        } else if pattern.measures.contains(where: { $0.timing.duration != .quarter }) {
+            // add beam stroke width so its thickness isn't outside the viewBox
+            // if it's quarter notes, then it won't be jutting out anyway
+            calcHeight += style.beamSizes.strokeWidth / 2
+        }
+        
+        let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
+            size
+                .map(\.width)
+                .map { .width(.number($0)) },
+            size
+                .map(\.height)
+                .map { .height(.number($0)) },
+            .viewBox(
+                // extend viewBox to include header text in the negatives, if there is header text
+                minY: patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0,
+                width: calcWidth,
+                height: calcHeight
+            ),
+            .attribute(named: "overflow", value: "visible")
+        ].compactMap { $0 }
+        
+        #warning("TEMP: need to update to support multiple measures")
+        let nodes = self.generateNodes(in: pattern.measures[0])
+        
+        let svg = SVG(
+            svgAttrs: svgDeclAttrs,
+            nodes
+        )
+        
+        return svg
+    }
+    
+    private func generateNodes(in measure: Measure) -> [Node<SVG.DocumentContext>] {
+        let allStrums = measure.groups
             .flatMap(\.strums)
         
-        let strs = createRhythmText(quantity: allStrums.count, noteLength: pattern.timing)
-        
-        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(pattern.totalStrums) - style.strumSizes.gap
-        let calcHeight = style.strumSizes.height + style.textSizes.headerTextHeight + 2 * style.textSizes.beatTextHeight
+        let strs = createRhythmText(quantity: allStrums.count, noteLength: measure.timing)
         
         // MARK: Header Text
         let headers = allStrums
@@ -33,7 +85,7 @@ extension strumvg {
                 createStrumHeader(
                     content: strum.headingChar.map(String.init),
                     index: i,
-                    rhythmText: false
+                    countText: false
                 )
             }
         let headersGroup = Node<SVG.DocumentContext>.element(
@@ -45,11 +97,10 @@ extension strumvg {
         let arrows = allStrums
             .enumerated()
             .map { i, strum -> Node<SVG.DocumentContext> in
-                let arrow = createStrumArrow(strum: strum, duration: pattern.timing.duration)
+                let arrow = createStrumArrow(strum: strum, duration: measure.timing.duration)
                 let index = CGFloat(i)
                 
                 let translateX = (style.strumSizes.width + style.strumSizes.gap) * index
-                let translateY = style.textSizes.headerTextHeight
                 
                 return .element(
                     named: "g",
@@ -57,7 +108,7 @@ extension strumvg {
                         .attribute(named: "key", value: "strum\(i)"),
                         .attribute(
                             named: "transform",
-                            value: "translate(\(translateX),\(translateY))"
+                            value: "translate(\(translateX))"
                         ),
                         arrow,
                     ].compactMap { $0 }
@@ -75,7 +126,7 @@ extension strumvg {
                 return createStrumHeader(
                     content: str,
                     index: i,
-                    rhythmText: true
+                    countText: true
                 )
             }
         let countCharsGroup = Node<SVG.DocumentContext>.element(
@@ -86,34 +137,15 @@ extension strumvg {
         // MARK: Note Groups
         let noteGroupsGroup = createNoteGroups(
             strums: allStrums,
-            noteLength: pattern.timing
+            noteLength: measure.timing
         )
         
-        let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
-            size
-                .map(\.width)
-                .map { .width(.number($0)) },
-            size
-                .map(\.height)
-                .map { .height(.number($0)) },
-            .viewBox(
-                width: calcWidth,
-                height: calcHeight
-            ),
-            .attribute(named: "overflow", value: "visible")
-        ].compactMap { $0 }
-        
-        let svg = SVG(
-            svgAttrs: svgDeclAttrs,
-            [
-                headersGroup,
-                arrowsGroup,
-                countCharsGroup,
-                noteGroupsGroup,
-            ]
-        )
-        
-        return svg
+        return [
+            headersGroup,
+            arrowsGroup,
+            countCharsGroup,
+            noteGroupsGroup,
+        ]
     }
     
     private func createRhythmText(
@@ -128,9 +160,14 @@ extension strumvg {
             switch noteLength.duration {
             case .quarter:
                 if triplet {
-                    if int % 3 == 0 {
+                    switch int % 3 {
+                    case 0:
                         return "\(Int(Double(i / 3 + 1)))"
-                    } else {
+                    case 1:
+                        return "+"
+                    case 2:
+                        return "a"
+                    default:
                         return ""
                     }
                 } else {
@@ -139,9 +176,14 @@ extension strumvg {
                 
             case .eighth:
                 if triplet {
-                    if int % 3 == 0 {
+                    switch int % 3 {
+                    case 0:
                         return "\(Int(Double(i / 3 + 1)))"
-                    } else {
+                    case 1:
+                        return "+"
+                    case 2:
+                        return "a"
+                    default:
                         return ""
                     }
                 } else {
@@ -155,24 +197,27 @@ extension strumvg {
             case .sixteenth:
                 if triplet {
                     if int % 3 == 0 {
-                        let v = Int(i / 3 + 1)
-                        if v.isMultiple(of: 2) {
-                            return "&"
-                        } else {
+                        let v = Int(i / 6 + 1)
+                        if int.isMultiple(of: 2) {
                             return "\(v)"
+                        } else {
+                            return "+"
                         }
                     } else {
                         return ""
                     }
                 } else {
-                    let odd = int % 2 != 0
-                    let halfOdd = Int(i / 2) % 2 != 0
-                    if odd {
-                        return ""
-                    } else if halfOdd {
+                    switch int % 4 {
+                    case 0:
+                        return "\(Int((Double(i) / 4).rounded()))"
+                    case 1:
+                        return "e"
+                    case 2:
                         return "+"
-                    } else {
-                        return "\(Int((Double(i) / 4).rounded() + 1))"
+                    case 3:
+                        return "a"
+                    default:
+                        return ""
                     }
                 }
             }
@@ -182,24 +227,21 @@ extension strumvg {
     private func createStrumHeader(
         content: String?,
         index: Int,
-        rhythmText: Bool
+        countText: Bool
     ) -> Node<SVG.DocumentContext>? {
         guard let content else { return nil }
         
-        let height = rhythmText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
-        let width = style.strumSizes.width
-        let fontSize = rhythmText ? style.textSizes.beatFontSize : style.textSizes.headerFontSize
+        let height = countText ? style.textSizes.beatTextHeight : style.textSizes.headerTextHeight
         let x = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(index) + style.strumSizes.width / 2
-        let yBase = rhythmText ? style.textSizes.headerTextHeight + style.strumSizes.height * FIX_FACTOR : 0
         
         return Node<SVG.DocumentContext>.element(
             named: "text",
             nodes: [
                 .text("\(content)"),
-                .attribute(named: "key", value: "\(rhythmText ? "count" : "head")\(index)"),
+                .attribute(named: "key", value: "\(countText ? "count" : "head")\(index)"),
                 .attribute(named: "x", value: x, format: numberFormat),
-                .attribute(named: "y", value: yBase + height * fontSize, format: numberFormat),
-                .attribute(named: "textLength", value: width, format: numberFormat),
+                .attribute(named: "y", value: height / 2, format: numberFormat),
+                .attribute(named: "dominant-baseline", value: "central"),
             ]
         )
     }
@@ -214,10 +256,11 @@ extension strumvg {
     private var strumHeaderTextStaticAttrs: [Node<SVG.DocumentContext>] {
         [
             .attribute(named: "key", value: "heads"),
+            .attribute(named: "transform", value: "translate(0 -\(style.textSizes.headerTextHeight))"),
             .attribute(named: "fill", value: style.colors.headers),
             .attribute(
                 named: "font-size",
-                value: style.textSizes.headerTextHeight * style.textSizes.headerFontSize,
+                value: style.textSizes.headerFontSizeActual,
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.strumHeader.family),
@@ -229,10 +272,11 @@ extension strumvg {
     private var countCharStaticAttrs: [Node<SVG.DocumentContext>] {
         [
             .attribute(named: "key", value: "counts"),
+            .attribute(named: "transform", value: "translate(0 \(style.strumSizes.height))"),
             .attribute(named: "fill", value: style.colors.rhythms),
             .attribute(
                 named: "font-size",
-                value: style.textSizes.beatTextHeight * style.textSizes.beatFontSize,
+                value: style.textSizes.beatFontSizeActual,
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.countChar.family),
@@ -246,36 +290,32 @@ extension strumvg {
         duration: NoteDuration
     ) -> Node<SVG.DocumentContext>? {
         let variant = strum.variant
-        let width = style.strumSizes.width /*?? 50*/
-        let height = style.strumSizes.height /*?? 100*/
+        let width = style.strumSizes.width
+        let height = style.strumSizes.height
         
-        let strokeRatio: CGFloat = 0.2
-        let strokeWidth = width * strokeRatio
-        let headRatio: CGFloat = 0.2
-        let headHeight: CGFloat = height * headRatio
+        let strokeWidth = style.strumSizes.strokeWidth
+        let headHeight = style.strumSizes.arrowHeadHeight
         
-        let triangle = { () -> Node<SVG.DocumentContext> in
-            .element(
-                named: "polygon",
-                nodes: [
-                    .attribute(
-                        named: "points",
-                        value: [
-                            "0,\(headHeight)",
-                            "\(width / 2),0",
-                            "\(width),\(headHeight)",
-                        ].joined(separator: " ")
-                    ),
-                    .attribute(named: "stroke", value: "none"),
-                ]
-            )
-        }
+        let triangle: Node<SVG.DocumentContext> = .element(
+            named: "polygon",
+            nodes: [
+                .attribute(
+                    named: "points",
+                    value: [
+                        "0,\(headHeight)",
+                        "\(width / 2),0",
+                        "\(width),\(headHeight)",
+                    ].joined(separator: " ")
+                ),
+                .attribute(named: "stroke", value: "none"),
+            ]
+        )
         
         // For more accurate placement when rotation is needed,
         // rotate around (0,0), then translate back into place
         let arrowRotationTransformAttr = Node<SVG.DocumentContext>.attribute(
             named: "transform",
-            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width),-\(height * (0.5 + headRatio)))" : ""
+            value: strum.direction == .down ? "rotate(180 0 0) translate(-\(width) -\(height))" : ""
         )
         
         switch variant {
@@ -286,7 +326,7 @@ extension strumvg {
                     .attribute(named: "x1", value: width / 2, format: numberFormat),
                     .attribute(named: "y1", value: headHeight, format: numberFormat),
                     .attribute(named: "x2", value: width / 2, format: numberFormat),
-                    .attribute(named: "y2", value: height * (0.5 + headRatio), format: numberFormat),
+                    .attribute(named: "y2", value: height, format: numberFormat),
                     .attribute(named: "stroke-width", value: strokeWidth, format: numberFormat),
                 ]
             )
@@ -296,16 +336,19 @@ extension strumvg {
                 nodes: [
                     arrowRotationTransformAttr,
                     line,
-                    triangle()
+                    triangle
                 ]
             )
             
         case .arpeggio:
-            let offsetY = headHeight * 0.9
             let numWaves = 6
-            let amplitude = 6
-            // let offsetX = amplitude * 2;
-            let wavelength = height / CGFloat(numWaves) / CGFloat(2)
+            
+            let startingY = headHeight / 2
+            let squiggleStartingY = headHeight * 0.85
+            let squiggleHeight = height - squiggleStartingY
+            let wavelength = squiggleHeight / CGFloat(numWaves)
+            
+            let amplitude = wavelength / 2
             
             // Squiggle
             let squigglePath = Node<SVG.DocumentContext>.element(
@@ -313,12 +356,9 @@ extension strumvg {
                 attributes: [
                     .attribute(
                         named: "d",
-                        value: "M\(width / 2) , \(offsetY / 2)l0 \(offsetY / 2)" +
-                        (0..<numWaves)
-                            .map { i in
-                                "q\(i % 2 == 0 ? -amplitude : amplitude) \(wavelength / 2) , \(0) \(wavelength)"
-                            }
-                            .joined(separator: ", ")
+                        value: "M\(width / 2) \(startingY)l0 \(squiggleStartingY - startingY)q\(-amplitude) \(amplitude) "
+                            + Array(repeating: "0 \(wavelength)", count: numWaves)
+                                .joined(separator: "t")
                     ),
                     .attribute(
                         named: "stroke-width",
@@ -328,16 +368,16 @@ extension strumvg {
                     .attribute(named: "fill", value: "none"),
                 ]
             )
-
+            
             return .element(
                 named: "g",
                 nodes: [
                     arrowRotationTransformAttr,
-                    triangle(),
+                    triangle,
                     squigglePath
                 ]
             )
-
+            
         case .muted:
             return Node<SVG.DocumentContext>.element(
                 named: "path",
@@ -355,7 +395,7 @@ extension strumvg {
                             // draw to top left of X
                             "L 0 0",
                             // move to bottom of line
-                            "M \(width / 2) \(height * (headRatio + 0.5))",
+                            "M \(width / 2) \(height)",
                             // draw to top of line
                             "V \(width / 2)",
                         ].joined()
@@ -374,23 +414,13 @@ extension strumvg {
             return nil
             
         case .rest:
-            let scaleFactor: CGFloat = 2 / 3
-            let partialHeight = height * (headRatio + 0.5)
-            
-            let w = width * scaleFactor
-            let h = partialHeight * scaleFactor
-            let cx = (width - w) / 2
-            let cy = (partialHeight - h) / 2
-            
             return Node<SVG.DocumentContext>.element(
                 named: "g",
                 nodes: [
                     restNode(
                         duration: duration,
-                        width: w,
-                        height: h,
-                        cx: cx,
-                        cy: cy
+                        width: width,
+                        height: height
                     ),
                 ]
             )
@@ -410,6 +440,10 @@ extension strumvg {
                         format: numberFormat
                     ),
                     .attribute(
+                        named: "dominant-baseline",
+                        value: "central"
+                    ),
+                    .attribute(
                         named: "stroke",
                         value: "none"
                     ),
@@ -426,7 +460,7 @@ extension strumvg {
             .attribute(named: "stroke", value: style.colors.arrows),
             .attribute(
                 named: "font-size",
-                value: style.strumSizes.height / 2,
+                value: style.strumSizes.charStrumTextSize,
                 format: numberFormat
             ),
             .attribute(
@@ -436,15 +470,6 @@ extension strumvg {
             .attribute(named: "font-family", value: style.fonts.arrowText.family),
             .attribute(named: "font-weight", value: style.fonts.arrowText.weight),
             .attribute(named: "font-style", value: style.fonts.arrowText.style),
-            .attribute(
-                named: "textLength",
-                value: style.strumSizes.width,
-                format: numberFormat
-            ),
-            .attribute(
-                named: "lengthAdjust",
-                value: "spacingAndGlyphs"
-            ),
         ]
     }
     
@@ -452,18 +477,19 @@ extension strumvg {
         strums: [Strum],
         noteLength: Timing
     ) -> Node<SVG.DocumentContext> {
-        let y = style.textSizes.headerTextHeight + style.strumSizes.height * FIX_FACTOR + style.textSizes.beatTextHeight
+        let y = style.strumSizes.height + style.textSizes.beatTextHeight
         
         let triplet = noteLength.triplet
-        let horizontalStrokes = noteLength.duration.horizontalStrokeCount
+        let beamBarCount = noteLength.duration.beamBarCount
         
-        let subdivision = triplet ? 3 : 2
-        let quantity = Int(floor(Double(strums.count) / Double(subdivision)))
+        let beatsPerGroup = triplet ? 3 : 2
+        let quantity = Int(floor(Double(strums.count) / Double(beatsPerGroup)))
         
         return .element(
             named: "g",
             nodes: [
-                .attribute(named: "key", value: "rhythms"),
+                .attribute(named: "key", value: "rhythmGroups"),
+                .attribute(named: "transform", value: "translate(0 \(y))"),
                 .attribute(named: "fill", value: style.colors.rhythms),
                 .attribute(named: "stroke", value: style.colors.rhythms),
                 .attribute(
@@ -478,87 +504,130 @@ extension strumvg {
                 .attribute(named: "font-style", value: style.fonts.tripletText.style),
             ] + (0..<quantity).map { i in
                 return createNoteGroup(
-                    quantity: subdivision,
+                    groupNum: i,
+                    beatCount: beatsPerGroup,
                     triplet: triplet,
-                    horizontalStrokes: horizontalStrokes,
-                    x: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap) * CGFloat(i) + style.strumSizes.width / 2,
-                    y: y,
-                    width: CGFloat(subdivision) * (style.strumSizes.width + style.strumSizes.gap)
+                    beamBarCount: beamBarCount
                 )
             }
         )
     }
     
+    /// - Parameters:
+    ///   - groupNum: The index of the note group in the measure.
+    ///   - beatCount: The number of strums in the group.
+    ///   - triplet: Whether or not the group is a triplet.
+    ///   - beamBarCount: The number of beams/flags to draw for the group.
     private func createNoteGroup(
-        quantity: Int,
+        groupNum: Int,
+        beatCount: Int,
         triplet: Bool,
-        horizontalStrokes: Int,
-        x: CGFloat,
-        y: CGFloat,
-        width: CGFloat
+        beamBarCount: Int
     ) -> Node<SVG.DocumentContext> {
-        let quantityFloat = CGFloat(quantity)
+        let beatCountFloat = CGFloat(beatCount)
+        /// Full group width, from left edge of first strum to right edge of last strum (including gap after)
+        let fullWidth = CGFloat(beatCountFloat) * (style.strumSizes.width + style.strumSizes.gap)
         
+        /// `fullWidth` - (0.5 of strum space width on each end, which equals 1 full width)
+        let beamWidth: CGFloat = fullWidth - style.strumSizes.width - style.strumSizes.gap
+        
+        let tripletTextElementY = style.beamSizes.stemHeight + style.textSizes.triplet3TextOffsetY
         let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
             named: "text",
             nodes: [
                 .text("3"), // triplet label
                 .attribute(
                     named: "x",
-                    value: (width * (quantityFloat - 1)) / quantityFloat / 2,
+                    value: beamWidth / 2,
                     format: numberFormat
                 ),
                 .attribute(
                     named: "y",
-                    value: style.beamSizes.stemHeight + 16,
+                    value: tripletTextElementY,
                     format: numberFormat
                 ),
                 .attribute(named: "stroke", value: "none"),
             ]
         ) : nil
         
-        // For each stem, create a pair of commands that moves the path to the start
-        // and draws a relative line vertically
-        let stemLinePathCommands = (0..<quantity).map { i in
-            "M\((width * CGFloat(i)) / quantityFloat),0v\(style.beamSizes.stemHeight)"
-        }.joined()
+        // M0,0 [v8 h50 V0]+
+        let beamLength = beamWidth / (beatCountFloat - 1)
+        // Add first path node
+        var noteBeamsPathAttr = "M0,0"
         
-        // Space out horizontal strokes by 1.5*strokeWidth, or 1 (whichever is larger)
-        let horizontalStrokeGap = max(1.5 * style.beamSizes.strokeWidth, 1)
-        // This seems weird but it seems to work
-        let beamLength = (width * (quantityFloat - 1)) / quantityFloat
+        // Construct repeat segments
+        var pathSegment = "v\(style.beamSizes.stemHeight)"
+        // If at least 8th notes, draw first beam bar
+        if beamBarCount > 0 {
+            pathSegment += " h\(beamLength)"
+        } else {
+            // Otherwise, just move node to next stem
+            pathSegment += " m\(beamLength),0"
+        }
+        pathSegment += " V0 "
         
-        let stemBeamPathCommands = (0..<horizontalStrokes).map { i in
-            let strokeY = style.beamSizes.stemHeight - CGFloat(i) * horizontalStrokeGap
-            return "M0,\(strokeY)h\(beamLength)"
-        }.joined()
+        // Append path string with repeating nodes
+        noteBeamsPathAttr += Array(
+            repeating: pathSegment,
+            count: beatCount - 1
+        )
+        .joined(separator: " ")
         
         let noteBeamsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
                 .attribute(
                     named: "d",
-                    value: stemLinePathCommands + stemBeamPathCommands
+                    value: noteBeamsPathAttr
                 )
             ]
         )
+        
+        let extraBeamBars = beamBarCount - 1
+        var extraBeamPaths = [Node<SVG.DocumentContext>]()
+        if extraBeamBars > 0 {
+            // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
+            let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
+            
+            extraBeamPaths = (0..<extraBeamBars).map { i in
+                // <line x1="0" y1="4" x2="50" y2="4"></line>
+                let y = style.beamSizes.stemHeight - CGFloat(i + 1) * beamStrokeVerticalGap
+                return .element(
+                    named: "line",
+                    attributes: [
+                        .attribute(named: "x1", value: "0"),
+                        .attribute(named: "y1", value: y, format: numberFormat),
+                        .attribute(named: "x2", value: beamWidth, format: numberFormat),
+                        .attribute(named: "y2", value: y, format: numberFormat),
+                    ]
+                )
+            }
+        }
         
         let beamsGroup = Node<SVG.DocumentContext>.element(
             named: "g",
             nodes: [
                 .attribute(named: "fill", value: "none"),
-                .attribute(named: "stroke-linecap", value: "square"),
                 noteBeamsPath,
-            ]
+            ] + extraBeamPaths
         )
+        
+        let x = CGFloat(groupNum) * fullWidth
+        let translateX = x + style.strumSizes.width / 2
         
         return Node<SVG.DocumentContext>.element(
             named: "g",
             nodes: [
-                [.attribute(
-                    named: "transform",
-                    value: "translate(\(x.formatted(numberFormat)),\(y.formatted(numberFormat)))"
-                )],
+                [
+                    .attribute(
+                        named: "key",
+                        value: "group\(groupNum)"
+                    ),
+                    .attribute(
+                        named: "transform",
+                        value: "translate(\(translateX.formatted(numberFormat)))"
+                    )
+                ],
                 [beamsGroup, textEl]
                     .compactMap { $0 },
             ].flatMap { $0 }

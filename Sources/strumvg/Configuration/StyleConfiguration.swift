@@ -39,6 +39,20 @@ struct StyleConfiguration: Codable {
         /// ``StyleConfiguration/Args/TextSizes-swift.struct/tripletFontSize``
         let tripletFontSize: CGFloat
         
+        var beatFontSizeActual: CGFloat {
+            beatTextHeight * beatFontSize
+        }
+        
+        var headerFontSizeActual: CGFloat {
+            headerTextHeight * headerFontSize
+        }
+        
+        /// The vertical space between a triplet beam and the `3` text.
+        private let triplet3TextGap: CGFloat = 2
+        var triplet3TextOffsetY: CGFloat {
+            tripletFontSize + triplet3TextGap
+        }
+        
         static var `default`: Self {
             StyleConfiguration.default.textSizes
         }
@@ -52,6 +66,24 @@ struct StyleConfiguration: Codable {
         /// ``StyleConfiguration/Args/StrumSizes-swift.struct/gap``
         let gap: CGFloat
         
+        private let strokeWidthRatio: CGFloat = 0.2
+        var strokeWidth: CGFloat {
+            width * strokeWidthRatio
+        }
+        
+        private let arrowHeadHeightRatio: CGFloat = 0.2
+        var arrowLineHeight: CGFloat {
+            height * (1 - arrowHeadHeightRatio)
+        }
+        var arrowHeadHeight: CGFloat {
+            height * arrowHeadHeightRatio
+        }
+        
+        /// Used as the `font-size` for characters inserts as strums.
+        var charStrumTextSize: CGFloat {
+            height / 2
+        }
+        
         static var `default`: Self {
             StyleConfiguration.default.strumSizes
         }
@@ -62,6 +94,11 @@ struct StyleConfiguration: Codable {
         let strokeWidth: CGFloat
         /// ``StyleConfiguration/Args/BeamSizes-swift.struct/stemHeight``
         let stemHeight: CGFloat
+        
+        /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
+        var beamStrokeVerticalGap: CGFloat {
+            max(1.5 * strokeWidth, 1)
+        }
         
         static var `default`: Self {
             StyleConfiguration.default.beamSizes

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct StrumKind: RawRepresentable {
+public struct StrumKind: RawRepresentable, Sendable, Hashable {
     public let direction: Direction?
     public let variant: Variant
     
@@ -20,6 +20,11 @@ public struct StrumKind: RawRepresentable {
 //    case space
 //    case rest
 //    case other(Character)
+    
+    internal init(direction: Direction?, variant: Variant) {
+        self.direction = direction
+        self.variant = variant
+    }
     
     public init(rawValue: Character) {
         switch rawValue {
@@ -55,6 +60,19 @@ public struct StrumKind: RawRepresentable {
     
     public var rawValue: Character {
         self.variant.character(for: self.direction)
+    }
+    
+    public static let down = StrumKind(direction: .down, variant: .normal)
+    public static let up = StrumKind(direction: .up, variant: .normal)
+    public static let space = StrumKind(direction: nil, variant: .space)
+    public static let downMuted = StrumKind(direction: .down, variant: .muted)
+    public static let upMuted = StrumKind(direction: .up, variant: .muted)
+    public static let downArpeggio = StrumKind(direction: .down, variant: .arpeggio)
+    public static let upArpeggio = StrumKind(direction: .up, variant: .arpeggio)
+    public static let rest = StrumKind(direction: nil, variant: .rest)
+    
+    public static func other(_ char: Character) -> StrumKind {
+        StrumKind(direction: nil, variant: .other(char))
     }
 }
 

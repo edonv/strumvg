@@ -2,81 +2,69 @@
 //  Pattern.swift
 //  strumvg
 //
-//  Created by Edon Valdman on 2/23/25.
+//  Created by Edon Valdman on 6/12/26.
 //
 
 import Foundation
-
 import RegexBuilder
 
-public struct Pattern: RawRepresentable {
-    public let groups: [RhythmicGroup]
-    public let timing: Timing
+/// A strumming pattern.
+///
+/// Raw value: `[measure]+` (separated by `"|"`), each measure can end with `-[timing]`
+///
+/// Can also have a timing identifier at the end of the full string to represent for the full pattern.
+public struct Pattern: RawRepresentable, Sendable, Hashable {
+    public let measures: [Measure]
     
-    public var totalStrums: Int {
-        groups.flatMap(\.strums).count
+    public init(measures: [Measure]) {
+        self.measures = measures
     }
     
-    init(groups: [RhythmicGroup], timing: Timing) {
-        self.groups = groups
-        self.timing = timing
-    }
-    
-    /// - Returns: A validated `Pattern`, or `nil` if the `timing` component is missing.
+    /// - Returns: A validated `Pattern`, or `nil` if the format is invalid.
     public init?(rawValue: String) {
-        // Strums
+        let timingRegexMatches = rawValue.matches(of: Timing.regex)
         
-        let groupStrumsByRhythm = rawValue
+        guard !timingRegexMatches.isEmpty else { return nil }
+        
+        var rhythmGroupsByMeasure = rawValue
+            // Trim only newlines in case there is intentional leading whitespace in the strums
             .trimmingCharacters(in: .newlines)
-            // 1/4
-            .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1})(?=.*-4$)/) { match in
-                return "\(match.output.1)\n"
+            .split(separator: "|")
+            // Initial clean-up
+            .map { measureStr in
+                measureStr
+                    // Trim only newlines in case there is intentional leading whitespace in the strums
+                    .trimmingCharacters(in: .newlines)
+                    // Remove any remaining barlines in each measure
+                    .replacingOccurrences(of: "|", with: "")
             }
-            // 1/8
-//            .replace(/((?:(?:[^\{\}])|(?:\{.\})){1,2})(?=.*(-8)$)/g, '{$1}$2\n')
-            .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1,2})(?=.*-8$)/) { match in
-                return "\(match.output.1)\n"
+        
+        // if there is more than 1 group (or there's just 1 group AND the Timing segment is separated by a barline)
+        if timingRegexMatches.count == 1
+            && rhythmGroupsByMeasure.count > 1,
+           let firstMatch = timingRegexMatches.first,
+           let timing = Timing(rawValue: String(firstMatch.output.0)) {
+            // remove only timing string
+            if let index = rhythmGroupsByMeasure.firstIndex(of: timing.rawValue) {
+                rhythmGroupsByMeasure.remove(at: index)
             }
-            // 1/16
-//            .replace(/((?:(?:[^\{\}])|(?:\{.\})){1,4})(?=.*(-16)$)/g, '{$1}$2\n')
-            .replacing(/((?:(?:[^\{\}])|(?:\{.\})){1,4})(?=.*-16$)/) { match in
-                return "\(match.output.1)\n"
-            }
-            // 1/4t, 1/8t, 1/16t
-//            .replace(/((?:(?:[^\{\}])|(?:\{.\})){1,3})(?=.*(-(?:4|8|16)t)$)/g, '{$1}$2\n');
-            .replacing(/((?:(?:[^\{\}])|(?:\{.{2}\})){1,3})(?=.*-(?:4|8|16)t$)/) { match in
-                return "\(match.output.1)\n"
-            }
-            // remove original trailing noteLength
-            .replacing(/\n-(?:4|8|16)t?$/, with: "")
-            // group all individual strum chars in curly braces
-            .replacing(/([^\{\}\n])(?!.*\})(?=.*$)/.anchorsMatchLineEndings()) { match in
-                return "{\(match.output.1)}"
-            }
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            // append each measure string with the timing string
+            rhythmGroupsByMeasure = rhythmGroupsByMeasure
+                .map { segment in
+                    guard !segment.contains(timing.rawValue) else { return segment }
+                    return segment + timing.rawValue
+                }
+        }
         
-//        print(groupStrumsByRhythm)
-        
-        self.groups = groupStrumsByRhythm
-            .components(separatedBy: "\n")
-            .compactMap(RhythmicGroup.init(rawValue:))
-        
-        // Timing
-        
-        let timingRegex = /-(?<time>\d+)(?<triplet>t)?$/
-        
-        guard let timingMatch = try? timingRegex.firstMatch(in: rawValue)?.output,
-              let durationInt = Int(timingMatch.time),
-              let duration = NoteDuration(rawValue: durationInt) else { return nil }
-        
-        self.timing = .init(duration: duration, triplet: timingMatch.triplet != nil)
+        self.measures = rhythmGroupsByMeasure
+//            .compactMap(Measure.init(rawValue:))
+            .map { Measure(rawValue: $0)! }
     }
     
     public var rawValue: String {
-        groups
-            .flatMap(\.strums)
+        measures
             .map(\.rawValue)
-            .joined()
-        + "-\(timing.duration.rawValue)\(timing.triplet ? "t" : "")"
+            .joined(separator: "|")
     }
 }
