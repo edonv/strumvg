@@ -24,11 +24,20 @@ public struct StyleConfiguration: Codable {
         public let rhythms: String
         /// The color of the articulations and header text above the arrows.
         public let headers: String
+        /// The color of the barlines.
+        /// > Default: `#000000` (black)
+        public let barlines: String
         
-        public init(arrows: String, rhythms: String, headers: String) {
+        public init(
+            arrows: String,
+            rhythms: String,
+            headers: String,
+            barlines: String
+        ) {
             self.arrows = arrows
             self.rhythms = rhythms
             self.headers = headers
+            self.barlines = barlines
         }
         
         public init(config: ConfigReader) {
@@ -43,6 +52,10 @@ public struct StyleConfiguration: Codable {
                 ),
                 headers: config.string(
                     forKey: "headers",
+                    default: "#000000"
+                ),
+                barlines: config.string(
+                    forKey: "barlines",
                     default: "#000000"
                 )
             )
