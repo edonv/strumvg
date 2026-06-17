@@ -122,10 +122,10 @@ public struct StyleConfiguration: Codable {
         public let width: CGFloat
         /// The height of each strum arrow.
         public let height: CGFloat
+        public let strokeWidthRatio: CGFloat
         /// The horizontal space between each strum.
         public let gap: CGFloat
         
-        private let strokeWidthRatio: CGFloat = 0.2
         package var strokeWidth: CGFloat {
             width * strokeWidthRatio
         }
@@ -143,9 +143,15 @@ public struct StyleConfiguration: Codable {
             height / 2
         }
         
-        public init(width: CGFloat, height: CGFloat, gap: CGFloat) {
+        public init(
+            width: CGFloat,
+            height: CGFloat,
+            strokeWidth: CGFloat,
+            gap: CGFloat
+        ) {
             self.width = width
             self.height = height
+            self.strokeWidthRatio = strokeWidth
             self.gap = gap
         }
         
@@ -153,6 +159,7 @@ public struct StyleConfiguration: Codable {
             self.init(
                 width: config.cgFloat(forKey: "width", default: 20),
                 height: config.cgFloat(forKey: "height", default: 80),
+                strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 0.2),
                 gap: config.cgFloat(forKey: "gap", default: 30)
             )
         }
