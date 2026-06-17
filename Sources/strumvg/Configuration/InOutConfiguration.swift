@@ -85,7 +85,7 @@ struct InOutConfiguration: ParsableArguments {
             // Apply default value
             if destinationType == nil
                 && fileOutput == nil {
-                self.destinationType = .log
+                self.destinationType = .stdout
             }
             
             switch destinationType {
