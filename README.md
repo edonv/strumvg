@@ -21,9 +21,10 @@ USAGE: strumvg [<options>] [<pattern-string>]
 ARGUMENTS:
   <pattern-string>        The string representation of a pattern.
 
-IN/OUT OPTIONS:
+INPUT/OUTPUT OPTIONS:
   -a, --arg/-i, --stdin   Source for input pattern string. (default: -a)
-  -l, --log/-o, --stdout  Destination for output SVG content. (default: -l)
+  -l, --log/-o, --stdout/-f, --file=<file-path>.svg
+                          Destination for output SVG content. (default: -l)
 
 CONFIGURATION:
   --arrow-color <arrow-color>
