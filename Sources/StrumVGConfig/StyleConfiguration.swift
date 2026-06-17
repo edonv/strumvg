@@ -231,7 +231,11 @@ public struct StyleConfiguration: Codable {
             strumSizes.gap * gapRatio
         }
         
-        public init(strokeWidth: CGFloat, heightRatio: CGFloat, gapRatio: CGFloat) {
+        public init(
+            strokeWidth: CGFloat,
+            heightRatio: CGFloat,
+            gapRatio: CGFloat
+        ) {
             self.strokeWidth = strokeWidth
             self.heightRatio = heightRatio
             self.gapRatio = gapRatio
