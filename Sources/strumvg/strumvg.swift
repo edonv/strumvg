@@ -44,9 +44,18 @@ struct strumvg: AsyncParsableCommand {
     
     private mutating func initStyle() async throws -> StyleConfiguration {
         var jsonProvider: FileProvider<JSONSnapshot>? = nil
+        var yamlProvider: FileProvider<YAMLSnapshot>? = nil
         if let configPath = inOut.configFilePath {
             if configPath.hasSuffix(".json") {
                 jsonProvider = try await FileProvider<JSONSnapshot>(
+                    filePath: .init(configPath),
+                    allowMissing: true
+                )
+            }
+            
+            if configPath.hasSuffix(".yml")
+                || configPath.hasSuffix(".yaml") {
+                yamlProvider = try await FileProvider<YAMLSnapshot>(
                     filePath: .init(configPath),
                     allowMissing: true
                 )
@@ -56,6 +65,7 @@ struct strumvg: AsyncParsableCommand {
         let providers: [(any ConfigProvider)?] = [
             CommandLineArgumentsProvider(arguments: otherArgs),
             jsonProvider,
+            yamlProvider,
         ]
         
         let config = ConfigReader(
