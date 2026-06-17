@@ -295,22 +295,19 @@ public struct StyleConfiguration: Codable {
         
         public struct Styling: Codable {
             /// Font family name.
+            /// > Default: `sans-serif`
             ///
-            /// Attribute: `font-family`
-            ///
-            /// Default: `sans-serif`
+            /// > Attribute: `font-family`
             public let family: String
             /// Font weight.
+            /// > Default: `normal`
             ///
-            /// Attribute: `font-weight`
-            ///
-            /// Default: `normal`
+            /// > Attribute: `font-weight`
             public let weight: String
             /// Font weight.
+            /// > Default: `normal`
             ///
-            /// Attribute: `font-style`
-            ///
-            /// Default: `normal`
+            /// > Attribute: `font-style`
             public let style: String
             
             public init(family: String, weight: String, style: String) {
