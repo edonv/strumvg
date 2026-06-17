@@ -61,18 +61,18 @@ public struct StyleConfiguration: Codable {
         /// The actual font-size of the triplet label, if applicable.
         public let tripletFontSize: CGFloat
         
-        public var beatFontSizeActual: CGFloat {
+        package var beatFontSizeActual: CGFloat {
             beatTextHeight * beatFontSize
         }
         
-        public var headerFontSizeActual: CGFloat {
+        package var headerFontSizeActual: CGFloat {
             headerTextHeight * headerFontSize
         }
         
         /// The vertical space between a triplet beam and the `3` text.
-        private let triplet3TextGap: CGFloat = 2
-        public var triplet3TextOffsetY: CGFloat {
-            tripletFontSize + triplet3TextGap
+        private static let triplet3TextGap: CGFloat = 2
+        package var triplet3TextOffsetY: CGFloat {
+            tripletFontSize + TextSizes.triplet3TextGap
         }
         
         public init(
@@ -126,20 +126,20 @@ public struct StyleConfiguration: Codable {
         public let gap: CGFloat
         
         private let strokeWidthRatio: CGFloat = 0.2
-        public var strokeWidth: CGFloat {
+        package var strokeWidth: CGFloat {
             width * strokeWidthRatio
         }
         
-        private let arrowHeadHeightRatio: CGFloat = 0.2
-        public var arrowLineHeight: CGFloat {
-            height * (1 - arrowHeadHeightRatio)
+        private static let arrowHeadHeightRatio: CGFloat = 0.2
+        package var arrowLineHeight: CGFloat {
+            height * (1 - StrumSizes.arrowHeadHeightRatio)
         }
-        public var arrowHeadHeight: CGFloat {
-            height * arrowHeadHeightRatio
+        package var arrowHeadHeight: CGFloat {
+            height * StrumSizes.arrowHeadHeightRatio
         }
         
         /// Used as the `font-size` for characters inserts as strums.
-        public var charStrumTextSize: CGFloat {
+        package var charStrumTextSize: CGFloat {
             height / 2
         }
         
@@ -165,7 +165,7 @@ public struct StyleConfiguration: Codable {
         public let stemHeight: CGFloat
         
         /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
-        public var beamStrokeVerticalGap: CGFloat {
+        package var beamStrokeVerticalGap: CGFloat {
             max(1.5 * strokeWidth, 1)
         }
         
