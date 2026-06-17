@@ -56,7 +56,7 @@ package struct InOutConfiguration: ParsableArguments {
             case patternString
         }
         
-        private(set) var source: Source!
+        package private(set) var source: Source!
         
         package mutating func validate() throws {
             // Apply default value
@@ -144,7 +144,7 @@ package struct InOutConfiguration: ParsableArguments {
             case fileOutput
         }
         
-        private(set) var destination: Destination!
+        package private(set) var destination: Destination!
         
         package mutating func validate() throws {
             // Apply default value
@@ -200,7 +200,7 @@ package struct InOutConfiguration: ParsableArguments {
             }
         }
         
-        enum Destination {
+        package enum Destination {
             case stdout
             case log
             case file(path: String)
