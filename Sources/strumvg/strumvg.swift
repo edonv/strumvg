@@ -30,16 +30,6 @@ struct strumvg: ParsableCommand {
     var style: StyleConfiguration!
     
     mutating func validate() throws {
-        if inOut.inputSource == .argument
-            && inOut.patternString == nil {
-            throw ValidationError("`inputSource` flag set to `--arg` and `patternString` argument is missing.")
-        }
-        
-        if inOut.inputSource != .argument
-            && inOut.patternString != nil {
-            throw ValidationError("`inputSource` flag set to `--stdin` and `patternString` argument is present.")
-        }
-        
         self.style = try self.styleArgs
             .merging(withFileAt: inOut.configFilePath)
     }
