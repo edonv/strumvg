@@ -8,7 +8,11 @@
 import Foundation
 import ArgumentParser
 
-struct InOutConfiguration: ParsableArguments {
+package struct InOutConfiguration: ParsableArguments {
+    package init() {
+        
+    }
+    
     @Option(
         name: [.customLong("config"), .customShort("c")],
         help: .init(
@@ -17,12 +21,16 @@ struct InOutConfiguration: ParsableArguments {
         ),
         completion: .file(extensions: ["json"])
     )
-    var configFilePath: String?
+    package var configFilePath: String?
     
     @OptionGroup(title: "Input")
-    var input: Input
+    package var input: Input
     
-    struct Input: ParsableArguments {
+    package struct Input: ParsableArguments {
+        package init() {
+            
+        }
+        
         @Flag(
             help: .init(
                 "Source for input pattern string.",
@@ -43,14 +51,14 @@ struct InOutConfiguration: ParsableArguments {
         )
         private var patternString: String? = nil
         
-        enum CodingKeys: CodingKey {
+        package enum CodingKeys: CodingKey {
             case sourceType
             case patternString
         }
         
         private(set) var source: Source!
         
-        mutating func validate() throws {
+        package mutating func validate() throws {
             // Apply default value
             if sourceType == nil
                 && patternString == nil {
@@ -96,16 +104,20 @@ struct InOutConfiguration: ParsableArguments {
             }
         }
         
-        enum Source {
+        package enum Source {
             case stdin
             case argument(pattern: String)
         }
     }
     
     @OptionGroup(title: "Output")
-    var output: Output
+    package var output: Output
     
-    struct Output: ParsableArguments {
+    package struct Output: ParsableArguments {
+        package init() {
+            
+        }
+        
         @Flag(
             help: .init(
                 "Destination for output SVG content.",
@@ -134,7 +146,7 @@ struct InOutConfiguration: ParsableArguments {
         
         private(set) var destination: Destination!
         
-        mutating func validate() throws {
+        package mutating func validate() throws {
             // Apply default value
             if destinationType == nil
                 && fileOutput == nil {
