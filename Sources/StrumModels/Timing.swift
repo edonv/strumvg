@@ -57,14 +57,18 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
     /// The (maximum) number of note stems per group, depending on the type of `Timing`.
     public var stemsPerGroup: Int {
         switch self.triplet {
-        case true: 3
+        case true:
+            return 3
         case false:
             switch duration {
             // TODO: this should be 1, but currently, if there's an odd number of strums, the last one won't have a stem. currently, it gets padded to have an odd number
-            case .quarter: 2
-            case .eighth: 2
+            case .quarter:
+                return 2
+            case .eighth:
+                return 2
             // TODO: this should be 4, but currently, if there's an odd number of strums, the last one won't have a stem. currently, it gets padded to have an even number. sets of 4 should be rendered linked
-            case .sixteenth: 2
+            case .sixteenth:
+                return 2
             }
         }
     }
