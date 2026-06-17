@@ -93,15 +93,15 @@ public struct StyleConfiguration: Codable {
         
         public init(
             beatTextHeight: CGFloat,
-            beatFontSize: CGFloat,
+            beatFontSizeRatio: CGFloat,
             headerTextHeight: CGFloat,
-            headerFontSize: CGFloat,
+            headerFontSizeRatio: CGFloat,
             tripletFontSize: CGFloat
         ) {
             self.beatTextHeight = beatTextHeight
-            self.beatFontSizeRatio = beatFontSize
+            self.beatFontSizeRatio = beatFontSizeRatio
             self.headerTextHeight = headerTextHeight
-            self.headerFontSizeRatio = headerFontSize
+            self.headerFontSizeRatio = headerFontSizeRatio
             self.tripletFontSize = tripletFontSize
         }
         
@@ -111,16 +111,16 @@ public struct StyleConfiguration: Codable {
                     forKey: "beatTextHeight",
                     default: 30
                 ),
-                beatFontSize: config.cgFloat(
-                    forKey: "beatFontSize",
+                beatFontSizeRatio: config.cgFloat(
+                    forKey: "beatFontSizeRatio",
                     default: 0.8
                 ),
                 headerTextHeight: config.cgFloat(
                     forKey: "headerTextHeight",
                     default: 30
                 ),
-                headerFontSize: config.cgFloat(
-                    forKey: "headerFontSize",
+                headerFontSizeRatio: config.cgFloat(
+                    forKey: "headerFontSizeRatio",
                     default: 0.8
                 ),
                 tripletFontSize: config.cgFloat(
@@ -167,12 +167,12 @@ public struct StyleConfiguration: Codable {
         public init(
             width: CGFloat,
             height: CGFloat,
-            strokeWidth: CGFloat,
+            strokeWidthRatio: CGFloat,
             gap: CGFloat
         ) {
             self.width = width
             self.height = height
-            self.strokeWidthRatio = strokeWidth
+            self.strokeWidthRatio = strokeWidthRatio
             self.gap = gap
         }
         
@@ -180,7 +180,7 @@ public struct StyleConfiguration: Codable {
             self.init(
                 width: config.cgFloat(forKey: "width", default: 20),
                 height: config.cgFloat(forKey: "height", default: 80),
-                strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 0.2),
+                strokeWidthRatio: config.cgFloat(forKey: "strokeWidthRatio", default: 0.2),
                 gap: config.cgFloat(forKey: "gap", default: 30)
             )
         }
