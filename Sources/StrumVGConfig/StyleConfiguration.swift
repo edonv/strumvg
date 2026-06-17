@@ -61,16 +61,19 @@ public struct StyleConfiguration: Codable {
         /// The actual font-size of the triplet label, if applicable.
         public let tripletFontSize: CGFloat
         
+        /// The actual font size to use for beat text, computed automatically.
         package var beatFontSize: CGFloat {
             beatTextHeight * beatFontSizeRatio
         }
         
+        /// The actual font size to use for header text, computed automatically.
         package var headerFontSize: CGFloat {
             headerTextHeight * headerFontSizeRatio
         }
         
         /// The vertical space between a triplet beam and the `3` text.
         private static let triplet3TextGap: CGFloat = 2
+        /// The vertical offset between the bottom of a `RhythmicGroup`'s beams and the baseline of the "triplet 3" text.
         package var triplet3TextOffsetY: CGFloat {
             tripletFontSize + TextSizes.triplet3TextGap
         }
@@ -122,18 +125,23 @@ public struct StyleConfiguration: Codable {
         public let width: CGFloat
         /// The height of each strum arrow.
         public let height: CGFloat
+        /// The relative stroke width of a strum arrow's lines, as a fraction of ``width``.
         public let strokeWidthRatio: CGFloat
         /// The horizontal space between each strum.
         public let gap: CGFloat
         
+        /// The computed stroke width of a strum arrow's lines.
         package var strokeWidth: CGFloat {
             width * strokeWidthRatio
         }
         
+        /// The relative height of an arrow's head, as a fraction of ``height``.
         private static let arrowHeadHeightRatio: CGFloat = 0.2
+        /// The computed height of a strum arrow's line.
         package var arrowLineHeight: CGFloat {
             height * (1 - StrumSizes.arrowHeadHeightRatio)
         }
+        /// The computed height of a strum arrow's head.
         package var arrowHeadHeight: CGFloat {
             height * StrumSizes.arrowHeadHeightRatio
         }
