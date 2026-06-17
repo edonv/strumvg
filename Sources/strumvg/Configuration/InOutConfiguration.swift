@@ -49,37 +49,96 @@ struct InOutConfiguration: ParsableArguments {
     )
     var patternString: String?
     
-    @Flag(
-        help: .init(
-            "Destination for output SVG content.",
-            discussion: "-o/--stdout uses the stdout as the output destination of the generated SVG string. -l/--log outputs the generated SVG string to the console."
+    @OptionGroup(title: "Output")
+    var output: Output
+    
+    struct Output: ParsableArguments {
+        @Flag(
+            help: .init(
+                "Destination for output SVG content.",
+                discussion: "This option is mutually exclusive with the --file option."
+            )
         )
-    )
-    var outputDestination: OutputDestination = .log
-    
-    @Argument(
-        help: .init(
-            "A path to a file that the generated SVG string should be written to.",
-            discussion: "This argument requires the --file flag."
-        ),
-        completion: .file(extensions: ["svg"])
-    )
-    var outputFilePath: String?
-    
-    enum OutputDestination: EnumerableFlag {
-        case stdout
-        case log
-        case file
+        private var destinationType: DestinationType?
         
-        static func name(for value: OutputDestination) -> NameSpecification {
-            switch value {
-            case .stdout:
-                return [.customShort("o"), .long]
-            case .log:
-                return [.customShort("l"), .long]
-            case .file:
-                return [.short, .long]
+        @Option(
+            name: [
+                .customShort("f"),
+                .customLong("file")
+            ],
+            help: .init(
+                "Outputs the generated SVG string to a specified file path.",
+                discussion: "This option is mutually exclusive with the --stdout and --log flags."
+            ),
+            completion: .file(extensions: ["svg"])
+        )
+        private var fileOutput: String? = nil
+        
+        enum CodingKeys: CodingKey {
+            case destinationType
+            case fileOutput
+        }
+        
+        private(set) var destination: Destination!
+        
+        mutating func validate() throws {
+            // Apply default value
+            if destinationType == nil
+                && fileOutput == nil {
+                self.destinationType = .log
             }
+            
+            switch destinationType {
+            case .stdout where fileOutput == nil:
+                self.destination = .stdout
+                return
+            case .log where fileOutput == nil:
+                self.destination = .log
+                return
+            case nil:
+                if let fileOutput {
+                    self.destination = .file(path: fileOutput)
+                    return
+                }
+            default:
+                // destinationType != nil
+                // both non-nil
+                if fileOutput != nil {
+                    throw ValidationError("Both a `destinationType` flag and `--file` option are present. They are mutually exclusive.")
+                }
+            }
+            
+            // both nil
+            throw ValidationError("Neither a `destinationType` flag nor the `--file` option is present. One of them must be present.")
+        }
+        
+        private enum DestinationType: EnumerableFlag {
+            case stdout
+            case log
+            
+            static func name(for value: DestinationType) -> NameSpecification {
+                switch value {
+                case .stdout:
+                    return [.customShort("o"), .long]
+                case .log:
+                    return [.customShort("l"), .long]
+                }
+            }
+            
+            static func help(for value: DestinationType) -> ArgumentHelp? {
+                switch value {
+                case .stdout:
+                    return "Outputs the generated SVG string to the stdout."
+                case .log:
+                    return "Outputs the generated SVG string to the console."
+                }
+            }
+        }
+        
+        enum Destination {
+            case stdout
+            case log
+            case file(path: String)
         }
     }
 }
