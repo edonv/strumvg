@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Configuration
 
 struct StyleConfiguration: Codable {
     let colors: Colors
@@ -15,28 +16,49 @@ struct StyleConfiguration: Codable {
     let fonts: Fonts
     
     struct Colors: Codable {
-        /// ``StyleConfiguration/Args/Colors-swift.struct/arrows``
+        /// The color of the arrows.
+        ///
+        /// Default value: `#000000` (black)
         let arrows: String
-        /// ``StyleConfiguration/Args/Colors-swift.struct/rhythms``
+        /// The color of the rhythm text and stems below the arrows.
         let rhythms: String
-        /// ``StyleConfiguration/Args/Colors-swift.struct/headers``
+        /// The color of the articulations and header text above the arrows.
         let headers: String
         
-        static var `default`: Self {
-            StyleConfiguration.default.colors
+        init(arrows: String, rhythms: String, headers: String) {
+            self.arrows = arrows
+            self.rhythms = rhythms
+            self.headers = headers
+        }
+        
+        init(config: ConfigReader) {
+            self.init(
+                arrows: config.string(
+                    forKey: "arrows",
+                    default: "#000000"
+                ),
+                rhythms: config.string(
+                    forKey: "rhythms",
+                    default: "#555555"
+                ),
+                headers: config.string(
+                    forKey: "headers",
+                    default: "#000000"
+                )
+            )
         }
     }
     
     struct TextSizes: Codable {
-        /// ``StyleConfiguration/Args/TextSizes-swift.struct/beatTextHeight``
+        /// The height of the space reserved for rhythm text below the arrows.
         let beatTextHeight: CGFloat
-        /// ``StyleConfiguration/Args/TextSizes-swift.struct/beatFontSize``
+        /// The relative font-size of the rhythm text below the arrows, as a fraction of its height.
         let beatFontSize: CGFloat
-        /// ``StyleConfiguration/Args/TextSizes-swift.struct/headerTextHeight``
+        /// The height of the space reserved for articulations and header text above the arrows.
         let headerTextHeight: CGFloat
-        /// ``StyleConfiguration/Args/TextSizes-swift.struct/headerFontSize``
+        /// The relative font-size of the articulations and header text above the arrows, as a fraction of its height.
         let headerFontSize: CGFloat
-        /// ``StyleConfiguration/Args/TextSizes-swift.struct/tripletFontSize``
+        /// The actual font-size of the triplet label, if applicable.
         let tripletFontSize: CGFloat
         
         var beatFontSizeActual: CGFloat {
@@ -53,17 +75,54 @@ struct StyleConfiguration: Codable {
             tripletFontSize + triplet3TextGap
         }
         
-        static var `default`: Self {
-            StyleConfiguration.default.textSizes
+        init(
+            beatTextHeight: CGFloat,
+            beatFontSize: CGFloat,
+            headerTextHeight: CGFloat,
+            headerFontSize: CGFloat,
+            tripletFontSize: CGFloat
+        ) {
+            self.beatTextHeight = beatTextHeight
+            self.beatFontSize = beatFontSize
+            self.headerTextHeight = headerTextHeight
+            self.headerFontSize = headerFontSize
+            self.tripletFontSize = tripletFontSize
+        }
+        
+        init(config: ConfigReader) {
+            self.init(
+                beatTextHeight: config.cgFloat(
+                    forKey: "beatTextHeight",
+                    default: 30
+                ),
+                beatFontSize: config.cgFloat(
+                    forKey: "beatFontSize",
+                    default: 0.8
+                ),
+                headerTextHeight: config.cgFloat(
+                    forKey: "headerTextHeight",
+                    default: 30
+                ),
+                headerFontSize: config.cgFloat(
+                    forKey: "headerFontSize",
+                    default: 0.8
+                ),
+                tripletFontSize: config.cgFloat(
+                    forKey: "tripletFontSize",
+                    default: 14
+                )
+            )
         }
     }
     
     struct StrumSizes: Codable {
-        /// ``StyleConfiguration/Args/StrumSizes-swift.struct/width``
+        /// The width of the space reserved for each strum arrow.
+        ///
+        /// This is the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text. It also defines the maximum width of a strum's arrowhead.
         let width: CGFloat
-        /// ``StyleConfiguration/Args/StrumSizes-swift.struct/height``
+        /// The height of each strum arrow.
         let height: CGFloat
-        /// ``StyleConfiguration/Args/StrumSizes-swift.struct/gap``
+        /// The horizontal space between each strum.
         let gap: CGFloat
         
         private let strokeWidthRatio: CGFloat = 0.2
@@ -84,15 +143,25 @@ struct StyleConfiguration: Codable {
             height / 2
         }
         
-        static var `default`: Self {
-            StyleConfiguration.default.strumSizes
+        init(width: CGFloat, height: CGFloat, gap: CGFloat) {
+            self.width = width
+            self.height = height
+            self.gap = gap
+        }
+        
+        init(config: ConfigReader) {
+            self.init(
+                width: config.cgFloat(forKey: "width", default: 20),
+                height: config.cgFloat(forKey: "height", default: 80),
+                gap: config.cgFloat(forKey: "gap", default: 30)
+            )
         }
     }
     
     struct BeamSizes: Codable {
-        /// ``StyleConfiguration/Args/BeamSizes-swift.struct/strokeWidth``
+        /// The stroke width of the rhythm stems/beams below the arrows.
         let strokeWidth: CGFloat
-        /// ``StyleConfiguration/Args/BeamSizes-swift.struct/stemHeight``
+        /// The vertical length of the beam stems.
         let stemHeight: CGFloat
         
         /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
@@ -100,8 +169,16 @@ struct StyleConfiguration: Codable {
             max(1.5 * strokeWidth, 1)
         }
         
-        static var `default`: Self {
-            StyleConfiguration.default.beamSizes
+        init(strokeWidth: CGFloat, stemHeight: CGFloat) {
+            self.strokeWidth = strokeWidth
+            self.stemHeight = stemHeight
+        }
+        
+        init(config: ConfigReader) {
+            self.init(
+                strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 2),
+                stemHeight: config.cgFloat(forKey: "stemHeight", default: 8)
+            )
         }
     }
     
@@ -115,10 +192,84 @@ struct StyleConfiguration: Codable {
         /// Font styling for triplet labels (`"3"`), if applicable.
         let tripletText: Styling
         
+        init(
+            strumHeader: Styling,
+            arrowText: Styling,
+            countChar: Styling,
+            tripletText: Styling
+        ) {
+            self.strumHeader = strumHeader
+            self.arrowText = arrowText
+            self.countChar = countChar
+            self.tripletText = tripletText
+        }
+        
+        init(config: ConfigReader) {
+            self.init(
+                strumHeader: .init(
+                    config: config.scoped(to: "strumHeader"),
+                    default: .default.bold
+                ),
+                arrowText: .init(
+                    config: config.scoped(to: "arrowText"),
+                    default: .default.bold
+                ),
+                countChar: .init(
+                    config: config.scoped(to: "countChar"),
+                    default: .default.bold
+                ),
+                tripletText: .init(
+                    config: config.scoped(to: "tripletText"),
+                    default: .default
+                )
+            )
+        }
+        
         struct Styling: Codable {
+            /// Font family name.
+            ///
+            /// Attribute: `font-family`
+            ///
+            /// Default: `sans-serif`
             let family: String
+            /// Font weight.
+            ///
+            /// Attribute: `font-weight`
+            ///
+            /// Default: `normal`
             let weight: String
+            /// Font weight.
+            ///
+            /// Attribute: `font-style`
+            ///
+            /// Default: `normal`
             let style: String
+            
+            init(family: String, weight: String, style: String) {
+                self.family = family
+                self.weight = weight
+                self.style = style
+            }
+            
+            fileprivate init(
+                config: ConfigReader,
+                default defaultValue: Styling
+            ) {
+                self.init(
+                    family: config.string(
+                        forKey: "family",
+                        default: defaultValue.family
+                    ),
+                    weight: config.string(
+                        forKey: "weight",
+                        default: defaultValue.weight
+                    ),
+                    style: config.string(
+                        forKey: "style",
+                        default: defaultValue.style
+                    )
+                )
+            }
             
             static var `default`: Styling {
                 .init(
@@ -135,231 +286,20 @@ struct StyleConfiguration: Codable {
                     style: "normal"
                 )
             }
-            
-            fileprivate enum CodingKeys: CodingKey {
-                case family
-                case weight
-                case style
-            }
         }
-        
-        static var `default`: Fonts {
-            StyleConfiguration.default.fonts
-        }
-    }
-    
-    static let `default` = StyleConfiguration(
-        colors: .init(
-            arrows: "#000000",
-            rhythms: "#555555",
-            headers: "#000000"
-        ),
-        textSizes: .init(
-            beatTextHeight: 30,
-            beatFontSize: 0.8,
-            headerTextHeight: 30,
-            headerFontSize: 0.8,
-            tripletFontSize: 14
-        ),
-        strumSizes: .init(
-            width: 20,
-            height: 80,
-            gap: 30
-        ),
-        beamSizes: .init(
-            strokeWidth: 2,
-            stemHeight: 8
-        ),
-        fonts: .init(
-            strumHeader: .default.bold,
-            arrowText: .default.bold,
-            countChar: .default.bold,
-            tripletText: .default
-        )
-    )
-    
-    func overlaying(
-        with args: StyleConfiguration.Args
-    ) -> StyleConfiguration {
-        return .init(
-            colors: .init(
-                arrows: args.colors.arrows
-                    ?? self.colors.arrows,
-                rhythms: args.colors.rhythms
-                    ?? self.colors.rhythms,
-                headers: args.colors.headers
-                    ?? self.colors.headers
-            ),
-            textSizes: .init(
-                beatTextHeight: args.textSizes.beatTextHeight
-                    ?? self.textSizes.beatTextHeight,
-                beatFontSize: args.textSizes.beatFontSize
-                    ?? self.textSizes.beatFontSize,
-                headerTextHeight: args.textSizes.headerTextHeight
-                    ?? self.textSizes.headerTextHeight,
-                headerFontSize: args.textSizes.headerFontSize
-                    ?? self.textSizes.headerFontSize,
-                tripletFontSize: args.textSizes.tripletFontSize
-                    ?? self.textSizes.tripletFontSize
-            ),
-            strumSizes: .init(
-                width: args.strumSizes.width
-                    ?? self.strumSizes.width,
-                height: args.strumSizes.height
-                    ?? self.strumSizes.height,
-                gap: args.strumSizes.gap
-                    ?? self.strumSizes.gap
-            ),
-            beamSizes: .init(
-                strokeWidth: args.beamSizes.strokeWidth
-                    ?? self.beamSizes.strokeWidth,
-                stemHeight: args.beamSizes.stemHeight
-                    ?? self.beamSizes.stemHeight
-            ),
-            fonts: .init(
-                strumHeader: self.fonts.strumHeader,
-                arrowText: self.fonts.arrowText,
-                countChar: self.fonts.countChar,
-                tripletText: self.fonts.tripletText
-            )
-        )
     }
 }
 
-// MARK: - Manual Decodable Inits
-// (this is to ensure default values)
+// MARK: - ConfigReader
 
 extension StyleConfiguration {
-    init(args: Args) {
+    init(config: ConfigReader) {
         self.init(
-            colors: .init(
-                arrows: args.colors.arrows ?? Self.default.colors.arrows,
-                rhythms: args.colors.rhythms ?? Self.default.colors.rhythms,
-                headers: args.colors.headers ?? Self.default.colors.headers
-            ),
-            textSizes: .init(
-                beatTextHeight: args.textSizes.beatTextHeight ?? Self.default.textSizes.beatTextHeight,
-                beatFontSize: args.textSizes.beatFontSize ?? Self.default.textSizes.beatFontSize,
-                headerTextHeight: args.textSizes.headerTextHeight ?? Self.default.textSizes.headerTextHeight,
-                headerFontSize: args.textSizes.headerFontSize ?? Self.default.textSizes.headerFontSize,
-                tripletFontSize: args.textSizes.tripletFontSize ?? Self.default.textSizes.tripletFontSize
-            ),
-            strumSizes: .init(
-                width: args.strumSizes.width ?? Self.default.strumSizes.width,
-                height: args.strumSizes.height ?? Self.default.strumSizes.height,
-                gap: args.strumSizes.gap ?? Self.default.strumSizes.gap
-            ),
-            beamSizes: .init(
-                strokeWidth: args.beamSizes.strokeWidth ?? Self.default.beamSizes.strokeWidth,
-                stemHeight: args.beamSizes.stemHeight ?? Self.default.beamSizes.stemHeight
-            ),
-            fonts: .init(
-                strumHeader: Self.default.fonts.strumHeader,
-                arrowText: Self.default.fonts.arrowText,
-                countChar: Self.default.fonts.countChar,
-                tripletText: Self.default.fonts.tripletText
-            )
+            colors: .init(config: config.scoped(to: "colors")),
+            textSizes: .init(config: config.scoped(to: "textSizes")),
+            strumSizes: .init(config: config.scoped(to: "strumSizes")),
+            beamSizes: .init(config: config.scoped(to: "beamSizes")),
+            fonts: .init(config: config.scoped(to: "fonts"))
         )
-    }
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.colors = try container.decodeIfPresent(StyleConfiguration.Colors.self, forKey: .colors) ?? .default
-        self.textSizes = try container.decodeIfPresent(StyleConfiguration.TextSizes.self, forKey: .textSizes) ?? .default
-        self.strumSizes = try container.decodeIfPresent(StyleConfiguration.StrumSizes.self, forKey: .strumSizes) ?? .default
-        self.beamSizes = try container.decodeIfPresent(StyleConfiguration.BeamSizes.self, forKey: .beamSizes) ?? .default
-        self.fonts = try container.decodeIfPresent(StyleConfiguration.Fonts.self, forKey: .fonts) ?? .default
-    }
-}
-
-extension StyleConfiguration.Colors {
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.arrows = try container.decodeIfPresent(String.self, forKey: .arrows) ?? Self.default.arrows
-        self.rhythms = try container.decodeIfPresent(String.self, forKey: .rhythms) ?? Self.default.rhythms
-        self.headers = try container.decodeIfPresent(String.self, forKey: .headers) ?? Self.default.headers
-    }
-}
-
-extension StyleConfiguration.TextSizes {
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.beatTextHeight = try container.decodeIfPresent(CGFloat.self, forKey: .beatTextHeight) ?? Self.default.beatTextHeight
-        self.beatFontSize = try container.decodeIfPresent(CGFloat.self, forKey: .beatFontSize) ?? Self.default.beatFontSize
-        self.headerTextHeight = try container.decodeIfPresent(CGFloat.self, forKey: .headerTextHeight) ?? Self.default.headerTextHeight
-        self.headerFontSize = try container.decodeIfPresent(CGFloat.self, forKey: .headerFontSize) ?? Self.default.headerFontSize
-        self.tripletFontSize = try container.decodeIfPresent(CGFloat.self, forKey: .tripletFontSize) ?? Self.default.tripletFontSize
-    }
-}
-
-extension StyleConfiguration.StrumSizes {
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.width = try container.decodeIfPresent(CGFloat.self, forKey: .width) ?? Self.default.width
-        self.height = try container.decodeIfPresent(CGFloat.self, forKey: .height) ?? Self.default.height
-        self.gap = try container.decodeIfPresent(CGFloat.self, forKey: .gap) ?? Self.default.gap
-    }
-}
-
-extension StyleConfiguration.BeamSizes {
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.strokeWidth = try container.decodeIfPresent(CGFloat.self, forKey: .strokeWidth) ?? Self.default.strokeWidth
-        self.stemHeight = try container.decodeIfPresent(CGFloat.self, forKey: .stemHeight) ?? Self.default.stemHeight
-    }
-}
-
-extension StyleConfiguration.Fonts {
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        var strumHeader: Styling = StyleConfiguration.default.fonts.strumHeader
-        var arrowText: Styling = StyleConfiguration.default.fonts.arrowText
-        var countChar: Styling = StyleConfiguration.default.fonts.countChar
-        var tripletText: Styling = StyleConfiguration.default.fonts.tripletText
-        
-        let keys: Set<CodingKeys> = [.strumHeader, .arrowText, .countChar, .tripletText]
-        for key in keys {
-            guard container.contains(key) else { continue }
-            
-            let nestedContainer = try container.nestedContainer(keyedBy: Styling.CodingKeys.self, forKey: key)
-            
-            let family = try nestedContainer.decodeIfPresent(String.self, forKey: .family)
-            let weight = try nestedContainer.decodeIfPresent(String.self, forKey: .weight)
-            let style = try nestedContainer.decodeIfPresent(String.self, forKey: .style)
-            
-            switch key {
-            case .strumHeader:
-                strumHeader = .init(
-                    family: family ?? StyleConfiguration.default.fonts.strumHeader.family,
-                    weight: weight ?? StyleConfiguration.default.fonts.strumHeader.weight,
-                    style: style ?? StyleConfiguration.default.fonts.strumHeader.style
-                )
-            case .arrowText:
-                arrowText = .init(
-                    family: family ?? StyleConfiguration.default.fonts.arrowText.family,
-                    weight: weight ?? StyleConfiguration.default.fonts.arrowText.weight,
-                    style: style ?? StyleConfiguration.default.fonts.arrowText.style
-                )
-            case .countChar:
-                countChar = .init(
-                    family: family ?? StyleConfiguration.default.fonts.countChar.family,
-                    weight: weight ?? StyleConfiguration.default.fonts.countChar.weight,
-                    style: style ?? StyleConfiguration.default.fonts.countChar.style
-                )
-            case .tripletText:
-                tripletText = .init(
-                    family: family ?? StyleConfiguration.default.fonts.tripletText.family,
-                    weight: weight ?? StyleConfiguration.default.fonts.tripletText.weight,
-                    style: style ?? StyleConfiguration.default.fonts.tripletText.style
-                )
-                
-            }
-        }
-        
-        self.strumHeader = strumHeader
-        self.arrowText = arrowText
-        self.countChar = countChar
-        self.tripletText = tripletText
     }
 }
