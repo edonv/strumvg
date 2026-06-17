@@ -18,6 +18,31 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
 
 extension strumvg {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
+        let viewBox = calcViewBox(for: pattern)
+        
+        let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
+            size
+                .map(\.width)
+                .map { .width(.number($0)) },
+            size
+                .map(\.height)
+                .map { .height(.number($0)) },
+            viewBox,
+            .attribute(named: "overflow", value: "visible")
+        ].compactMap { $0 }
+        
+        #warning("TEMP: need to update to support multiple measures")
+        let nodes = self.generateNodes(in: pattern.measures[0])
+        
+        let svg = SVG(
+            svgAttrs: svgDeclAttrs,
+            nodes
+        )
+        
+        return svg
+    }
+    
+    private func calcViewBox(for pattern: Pattern) -> Attribute<SVG.DeclarationContext> {
         let totalStrumCount = pattern.measures
             .reduce(into: 0) { $0 += $1.totalStrums }
         let patternContainsHeaderText = pattern.measures
@@ -27,7 +52,8 @@ extension strumvg {
         
         #warning("TODO: implement adding in barline widths and gaps")
         /// `(number of strums) * (width + gap) - (1 gap)`
-        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount) - style.strumSizes.gap
+        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount)
+            - style.strumSizes.gap
         /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> triplet text height, including padding above it)`
         ///
         /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
@@ -46,31 +72,12 @@ extension strumvg {
             calcHeight += style.beamSizes.strokeWidth / 2
         }
         
-        let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
-            size
-                .map(\.width)
-                .map { .width(.number($0)) },
-            size
-                .map(\.height)
-                .map { .height(.number($0)) },
-            .viewBox(
-                // extend viewBox to include header text in the negatives, if there is header text
-                minY: patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0,
-                width: calcWidth,
-                height: calcHeight
-            ),
-            .attribute(named: "overflow", value: "visible")
-        ].compactMap { $0 }
-        
-        #warning("TEMP: need to update to support multiple measures")
-        let nodes = self.generateNodes(in: pattern.measures[0])
-        
-        let svg = SVG(
-            svgAttrs: svgDeclAttrs,
-            nodes
+        return .viewBox(
+            // extend viewBox to include header text in the negatives, if there is header text
+            minY: patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0,
+            width: calcWidth,
+            height: calcHeight
         )
-        
-        return svg
     }
     
     private func generateNodes(in measure: Measure) -> [Node<SVG.DocumentContext>] {
