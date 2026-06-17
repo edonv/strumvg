@@ -21,48 +21,11 @@ USAGE: strumvg [<options>] [<pattern-string>]
 ARGUMENTS:
   <pattern-string>        The string representation of a pattern.
 
-IN/OUT OPTIONS:
-  -i, --stdin/-a, --arg   Source for input pattern string. (default: -a)
-  -o, --stdout/-l, --log  Destination for output SVG content. (default: -l)
-
-CONFIGURATION:
-  --arrow-color <arrow-color>
-                          The color of the arrows. (default: #000000)
-  --rhythm-color <rhythm-color>
-                          The color of the rhythm text and stems below the
-                          arrows. (default: #555555)
-  --header-color <header-color>
-                          The color of the articulations and header text above
-                          the arrows. (default: #000000)
-  --beat-text-height <beat-text-height>
-                          The height of the space reserved for rhythm text
-                          below the arrows. (default: 30.0)
-  --beat-font-size <beat-font-size>
-                          The actual font-size of the rhythm text below the
-                          arrows, relative to its height. (default: 0.8)
-  --header-text-height <header-text-height>
-                          The height of the space reserved for articulations
-                          and header text above the arrows. (default: 30.0)
-  --header-font-size <header-font-size>
-                          The actual font-size of the articulations and header
-                          text above the arrows, relative to its height.
-                          (default: 0.8)
-  --triplet-font-size <triplet-font-size>
-                          The actual font-size of the triplet label, if
-                          applicable. (default: 14.0)
-  --strum-width <strum-width>
-                          The width of each strum arrow. (default: 20.0)
-        This is also the width of the space reserved for each "rhythmic column"
-        composed of arrow, header text, and beat text.
-  --strum-height <strum-height>
-                          The height of each strum arrow. (default: 80.0)
-  --strum-gap <strum-gap> The horizontal space between each strum  (default:
-                          30.0)
-  --beam-stroke-width <beam-stroke-width>
-                          The stroke width of the rhythm stems/beams below the
-                          arrows. (default: 2.0)
-  --beam-steam-height <beam-steam-height>
-                          The vertical length of the beam stems. (default: 8.0)
+INPUT/OUTPUT OPTIONS:
+  -i, --stdin/-a, --arg=<pattern>
+                          Source for input pattern string. (default: --stdin)
+  -o, --stdout/-l, --log/-f, --file=<file-path>.svg
+                          Destination for output SVG content. (default: --stdout)
 
 OPTIONS:
   -h, --help              Show help information.
@@ -103,13 +66,37 @@ Examples:
 - `D  D u  uD u-16t`
 - `D umarDx-4`
 
+### Styling
+
+To customize the output, you can use a combination of a JSON/YAML configuration file and CLI arguments. For the JSON schema, [see here](./.github/strumvg-schema.json).
+
+Any property available in a config file can be specified in a CLI argument. Nested properties are just linked together with dashes, and the argument starts with a double dash (`--`). Any standard syntax for providing a value for an option is supported. Any properties that use camel case (i.e. `beamSizes.strokeWidth`) are converted to kebab case (i.e. `--beam-sizes-stroke-width`).
+
+Example:
+
+```json
+{
+    "colors": {
+        "arrows": "blue",
+        "rhythms": "yellow",
+        "headers": "green"
+    }
+}
+```
+
+is equivalent to:
+
+```shell
+strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=green
+```
+
 ## To-Do's
 
 - [x] Make capitalized strums DOWN (because they're on beat).
 - [x] Allow specifying JSON file for configuration options, rather than having to use command-line options for everything.   
 - [x] Add font customizing, also maybe classes/CSS/`<style>` for styling SVG.
+- [x] Refactored config stuff to use https://github.com/apple/swift-configuration
 - [ ] Allow `|` to be used as a barline to reset beat counting.
 - [ ] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
-- [ ] Refactored config stuff to use https://github.com/apple/swift-configuration

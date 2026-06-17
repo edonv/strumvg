@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot;{hD}rr{rD}s ADMD u-8t&quot;"
+            argument = "-a=&quot;{hD}rr{rD}s ADMD u-8t&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

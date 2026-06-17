@@ -6,13 +6,16 @@
 
 import Foundation
 import ArgumentParser
+import Configuration
+
+import StrumVGConfig
 import StrumModels
 
 import Plot
 import PlotSVG
 
 @main
-struct strumvg: ParsableCommand {
+struct strumvg: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "A command for generating an SVG of a strumming pattern.",
         discussion: "Any SVG-compatible value can be used for any configuration option.",
@@ -22,51 +25,63 @@ struct strumvg: ParsableCommand {
     @OptionGroup(title: "Input/Output Options")
     var inOut: InOutConfiguration
     
-    /// Style configuration specified by inline command arguments.
-    @OptionGroup(title: "Styling Options")
-    private var styleArgs: StyleConfiguration.Args
+    @Argument(
+        parsing: .allUnrecognized,
+        help: .init(visibility: .private)
+    )
+    var otherArgs: [String] = []
     
-    /// Style configuration created by mapping `styleArgs` to ``StyleConfiguration``, merging with values from a file specified at ``InOutConfiguration/configFilePath`` and falling back on ``StyleConfiguration/default`` values.
+    /// Style configuration created by reading command-line arguments, followed by a specified config file, then falling back on default values.
+    ///
+    /// Command-line arguments for styling are read from ``otherArgs``.
     var style: StyleConfiguration!
     
     mutating func validate() throws {
-        // If using output to file and not argument pattern string, it will think output file path argument is patternString
-        if inOut.inputSource != .argument
-            && inOut.patternString != nil
-            && inOut.outputDestination == .file
-            && inOut.outputFilePath == nil {
-            inOut.outputFilePath = inOut.patternString
-            inOut.patternString = nil
-        }
-        
-        if inOut.inputSource == .argument
-            && inOut.patternString == nil {
-            throw ValidationError("`inputSource` flag set to `--arg` and `patternString` argument is missing.")
-        }
-        
-        if inOut.inputSource != .argument
-            && inOut.patternString != nil {
-            throw ValidationError("`inputSource` flag set to `--stdin` and `patternString` argument is present.")
-        }
-        
-        if inOut.outputDestination == .file
-            && inOut.outputFilePath == nil {
-            throw ValidationError("`outputDestination` flag set to `--file` and `outputFilePath` argument is missing.")
-        }
-        
-        if inOut.outputDestination != .file
-            && inOut.outputFilePath != nil {
-            throw ValidationError("`outputDestination` flag is not set to `--file` and `outputFilePath` argument is present.")
-        }
-        
-        self.style = try self.styleArgs
-            .merging(withFileAt: inOut.configFilePath)
+        // add an extra arg to the start because `CommandLineArgumentsProvider`
+        // drops the first arg automatically (it assumes its the program name)
+        otherArgs.insert("", at: 0)
     }
     
-    mutating func run() throws {
+    private mutating func initStyle() async throws -> StyleConfiguration {
+        var jsonProvider: FileProvider<JSONSnapshot>? = nil
+        var yamlProvider: FileProvider<YAMLSnapshot>? = nil
+        if let configPath = inOut.configFilePath {
+            if configPath.hasSuffix(".json") {
+                jsonProvider = try await FileProvider<JSONSnapshot>(
+                    filePath: .init(configPath),
+                    allowMissing: true
+                )
+            }
+            
+            if configPath.hasSuffix(".yml")
+                || configPath.hasSuffix(".yaml") {
+                yamlProvider = try await FileProvider<YAMLSnapshot>(
+                    filePath: .init(configPath),
+                    allowMissing: true
+                )
+            }
+        }
+        
+        let providers: [(any ConfigProvider)?] = [
+            CommandLineArgumentsProvider(arguments: otherArgs),
+            jsonProvider,
+            yamlProvider,
+        ]
+        
+        let config = ConfigReader(
+            providers: providers
+                .compactMap(\.self)
+        )
+        
+        return .init(config: config)
+    }
+    
+    mutating func run() async throws {
+        self.style = try await self.initStyle()
+        
         let str: String
         
-        switch inOut.inputSource {
+        switch inOut.input.source! {
         case .stdin:
             let stdin = FileHandle.standardInput
             guard let data = try stdin.readToEnd() else {
@@ -79,12 +94,8 @@ struct strumvg: ParsableCommand {
             }
             str = dataStr
             
-        case .argument:
-            guard let patternString = inOut.patternString else {
-                throw ValidationError("`inputSource` flag set to `--arg` and the `patternString` argument is missing.")
-            }
-            
-            str = patternString
+        case .argument(let pattern):
+            str = pattern
         }
         
 //        let string = "{xD} D u uD u-16t"
@@ -98,7 +109,7 @@ struct strumvg: ParsableCommand {
         let svg = generate(pattern: pattern)
         let svgStr = svg.render(indentedBy: .spaces(2))
         
-        switch inOut.outputDestination {
+        switch inOut.output.destination! {
         case .stdout:
             guard let svgStrData = svgStr.data(using: .utf8) else {
                 print("Failed to convert SVG string content to UTF-8 data.")
@@ -111,13 +122,8 @@ struct strumvg: ParsableCommand {
         case .log:
             print(svgStr)
             
-        case .file:
-            guard let outputFilePath = inOut.outputFilePath else {
-                print("Missing output file path (`<outputFilePath>` argument.")
-                throw ExitCode(EXIT_FAILURE)
-            }
-            
-            let outputURL = URL(filePath: outputFilePath, directoryHint: .notDirectory)
+        case .file(let path):
+            let outputURL = URL(filePath: path, directoryHint: .notDirectory)
             try svgStr.write(to: outputURL, atomically: true, encoding: .utf8)
         }
     }

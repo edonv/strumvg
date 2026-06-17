@@ -260,7 +260,7 @@ extension strumvg {
             .attribute(named: "fill", value: style.colors.headers),
             .attribute(
                 named: "font-size",
-                value: style.textSizes.headerFontSizeActual,
+                value: style.textSizes.headerFontSize,
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.strumHeader.family),
@@ -276,7 +276,7 @@ extension strumvg {
             .attribute(named: "fill", value: style.colors.rhythms),
             .attribute(
                 named: "font-size",
-                value: style.textSizes.beatFontSizeActual,
+                value: style.textSizes.beatFontSize,
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.countChar.family),
