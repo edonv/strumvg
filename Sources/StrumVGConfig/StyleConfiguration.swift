@@ -8,30 +8,30 @@
 import Foundation
 import Configuration
 
-struct StyleConfiguration: Codable {
-    let colors: Colors
-    let textSizes: TextSizes
-    let strumSizes: StrumSizes
-    let beamSizes: BeamSizes
-    let fonts: Fonts
+public struct StyleConfiguration: Codable {
+    public let colors: Colors
+    public let textSizes: TextSizes
+    public let strumSizes: StrumSizes
+    public let beamSizes: BeamSizes
+    public let fonts: Fonts
     
-    struct Colors: Codable {
+    public struct Colors: Codable {
         /// The color of the arrows.
         ///
         /// Default value: `#000000` (black)
-        let arrows: String
+        public let arrows: String
         /// The color of the rhythm text and stems below the arrows.
-        let rhythms: String
+        public let rhythms: String
         /// The color of the articulations and header text above the arrows.
-        let headers: String
+        public let headers: String
         
-        init(arrows: String, rhythms: String, headers: String) {
+        public init(arrows: String, rhythms: String, headers: String) {
             self.arrows = arrows
             self.rhythms = rhythms
             self.headers = headers
         }
         
-        init(config: ConfigReader) {
+        public init(config: ConfigReader) {
             self.init(
                 arrows: config.string(
                     forKey: "arrows",
@@ -49,33 +49,33 @@ struct StyleConfiguration: Codable {
         }
     }
     
-    struct TextSizes: Codable {
+    public struct TextSizes: Codable {
         /// The height of the space reserved for rhythm text below the arrows.
-        let beatTextHeight: CGFloat
+        public let beatTextHeight: CGFloat
         /// The relative font-size of the rhythm text below the arrows, as a fraction of its height.
-        let beatFontSize: CGFloat
+        public let beatFontSize: CGFloat
         /// The height of the space reserved for articulations and header text above the arrows.
-        let headerTextHeight: CGFloat
+        public let headerTextHeight: CGFloat
         /// The relative font-size of the articulations and header text above the arrows, as a fraction of its height.
-        let headerFontSize: CGFloat
+        public let headerFontSize: CGFloat
         /// The actual font-size of the triplet label, if applicable.
-        let tripletFontSize: CGFloat
+        public let tripletFontSize: CGFloat
         
-        var beatFontSizeActual: CGFloat {
+        public var beatFontSizeActual: CGFloat {
             beatTextHeight * beatFontSize
         }
         
-        var headerFontSizeActual: CGFloat {
+        public var headerFontSizeActual: CGFloat {
             headerTextHeight * headerFontSize
         }
         
         /// The vertical space between a triplet beam and the `3` text.
         private let triplet3TextGap: CGFloat = 2
-        var triplet3TextOffsetY: CGFloat {
+        public var triplet3TextOffsetY: CGFloat {
             tripletFontSize + triplet3TextGap
         }
         
-        init(
+        public init(
             beatTextHeight: CGFloat,
             beatFontSize: CGFloat,
             headerTextHeight: CGFloat,
@@ -89,7 +89,7 @@ struct StyleConfiguration: Codable {
             self.tripletFontSize = tripletFontSize
         }
         
-        init(config: ConfigReader) {
+        public init(config: ConfigReader) {
             self.init(
                 beatTextHeight: config.cgFloat(
                     forKey: "beatTextHeight",
@@ -115,41 +115,41 @@ struct StyleConfiguration: Codable {
         }
     }
     
-    struct StrumSizes: Codable {
+    public struct StrumSizes: Codable {
         /// The width of the space reserved for each strum arrow.
         ///
         /// This is the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text. It also defines the maximum width of a strum's arrowhead.
-        let width: CGFloat
+        public let width: CGFloat
         /// The height of each strum arrow.
-        let height: CGFloat
+        public let height: CGFloat
         /// The horizontal space between each strum.
-        let gap: CGFloat
+        public let gap: CGFloat
         
         private let strokeWidthRatio: CGFloat = 0.2
-        var strokeWidth: CGFloat {
+        public var strokeWidth: CGFloat {
             width * strokeWidthRatio
         }
         
         private let arrowHeadHeightRatio: CGFloat = 0.2
-        var arrowLineHeight: CGFloat {
+        public var arrowLineHeight: CGFloat {
             height * (1 - arrowHeadHeightRatio)
         }
-        var arrowHeadHeight: CGFloat {
+        public var arrowHeadHeight: CGFloat {
             height * arrowHeadHeightRatio
         }
         
         /// Used as the `font-size` for characters inserts as strums.
-        var charStrumTextSize: CGFloat {
+        public var charStrumTextSize: CGFloat {
             height / 2
         }
         
-        init(width: CGFloat, height: CGFloat, gap: CGFloat) {
+        public init(width: CGFloat, height: CGFloat, gap: CGFloat) {
             self.width = width
             self.height = height
             self.gap = gap
         }
         
-        init(config: ConfigReader) {
+        public init(config: ConfigReader) {
             self.init(
                 width: config.cgFloat(forKey: "width", default: 20),
                 height: config.cgFloat(forKey: "height", default: 80),
@@ -158,23 +158,23 @@ struct StyleConfiguration: Codable {
         }
     }
     
-    struct BeamSizes: Codable {
+    public struct BeamSizes: Codable {
         /// The stroke width of the rhythm stems/beams below the arrows.
-        let strokeWidth: CGFloat
+        public let strokeWidth: CGFloat
         /// The vertical length of the beam stems.
-        let stemHeight: CGFloat
+        public let stemHeight: CGFloat
         
         /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
-        var beamStrokeVerticalGap: CGFloat {
+        public var beamStrokeVerticalGap: CGFloat {
             max(1.5 * strokeWidth, 1)
         }
         
-        init(strokeWidth: CGFloat, stemHeight: CGFloat) {
+        public init(strokeWidth: CGFloat, stemHeight: CGFloat) {
             self.strokeWidth = strokeWidth
             self.stemHeight = stemHeight
         }
         
-        init(config: ConfigReader) {
+        public init(config: ConfigReader) {
             self.init(
                 strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 2),
                 stemHeight: config.cgFloat(forKey: "stemHeight", default: 8)
@@ -182,17 +182,17 @@ struct StyleConfiguration: Codable {
         }
     }
     
-    struct Fonts: Codable {
+    public struct Fonts: Codable {
         /// Font styling for header text.
-        let strumHeader: Styling
+        public let strumHeader: Styling
         /// Font styling for text inserted in place of arrows.
-        let arrowText: Styling
+        public let arrowText: Styling
         /// Font styling for rhythm count text.
-        let countChar: Styling
+        public let countChar: Styling
         /// Font styling for triplet labels (`"3"`), if applicable.
-        let tripletText: Styling
+        public let tripletText: Styling
         
-        init(
+        public init(
             strumHeader: Styling,
             arrowText: Styling,
             countChar: Styling,
@@ -204,7 +204,7 @@ struct StyleConfiguration: Codable {
             self.tripletText = tripletText
         }
         
-        init(config: ConfigReader) {
+        public init(config: ConfigReader) {
             self.init(
                 strumHeader: .init(
                     config: config.scoped(to: "strumHeader"),
@@ -225,27 +225,27 @@ struct StyleConfiguration: Codable {
             )
         }
         
-        struct Styling: Codable {
+        public struct Styling: Codable {
             /// Font family name.
             ///
             /// Attribute: `font-family`
             ///
             /// Default: `sans-serif`
-            let family: String
+            public let family: String
             /// Font weight.
             ///
             /// Attribute: `font-weight`
             ///
             /// Default: `normal`
-            let weight: String
+            public let weight: String
             /// Font weight.
             ///
             /// Attribute: `font-style`
             ///
             /// Default: `normal`
-            let style: String
+            public let style: String
             
-            init(family: String, weight: String, style: String) {
+            public init(family: String, weight: String, style: String) {
                 self.family = family
                 self.weight = weight
                 self.style = style
@@ -271,7 +271,7 @@ struct StyleConfiguration: Codable {
                 )
             }
             
-            static var `default`: Styling {
+            public static var `default`: Styling {
                 .init(
                     family: "sans-serif",
                     weight: "normal",
@@ -279,7 +279,7 @@ struct StyleConfiguration: Codable {
                 )
             }
             
-            var bold: Styling {
+            public var bold: Styling {
                 .init(
                     family: family,
                     weight: "bold",
@@ -293,7 +293,7 @@ struct StyleConfiguration: Codable {
 // MARK: - ConfigReader
 
 extension StyleConfiguration {
-    init(config: ConfigReader) {
+    public init(config: ConfigReader) {
         self.init(
             colors: .init(config: config.scoped(to: "colors")),
             textSizes: .init(config: config.scoped(to: "textSizes")),
