@@ -163,7 +163,7 @@ public struct StyleConfiguration: Codable {
         /// > Default: `20`
         public let width: CGFloat
         /// The height of each strum arrow.
-        /// > Default: `80
+        /// > Default: `80`
         public let height: CGFloat
         /// The relative stroke width of a strum arrow's lines, as a fraction of ``width``.
         /// > Default: `0.2`
