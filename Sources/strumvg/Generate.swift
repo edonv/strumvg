@@ -36,29 +36,46 @@ extension strumvg {
             .attribute(named: "overflow", value: "visible")
         ].compactMap { $0 }
         
-        #warning("TEMP: need to update to support multiple measures")
-        let nodes = self.generateNodes(in: pattern.measures[0])
+        let nodes = pattern.measures.indices
+            .flatMap { self.generateMeasureNodes(for: $0, in: pattern.measures) }
         
         let svg = SVG(
             svgAttrs: svgDeclAttrs,
-            nodes
+            [
+                .element(
+                    named: "g",
+                    nodes: [
+                        .attribute(
+                            named: "key",
+                            value: "measures"
+                        )
+                    ] + nodes + CollectionOfOne(
+                        barlineNode(
+                            at: CGFloat(rect.size.width) - style.barlineSizes.strokeWidth / 2,
+                            index: pattern.measures.count
+                        )
+                    )
+                )
+            ]
         )
         
         return svg
     }
     
     private func calcRect(for pattern: Pattern) -> CGRect {
-        let totalStrumCount = pattern.measures
-            .reduce(into: 0) { $0 += $1.totalStrums }
         let patternContainsHeaderText = pattern.measures
             .contains { $0.groups.contains(where: \.containsHeaderText) }
         let patternContainsAnyTriplets = pattern.measures
             .contains(where: \.timing.triplet)
         
-        #warning("TODO: implement adding in barline widths and gaps")
-        /// `(number of strums) * (width + gap) - (1 gap)`
-        let calcWidth = (style.strumSizes.width + style.strumSizes.gap) * CGFloat(totalStrumCount)
-            - style.strumSizes.gap
+        var minY = patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0
+        
+        /// `(number of strums) * (width + gap) - (1 gap) + (barline gap + 2*0.5*barline stroke width)`
+        ///
+        /// add barlines and gaps (and outer halves of stroke widths)
+        let calcWidth = widthsOfMeasures(pattern.measures)
+            + style.barlineSizes.strokeWidth
+        
         /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> triplet text height, including padding above it)`
         ///
         /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
@@ -77,16 +94,94 @@ extension strumvg {
             calcHeight += style.beamSizes.strokeWidth / 2
         }
         
+        let barlineHeight = style.barlineSizes.height(withStrumSizes: style.strumSizes)
+        // if barlineHeight is taller than strum arrow, need to adjust rect bounds
+        if barlineHeight > style.strumSizes.height {
+            // update minY
+            let halfBarlineHeight = barlineHeight / 2
+            let barlineMinY = style.strumSizes.height / 2 - halfBarlineHeight
+            
+            if barlineMinY < minY {
+                calcHeight += (minY - barlineMinY)
+                minY = barlineMinY
+            }
+            
+            // update height if barlineHeight is taller than entire viewBox
+            // (uncommon, but cover case anyway)
+            if barlineHeight > calcHeight {
+                calcHeight += barlineHeight - calcHeight
+            }
+        }
+        
         return CGRect(
             origin: .init(
                 x: 0,
-                // extend viewBox to include header text in the negatives, if there is header text
-                y: patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0,
+                y: minY
             ),
             size: .init(
                 width: calcWidth,
                 height: calcHeight
             )
+        )
+    }
+    
+    /// Excludes trailing strum gap, includes leading/trailing barline gaps.
+    private func widthsOfMeasures<S: Sequence>(_ measures: S) -> CGFloat where S.Element == Measure {
+        measures
+            .map { m in
+                let beatCount = m.groups.flatMap(\.strums).count
+                /// Full group width, from left edge of first strum to right edge of last strum (excluding trailing strum gap after)
+                let measureWidth = CGFloat(beatCount) * (style.strumSizes.width + style.strumSizes.gap)
+                    - style.strumSizes.gap
+                // Add leading barline
+                return measureWidth + 2 * style.barlineSizes.gap(withStrumSizes: style.strumSizes)
+            }
+            .reduce(into: 0, +=)
+    }
+    
+    private func generateMeasureNodes(
+        for measureNum: Int,
+        in allMeasures: [Measure]
+    ) -> [Node<SVG.DocumentContext>] {
+        let currentMeasure = allMeasures[measureNum]
+        let content = generateNodes(in: currentMeasure)
+        
+        let widthUpToMeasure = widthsOfMeasures(allMeasures[..<measureNum])
+        
+        // Adding this measure's leading barline's gap
+        let leadingMeasureSpace = widthUpToMeasure
+            + style.barlineSizes.gap(withStrumSizes: style.strumSizes)
+        
+        return [
+            barlineNode(at: widthUpToMeasure, index: measureNum),
+            .element(
+                named: "g",
+                nodes: [
+                    .attribute(named: "key", value: "measure\(measureNum)"),
+                    .attribute(named: "transform", value: "translate(\(leadingMeasureSpace))"),
+                ] + content
+            ),
+        ]
+    }
+    
+    /// Barlines will be centered vertically against the strum arrows.
+    private func barlineNode(at x: CGFloat, index: Int) -> Node<SVG.DocumentContext> {
+        let halfBarlineHeight = style.barlineSizes.height(withStrumSizes: style.strumSizes) / 2
+        
+        let y1 = style.strumSizes.height / 2 - halfBarlineHeight
+        let y2 = style.strumSizes.height / 2 + halfBarlineHeight
+        
+        return .element(
+            named: "line",
+            attributes: [
+                .attribute(named: "key", value: "barline\(index)"),
+                .attribute(named: "x1", value: x, format: numberFormat),
+                .attribute(named: "y1", value: y1, format: numberFormat),
+                .attribute(named: "x2", value: x, format: numberFormat),
+                .attribute(named: "y2", value: y2, format: numberFormat),
+                .attribute(named: "stroke-width", value: style.beamSizes.strokeWidth, format: numberFormat),
+                .attribute(named: "stroke", value: style.colors.rhythms),
+            ]
         )
     }
     
