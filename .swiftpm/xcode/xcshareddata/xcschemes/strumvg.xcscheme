@@ -74,19 +74,10 @@
          <CommandLineArgument
             argument = "-c"
             isEnabled = "YES">
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--colors-headers"
-            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "&quot;orange&quot;"
             isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--test1-test2=&quot;true&quot;"
-            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
