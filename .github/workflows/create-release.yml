@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - uses: swift-actions/setup-swift@v2
+      # swift-actions/setup-swift@v3 is in beta
+      - uses: swift-actions/setup-swift@v3
         with:
           swift-version: "6.2"
       - name: Build macOS ARM64 Binary
