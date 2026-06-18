@@ -8,14 +8,26 @@
 import Foundation
 import Configuration
 
+/// Configurable properties for customizing the SVG output of `strumvg`.
+///
+/// Size-related properties are either an SVG user unit measurement or a ratio relative to another concrete property.
 public struct StyleConfiguration: Codable {
+    /// Styling related to colors.
     public let colors: Colors
+    /// Styling related to text sizes.
     public let textSizes: TextSizes
+    /// Styling related to strum sizes.
     public let strumSizes: StrumSizes
+    /// Styling related to beam sizes.
     public let beamSizes: BeamSizes
+    /// Styling related to barline sizes.
     public let barlineSizes: BarlineSizes
+    /// Styling related to fonts.
     public let fonts: Fonts
     
+    /// Color styling properties
+    ///
+    /// Color values can be any string recognized by [SVG/CSS as a color](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value).
     public struct Colors: Codable {
         /// The color of the arrows.
         /// > Default: `#000000` (black)
@@ -64,6 +76,11 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    /// Text sizing properties
+    ///
+    /// Properties denoted as a "height" refer to the amount of vertical space (in SVG user units) that will be reserved for that text.
+    ///
+    /// Properties denoted as a "font size" will translate to the `font-size` attribute.
     public struct TextSizes: Codable {
         /// The height of the space reserved for rhythm text below the arrows.
         /// > Default: `30`
@@ -138,6 +155,7 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    /// Strum sizing properties
     public struct StrumSizes: Codable {
         /// The width of the space reserved for each strum arrow.
         ///
@@ -197,6 +215,7 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    /// Beam and rhythmic-grouping sizing properties
     public struct BeamSizes: Codable {
         /// The stroke width of the rhythm stems/beams below the arrows.
         /// > Default: `2`
@@ -223,6 +242,7 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    /// Barline sizing properties
     public struct BarlineSizes: Codable {
         /// The stroke width of the barlines.
         /// > Default: `2`
@@ -263,6 +283,7 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    /// Font properties
     public struct Fonts: Codable {
         /// Font styling for header text.
         public let strumHeader: Styling
@@ -306,18 +327,30 @@ public struct StyleConfiguration: Codable {
             )
         }
         
+        /// A set of font specification properties.
+        ///
+        /// Includes values for `font-family`, `font-weight`, and `font-style` attributes.
         public struct Styling: Codable {
             /// Font family name.
+            ///
+            /// Values can be any string recognized by [SVG/CSS as a font family](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-family).
+            ///
             /// > Default: `sans-serif`
             ///
             /// > Attribute: `font-family`
             public let family: String
             /// Font weight.
+            ///
+            /// Values can be any string recognized by [SVG/CSS as a font weight](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight).
+            ///
             /// > Default: `normal`
             ///
             /// > Attribute: `font-weight`
             public let weight: String
             /// Font style.
+            ///
+            /// Values can be any string recognized by [SVG/CSS as a font style](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-style).
+            ///
             /// > Default: `normal`
             ///
             /// > Attribute: `font-style`
