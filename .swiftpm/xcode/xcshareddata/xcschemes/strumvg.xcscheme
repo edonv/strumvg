@@ -64,11 +64,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;d du udu-4|d du udu-8&quot;"
+            argument = "-a=&quot;d du udu-4|d du udu-8&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;d du udu-4t|d du udu-8&quot;"
+            argument = "-a=&quot;d du udu-4t|d du udu-8&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
