@@ -60,12 +60,6 @@ The string format is as follows:
 
 Optionally, each note in `pattern` can have a heading character. To indicate this in the formatted string, wrap any given character in curly braces (`{` and `}`) and preface the character with the heading character.
 
-Examples:
-
-- `{xD}f{xu}AaMmr-8`
-- `D  D u  uD u-16t`
-- `D umarDx-4`
-
 ### Multiple Measures
 
 Additionally, patterns can contain multiple measures of strums, specified by separating measures with `|` (pipe) characters.
@@ -73,6 +67,18 @@ Additionally, patterns can contain multiple measures of strums, specified by sep
 Pattern strings containing only a single measure can optionally be written with bar lines wrapping the pattern.
 
 Multiple measures can even have different rhythmic groupings (`noteLength`) by specifying the note length at the end of each measure. If the full pattern has only 1 note length, then it must be at the end of the patter, without any barlines after it.
+
+### Examples
+
+Basic Examples:
+
+```
+{xD}f{xu}AaMmr-8
+D  D u  uD u-16t
+D umarDx-4
+```
+
+Barline/Multi-Measure Examples:
 
 ```
 |DuD D  u|-8
