@@ -8,25 +8,25 @@
 import Foundation
 
 public struct StrumKind: RawRepresentable, Sendable, Hashable {
-    public let direction: Direction?
     public let variant: Variant
+    public let direction: Direction?
     
-    public static let down = StrumKind(direction: .down, variant: .normal)
-    public static let up = StrumKind(direction: .up, variant: .normal)
-    public static let space = StrumKind(direction: nil, variant: .space)
-    public static let downMuted = StrumKind(direction: .down, variant: .muted)
-    public static let upMuted = StrumKind(direction: .up, variant: .muted)
-    public static let downArpeggio = StrumKind(direction: .down, variant: .arpeggio)
-    public static let upArpeggio = StrumKind(direction: .up, variant: .arpeggio)
-    public static let rest = StrumKind(direction: nil, variant: .rest)
+    public static let down = StrumKind(variant: .normal, direction: .down)
+    public static let up = StrumKind(variant: .normal, direction: .up)
+    public static let space = StrumKind(variant: .space, direction: nil)
+    public static let downMuted = StrumKind(variant: .muted, direction: .down)
+    public static let upMuted = StrumKind(variant: .muted, direction: .up)
+    public static let downArpeggio = StrumKind(variant: .arpeggio, direction: .down)
+    public static let upArpeggio = StrumKind(variant: .arpeggio, direction: .up)
+    public static let rest = StrumKind(variant: .rest, direction: nil)
     
     public static func other(_ char: Character) -> StrumKind {
-        StrumKind(direction: nil, variant: .other(char))
+        StrumKind(variant: .other(char), direction: nil)
     }
     
-    internal init(direction: Direction?, variant: Variant) {
-        self.direction = direction
+    internal init(variant: Variant, direction: Direction?) {
         self.variant = variant
+        self.direction = direction
     }
     
     public init(rawValue: Character) {
