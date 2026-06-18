@@ -45,6 +45,7 @@ let package = Package(
                 "PlotExtensions",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Configuration", package: "swift-configuration"),
+                .product(name: "Yams", package: "Yams"),
                 "Plot",
                 "PlotSVG",
             ]
