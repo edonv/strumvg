@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "strumvg Configuration",
-  "description": "Configurable properties for customizing the SVG output of `strumvg`.\nSize-related properties are either an SVG user unit measurement or a ratio relative to another concrete property.",
+  "description": "Configurable properties for customizing the SVG output of `strumvg`.\nAll properties can be set via configuration file (JSON or YAML) or via CLI options. Nested properties are just linked together with dashes, and the argument starts with a double dash (`--`). Any standard syntax for providing a value for an option is supported. Any properties that use camel case (i.e. `beamSizes.strokeWidth`) are converted to kebab case (i.e. `--beam-sizes-stroke-width`).\nSize-related properties are either an SVG user unit measurement or a ratio relative to another concrete property.",
   "type": "object",
   "properties": {
     "colors": {
