@@ -52,29 +52,41 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-a=&quot;{hD}rr{rD}s ADMD u-8t&quot;"
+            argument = "-a=&quot;|{hD}rr{rD}sADMD u-8t|udu d d -4&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-a=&quot;|DuD D  u|D D uDu|-8&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-a=&quot;|DuD D  u-8|D DuDu -4|&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;d du udu-8&quot;"
+            argument = "-a=&quot;d du udu-4|d du udu-8&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;d du udu|-8&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "&quot;d du udu-4|d du udu-8&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "&quot;d du udu-4t|d du udu-8&quot;"
+            argument = "-a=&quot;d du udu-4t|d du udu-8&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-c"
             isEnabled = "YES">
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--colors-headers"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;orange&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--test1-test2=&quot;true&quot;"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
