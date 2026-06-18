@@ -8,6 +8,10 @@ let package = Package(
     platforms: [
         .macOS(.v15),
     ],
+    products: [
+        .library(name: "StrumVGConfig", targets: ["StrumVGConfig"]),
+        .library(name: "StrumModels", targets: ["StrumModels"]),
+    ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.8.2"),
         .package(url: "https://github.com/JohnSundell/Plot.git", from: "0.14.0"),
