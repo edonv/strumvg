@@ -18,7 +18,7 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
 
 extension strumvg {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
-        let viewBox = calcViewBox(for: pattern)
+        let rect = calcRect(for: pattern)
         
         let svgDeclAttrs: [Attribute<SVG.DeclarationContext>] = [
             size
@@ -27,7 +27,12 @@ extension strumvg {
             size
                 .map(\.height)
                 .map { .height(.number($0)) },
-            viewBox,
+            .viewBox(
+                minX: rect.origin.x,
+                minY: rect.origin.y,
+                width: rect.size.width,
+                height: rect.size.height
+            ),
             .attribute(named: "overflow", value: "visible")
         ].compactMap { $0 }
         
@@ -42,7 +47,7 @@ extension strumvg {
         return svg
     }
     
-    private func calcViewBox(for pattern: Pattern) -> Attribute<SVG.DeclarationContext> {
+    private func calcRect(for pattern: Pattern) -> CGRect {
         let totalStrumCount = pattern.measures
             .reduce(into: 0) { $0 += $1.totalStrums }
         let patternContainsHeaderText = pattern.measures
@@ -72,11 +77,16 @@ extension strumvg {
             calcHeight += style.beamSizes.strokeWidth / 2
         }
         
-        return .viewBox(
-            // extend viewBox to include header text in the negatives, if there is header text
-            minY: patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0,
-            width: calcWidth,
-            height: calcHeight
+        return CGRect(
+            origin: .init(
+                x: 0,
+                // extend viewBox to include header text in the negatives, if there is header text
+                y: patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0,
+            ),
+            size: .init(
+                width: calcWidth,
+                height: calcHeight
+            )
         )
     }
     
