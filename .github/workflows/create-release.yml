@@ -39,7 +39,7 @@ jobs:
       - name: Download Artifacts from Previous Jobs
         uses: actions/download-artifact@v8
         with:
-          path: .
+          name: macos
       - name: List downloaded files
         run: ls -R
       - name: Create Release
