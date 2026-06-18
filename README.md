@@ -66,6 +66,24 @@ Examples:
 - `D  D u  uD u-16t`
 - `D umarDx-4`
 
+### Multiple Measures
+
+Additionally, patterns can contain multiple measures of strums, specified by separating measures with `|` (pipe) characters.
+
+Pattern strings containing only a single measure can optionally be written with bar lines wrapping the pattern.
+
+Multiple measures can even have different rhythmic groupings (`noteLength`) by specifying the note length at the end of each measure. If the full pattern has only 1 note length, then it must be at the end of the patter, without any barlines after it.
+
+```
+|DuD D  u|-8
+|DuD D  u-8
+DuD D  u|-8
+DuD D  u-8|
+|DuD D  u-8|
+|DuD D  u|D DuDu |-4
+|DuD D  u-8|D DuDu -4|
+```
+
 ### Styling
 
 To customize the output, you can use a combination of a JSON/YAML configuration file and CLI arguments. For the JSON schema, [see here](./.github/strumvg-schema.json).
