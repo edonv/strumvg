@@ -75,10 +75,6 @@
             argument = "-c"
             isEnabled = "YES">
          </CommandLineArgument>
-         <CommandLineArgument
-            argument = "&quot;orange&quot;"
-            isEnabled = "YES">
-         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
