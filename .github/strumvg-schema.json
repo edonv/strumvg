@@ -74,7 +74,7 @@
         },
         "height": {
           "description": "The height of each strum arrow.",
-          "default": 8
+          "default": 80
         },
         "strokeWidthRatio": {
           "description": "The relative stroke width of a strum arrow's lines, as a fraction of `width`.",
