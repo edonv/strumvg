@@ -1,119 +1,170 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "strumvg Configuration",
+  "description": "Configurable properties for customizing the SVG output of `strumvg`.\nSize-related properties are either an SVG user unit measurement or a ratio relative to another concrete property.",
   "type": "object",
   "properties": {
     "colors": {
+      "title": "Color styling properties",
+      "description": "Styling related to colors.\nColor values can be any string recognized by [SVG/CSS as a color](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value).",
       "type": "object",
       "properties": {
         "arrows": {
           "description": "The color of the arrows.",
-          "type": "string"
+          "type": "string",
+          "default": "#000000"
         },
         "rhythms": {
           "description": "The color of the rhythm text and stems below the arrows.",
-          "type": "string"
+          "type": "string",
+          "default": "#555555"
         },
         "headers": {
           "description": "The color of the articulations and header text above the arrows.",
-          "type": "string"
+          "type": "string",
+          "default": "#000000"
+        },
+        "barlines": {
+          "description": "The color of the articulations and header text above the arrows.",
+          "type": "string",
+          "default": "#000000"
         }
-      },
-      "default": {
-        "arrows": "#000000",
-        "rhythms": "#555555",
-        "headers": "#000000"
       }
     },
     "textSizes": {
+      "title": "Text sizing properties",
+      "description": "Styling related to text sizes.\nProperties denoted as a \"height\" refer to the amount of vertical space (in SVG user units) that will be reserved for that text.\nProperties denoted as a \"font size\" will translate to the `font-size` attribute.",
       "type": "object",
       "properties": {
         "beatTextHeight": {
           "description": "The height of the space reserved for rhythm text below the arrows.",
-          "type": "number"
+          "type": "number",
+          "default": 30
         },
-        "beatFontSize": {
-          "description": "The relative font-size of the rhythm text below the arrows, as a fraction of its height (`beatTextHeight`).",
-          "type": "number"
+        "beatFontSizeRatio": {
+          "description": "The relative font-size of the rhythm text below the arrows, as a fraction of its height.",
+          "type": "number",
+          "default": 0.8
         },
         "headerTextHeight": {
           "description": "The height of the space reserved for articulations and header text above the arrows.",
-          "type": "number"
+          "type": "number",
+          "default": 30
         },
-        "headerFontSize": {
-          "description": "The relative font-size of the articulations and header text above the arrows, as a fraction of its height (`headerFontSize`).",
-          "type": "number"
+        "headerFontSizeRatio": {
+          "description": "The relative font-size of the articulations and header text above the arrows, as a fraction of its height.",
+          "type": "number",
+          "default": 0.8
         },
         "tripletFontSize": {
           "description": "The actual font-size of the triplet label, if applicable.",
-          "type": "number"
+          "type": "number",
+          "default": 14
         }
-      },
-      "default": {
-        "beatTextHeight": 30,
-        "beatFontSize": 0.8,
-        "headerTextHeight": 30,
-        "headerFontSize": 0.8,
-        "tripletFontSize": 14
       }
     },
     "strumSizes": {
+      "title": "Strum sizing properties",
+      "description": "Styling related to strum sizes.",
       "type": "object",
       "properties": {
         "width": {
-          "description": "The width of each strum arrow.\nThis is also the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text.",
-          "type": "number"
+          "description": "The width of the space reserved for each strum arrow.\nThis is the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text. It also defines the maximum width of a strum's arrowhead.",
+          "default": 20
         },
         "height": {
           "description": "The height of each strum arrow.",
-          "type": "number"
+          "default": 8
+        },
+        "strokeWidthRatio": {
+          "description": "The relative stroke width of a strum arrow's lines, as a fraction of `width`.",
+          "default": 0.2
         },
         "gap": {
-          "description": "The horizontal space between each strum ",
-          "type": "number"
+          "description": "The horizontal space between each strum.",
+          "default": 30
         }
-      },
-      "default": {
-        "width": 20,
-        "height": 80,
-        "gap": 30
       }
     },
     "beamSizes": {
+      "title": "Beam and rhythmic-grouping sizing properties",
+      "description": "Styling related to beam sizes.",
       "type": "object",
       "properties": {
         "strokeWidth": {
           "description": "The stroke width of the rhythm stems/beams below the arrows.",
-          "type": "number"
+          "type": "number",
+          "default": 2
         },
         "stemHeight": {
           "description": "The vertical length of the beam stems.",
-          "type": "number"
+          "type": "number",
+          "default": 8
         }
-      },
-      "default": {
-        "strokeWidth": 2,
-        "stemHeight": 8
+      }
+    },
+    "barlineSizes": {
+      "title": "Barline sizing properties",
+      "description": "Styling related to barline sizes.",
+      "type": "object",
+      "properties": {
+        "strokeWidth": {
+          "description": "The stroke width of the barlines.",
+          "type": "number",
+          "default": 2
+        },
+        "heightRatio": {
+          "description": "The relative height of a barline, as a fraction of `strumSizes.height`.",
+          "type": "number",
+          "default": 1.25
+        },
+        "gapRatio": {
+          "description": "The relative width of a gap between a barline and adjacent \"rhythmic columns\", as a fraction of `strumSizes/gap`.",
+          "type": "number",
+          "default": 0.5
+        }
       }
     },
     "fonts": {
+      "title": "Font properties",
+      "description": "Styling related to fonts.",
       "type": "object",
       "properties": {
         "strumHeader": {
           "description": "Font styling for header text.",
-          "$ref": "#/definitions/font"
+          "$ref": "#/definitions/font",
+          "default": {
+            "family": "sans-serif",
+            "weight": "bold",
+            "style": "normal"
+          }
         },
         "arrowText": {
           "description": "Font styling for text inserted in place of arrows.",
-          "$ref": "#/definitions/font"
+          "$ref": "#/definitions/font",
+          "default": {
+            "family": "sans-serif",
+            "weight": "bold",
+            "style": "normal"
+          }
         },
         "countChar": {
           "description": "Font styling for rhythm count text.",
-          "$ref": "#/definitions/font"
+          "$ref": "#/definitions/font",
+          "default": {
+            "family": "sans-serif",
+            "weight": "bold",
+            "style": "normal"
+          }
         },
         "tripletText": {
           "description": "Font styling for triplet labels (\"3\"), if applicable.",
-          "$ref": "#/definitions/font"
+          "$ref": "#/definitions/font",
+          "default": {
+            "family": "sans-serif",
+            "weight": "normal",
+            "style": "normal"
+          }
         }
       }
     }
@@ -169,12 +220,18 @@
       "type": "object",
       "properties": {
         "family": {
+          "title": "Font family name.",
+          "description": "Values can be any string recognized by [SVG/CSS as a font family](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-family).",
           "$ref": "#/definitions/font-family"
         },
         "weight": {
+          "title": "Font weight.",
+          "description": "Values can be any string recognized by [SVG/CSS as a font weight](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight).",
           "$ref": "#/definitions/font-weight"
         },
         "style": {
+          "title": "Font style.",
+          "description": "Values can be any string recognized by [SVG/CSS as a font style](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-style).",
           "$ref": "#/definitions/font-style"
         }
       }
