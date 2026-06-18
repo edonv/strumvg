@@ -11,16 +11,6 @@ public struct StrumKind: RawRepresentable, Sendable, Hashable {
     public let direction: Direction?
     public let variant: Variant
     
-//    case down
-//    case up
-//    case mutedDown
-//    case mutedUp
-//    case arpDown
-//    case arpUp
-//    case space
-//    case rest
-//    case other(Character)
-    
     internal init(direction: Direction?, variant: Variant) {
         self.direction = direction
         self.variant = variant
