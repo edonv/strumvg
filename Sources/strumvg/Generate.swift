@@ -582,7 +582,7 @@ extension strumvg {
             // Otherwise, just move node to next stem
             pathSegment += " m\(beamLength),0"
         }
-        pathSegment += " V0 "
+        pathSegment += " V0"
         
         // Append path string with repeating nodes
         noteBeamsPathAttr += Array(
