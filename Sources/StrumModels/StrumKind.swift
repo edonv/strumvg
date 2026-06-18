@@ -7,8 +7,11 @@
 
 import Foundation
 
+/// A type of strum.
 public struct StrumKind: RawRepresentable, Sendable, Hashable {
+    /// The variation of the strum.
     public let variant: Variant
+    /// The direction of the strum, optionally.
     public let direction: Direction?
     
     public static let down = StrumKind(variant: .normal, direction: .down)
