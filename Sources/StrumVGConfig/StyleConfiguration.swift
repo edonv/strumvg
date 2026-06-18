@@ -78,7 +78,7 @@ public struct StyleConfiguration: Codable {
     
     /// Text sizing properties
     ///
-    /// Properties denoted as a "height" refer to the amount of vertical space (in SVG user units) that will be reserved for that text.
+    /// Properties denoted as a \"height\" refer to the amount of vertical space (in SVG user units) that will be reserved for that text.
     ///
     /// Properties denoted as a "font size" will translate to the `font-size` attribute.
     public struct TextSizes: Codable {
