@@ -51,7 +51,7 @@ extension strumvg {
                         )
                     ] + nodes + CollectionOfOne(
                         barlineNode(
-                            at: CGFloat(rect.size.width) - style.barlineSizes.strokeWidth / 2,
+                            at: CGFloat(rect.size.width) - style.barlineSizes.strokeWidth,
                             index: pattern.measures.count
                         )
                     )
@@ -113,13 +113,16 @@ extension strumvg {
             }
         }
         
+        let barlineStrokeWidth = style.barlineSizes.strokeWidth
         return CGRect(
             origin: .init(
-                x: 0,
+                // needs to not cut off first barline
+                x: -barlineStrokeWidth / 2,
                 y: minY
             ),
             size: .init(
-                width: calcWidth,
+                // needs to account for negative minX to not cut off last barline
+                width: calcWidth + barlineStrokeWidth / 2,
                 height: calcHeight
             )
         )
