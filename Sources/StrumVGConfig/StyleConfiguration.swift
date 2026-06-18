@@ -89,7 +89,7 @@ public struct StyleConfiguration: Codable {
         /// > Default: `0.8`
         public let beatFontSizeRatio: CGFloat
         /// The height of the space reserved for articulations and header text above the arrows.
-        /// > Default: `30
+        /// > Default: `30`
         public let headerTextHeight: CGFloat
         /// The relative font-size of the articulations and header text above the arrows, as a fraction of its height.
         /// > Default: `0.8`
