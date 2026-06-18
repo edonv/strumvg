@@ -179,7 +179,7 @@ extension strumvg {
                 .attribute(named: "y1", value: y1, format: numberFormat),
                 .attribute(named: "x2", value: x, format: numberFormat),
                 .attribute(named: "y2", value: y2, format: numberFormat),
-                .attribute(named: "stroke-width", value: style.beamSizes.strokeWidth, format: numberFormat),
+                .attribute(named: "stroke-width", value: style.barlineSizes.strokeWidth, format: numberFormat),
                 .attribute(named: "stroke", value: style.colors.rhythms),
             ]
         )
