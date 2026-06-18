@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// An instance of a strum in a pattern.
+///
+/// It contains a reference of the type of strum and an optional heading character.
 public struct Strum: RawRepresentable, Sendable, Hashable {
     public typealias Kind = StrumKind
     
