@@ -9,9 +9,7 @@ import Foundation
 import ArgumentParser
 
 public struct InOutConfiguration: ParsableArguments {
-    public init() {
-        
-    }
+    public init() {}
     
     @Option(
         name: [.customLong("config"), .customShort("c")],
@@ -27,9 +25,7 @@ public struct InOutConfiguration: ParsableArguments {
     public var input: Input
     
     public struct Input: ParsableArguments {
-        public init() {
-            
-        }
+        public init() {}
         
         @Flag(
             help: .init(
@@ -114,9 +110,7 @@ public struct InOutConfiguration: ParsableArguments {
     public var output: Output
     
     public struct Output: ParsableArguments {
-        public init() {
-            
-        }
+        public init() {}
         
         @Flag(
             help: .init(
