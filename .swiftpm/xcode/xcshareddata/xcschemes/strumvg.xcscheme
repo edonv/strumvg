@@ -53,7 +53,7 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-a=&quot;|{hD}rr{rD}sADMD u-8t|udu d d -4&quot;"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-a=&quot;|DuD D  u|D D uDu|-8&quot;"
@@ -61,7 +61,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-a=&quot;|DuD D  u-8|D DuDu -4|&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-a=&quot;d du udu-4|d du udu-8&quot;"
