@@ -96,7 +96,7 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Allow specifying JSON file for configuration options, rather than having to use command-line options for everything.   
 - [x] Add font customizing, also maybe classes/CSS/`<style>` for styling SVG.
 - [x] Refactored config stuff to use https://github.com/apple/swift-configuration
-- [ ] Allow `|` to be used as a barline to reset beat counting.
+- [x] Allow `|` to be used as a barline to reset beat counting.
 - [ ] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
