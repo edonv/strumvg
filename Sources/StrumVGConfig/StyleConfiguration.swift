@@ -317,7 +317,7 @@ public struct StyleConfiguration: Codable {
             ///
             /// > Attribute: `font-weight`
             public let weight: String
-            /// Font weight.
+            /// Font style.
             /// > Default: `normal`
             ///
             /// > Attribute: `font-style`
