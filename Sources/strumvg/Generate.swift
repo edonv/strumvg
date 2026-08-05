@@ -597,7 +597,7 @@ extension strumvg {
         let beamBarCount = noteLength.duration.beamBarCount
         
         let beatsPerGroup = triplet ? 3 : 2
-        let quantity = Int(floor(Double(strums.count) / Double(beatsPerGroup)))
+        let groupQuantity = Int(floor(Double(strums.count) / Double(beatsPerGroup)))
         
         return .element(
             named: "g",
@@ -616,7 +616,7 @@ extension strumvg {
                 .attribute(named: "font-family", value: style.fonts.tripletText.family),
                 .attribute(named: "font-weight", value: style.fonts.tripletText.weight),
                 .attribute(named: "font-style", value: style.fonts.tripletText.style),
-            ] + (0..<quantity).map { i in
+            ] + (0..<groupQuantity).map { i in
                 return createNoteGroup(
                     groupNum: i,
                     beatCount: beatsPerGroup,
