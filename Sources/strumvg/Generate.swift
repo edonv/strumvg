@@ -325,7 +325,7 @@ extension strumvg {
                 } else {
                     switch int % 4 {
                     case 0:
-                        return "\(Int((Double(i) / 4).rounded()))"
+                        return "\(Int((Double(i) / 4 + 1).rounded()))"
                     case 1:
                         return "e"
                     case 2:
