@@ -48,5 +48,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ github.ref_name }}
-          files: './*/*'
+          files: './**/*'
           fail_on_unmatched_files: true
