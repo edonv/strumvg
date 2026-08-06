@@ -596,8 +596,8 @@ extension strumvg {
         let triplet = noteLength.triplet
         let beamBarCount = noteLength.duration.beamBarCount
         
-        let beatsPerGroup = triplet ? 3 : 2
-        let groupQuantity = Int(floor(Double(strums.count) / Double(beatsPerGroup)))
+        let strumsPerGroup = triplet ? 3 : 2
+        let groupQuantity = Int(floor(Double(strums.count) / Double(strumsPerGroup)))
         
         return .element(
             named: "g",
@@ -619,7 +619,7 @@ extension strumvg {
             ] + (0..<groupQuantity).map { i in
                 return createNoteGroup(
                     groupNum: i,
-                    beatCount: beatsPerGroup,
+                    strumCount: strumsPerGroup,
                     triplet: triplet,
                     beamBarCount: beamBarCount
                 )
@@ -629,18 +629,18 @@ extension strumvg {
     
     /// - Parameters:
     ///   - groupNum: The index of the note group in the measure.
-    ///   - beatCount: The number of strums in the group.
+    ///   - strumCount: The number of strums in the group.
     ///   - triplet: Whether or not the group is a triplet.
     ///   - beamBarCount: The number of beams/flags to draw for the group.
     private func createNoteGroup(
         groupNum: Int,
-        beatCount: Int,
+        strumCount: Int,
         triplet: Bool,
         beamBarCount: Int
     ) -> Node<SVG.DocumentContext> {
-        let beatCountFloat = CGFloat(beatCount)
+        let strumCountFloat = CGFloat(strumCount)
         /// Full group width, from left edge of first strum to right edge of last strum (including gap after)
-        let fullWidth = CGFloat(beatCountFloat) * (style.strumSizes.width + style.strumSizes.gap)
+        let fullWidth = CGFloat(strumCountFloat) * (style.strumSizes.width + style.strumSizes.gap)
         
         /// `fullWidth` - (0.5 of strum space width on each end, which equals 1 full width)
         let beamWidth: CGFloat = fullWidth - style.strumSizes.width - style.strumSizes.gap
@@ -665,7 +665,7 @@ extension strumvg {
         ) : nil
         
         // M0,0 [v8 h50 V0]+
-        let beamLength = beamWidth / (beatCountFloat - 1)
+        let beamLength = beamWidth / (strumCountFloat - 1)
         // Add first path node
         var noteBeamsPathAttr = "M0,0"
         
@@ -674,18 +674,18 @@ extension strumvg {
         // If at least 8th notes, draw first beam bar
         if beamBarCount > 0 {
             pathSegment += " h\(beamLength)"
-        } else if beatCount > 1 {
+        } else if strumCount > 1 {
             // Otherwise, just move node to next stem (if there is another stem)
             pathSegment += " m\(beamLength),0"
         }
-        if beamBarCount > 0 || beatCount > 1 {
+        if beamBarCount > 0 || strumCount > 1 {
             pathSegment += " V0"
         }
         
         // Append path string with repeating nodes
         noteBeamsPathAttr += Array(
             repeating: pathSegment,
-            count: max(beatCount - 1, 1) // always add at least 1
+            count: max(strumCount - 1, 1) // always add at least 1
         )
         .joined(separator: " ")
         
