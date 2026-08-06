@@ -674,16 +674,18 @@ extension strumvg {
         // If at least 8th notes, draw first beam bar
         if beamBarCount > 0 {
             pathSegment += " h\(beamLength)"
-        } else {
-            // Otherwise, just move node to next stem
+        } else if beatCount > 1 {
+            // Otherwise, just move node to next stem (if there is another stem)
             pathSegment += " m\(beamLength),0"
         }
-        pathSegment += " V0"
+        if beamBarCount > 0 || beatCount > 1 {
+            pathSegment += " V0"
+        }
         
         // Append path string with repeating nodes
         noteBeamsPathAttr += Array(
             repeating: pathSegment,
-            count: beatCount - 1
+            count: max(beatCount - 1, 1) // always add at least 1
         )
         .joined(separator: " ")
         
