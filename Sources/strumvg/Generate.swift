@@ -596,7 +596,7 @@ extension strumvg {
         let triplet = noteLength.triplet
         let beamBarCount = noteLength.duration.beamBarCount
         
-        let strumsPerGroup = triplet ? 3 : 2
+        let strumsPerGroup = noteLength.stemsPerGroup
         let groupQuantity = Int(floor(Double(strums.count) / Double(strumsPerGroup)))
         
         return .element(
