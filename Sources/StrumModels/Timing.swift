@@ -65,9 +65,8 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
                 return 1
             case .eighth:
                 return 2
-            // TODO: this should be 4, but currently, if there's an odd number of strums, the last one won't have a stem. currently, it gets padded to have an even number. sets of 4 should be rendered linked
             case .sixteenth:
-                return 2
+                return 4
             }
         }
     }
