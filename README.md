@@ -118,6 +118,7 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 
 ## To-Do's
 
+- [x] FIX ISSUE WITH INCOMPLETE NUMBER OF BEATS PER GROUP NOT GETTING BEAMS/STEMS
 - [x] Make capitalized strums DOWN (because they're on beat).
 - [x] Allow specifying JSON file for configuration options, rather than having to use command-line options for everything.   
 - [x] Add font customizing, also maybe classes/CSS/`<style>` for styling SVG.
