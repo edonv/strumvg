@@ -35,32 +35,23 @@ public struct StrumKind: RawRepresentable, Sendable, Hashable {
     public init(rawValue: Character) {
         switch rawValue {
         case "D", "d":
-            self.direction = .down
-            self.variant = .normal
+            self = .down
         case "u", "U":
-            self.direction = .up
-            self.variant = .normal
+            self = .up
         case "M":
-            self.direction = .down
-            self.variant = .muted
+            self = .downMuted
         case "m":
-            self.direction = .up
-            self.variant = .muted
+            self = .upMuted
         case "A":
-            self.direction = .down
-            self.variant = .arpeggio
+            self = .downArpeggio
         case "a":
-            self.direction = .up
-            self.variant = .arpeggio
+            self = .upArpeggio
         case " ":
-            self.direction = nil
-            self.variant = .space
+            self = .space
         case "r":
-            self.direction = nil
-            self.variant = .rest
+            self = .rest
         default:
-            self.direction = nil
-            self.variant = .other(rawValue)
+            self = .other(rawValue)
         }
     }
     
