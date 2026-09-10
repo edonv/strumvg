@@ -47,6 +47,8 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
         let groupStrumsByRhythm = rawValue
             // Trim only newlines in case there is intentional leading whitespace in the strums
             .trimmingCharacters(in: .newlines)
+            // remove repeat marks
+            .replacingOccurrences(of: ":", with: "")
             // Regex for whatever `timing` is
             .replacing(timing.rhythmicGroupingRegex) { match in
                 "\(match.output.1)\n"
