@@ -135,7 +135,7 @@ struct StrumModelsTests {
     
     @Test func testParsing() async throws {
         for (patternString, pattern) in parsingPatterns {
-            #expect(Pattern(rawValue: patternString) == pattern, Comment(rawValue: patternString))
+            #expect(Pattern(rawValue: patternString) == pattern)
         }
     }
 }
