@@ -16,14 +16,23 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
     public let groups: [RhythmicGroup]
     /// A specification describing how the groups' timings should be grouped.
     public let timing: Timing
+    public let repeatStart: Bool
+    public let repeatEnd: Bool
     
     public var totalStrums: Int {
         groups.flatMap(\.strums).count
     }
     
-    public init(groups: [RhythmicGroup], timing: Timing) {
+    public init(
+        groups: [RhythmicGroup],
+        timing: Timing,
+        repeatStart: Bool = false,
+        repeatEnd: Bool = false
+    ) {
         self.groups = groups
         self.timing = timing
+        self.repeatStart = repeatStart
+        self.repeatEnd = repeatEnd
     }
     
     /// - Returns: A validated `Measure`, or `nil` if the `timing` component is missing.
