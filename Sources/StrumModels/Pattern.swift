@@ -64,6 +64,18 @@ public struct Pattern: RawRepresentable, Sendable, Hashable {
             .map { Measure(rawValue: $0)! }
         
         // validation that for every repeatStart theres a repeatEnd
+        guard self.validateRepeats() else { return nil }
+    }
+    
+    public var rawValue: String {
+        measures
+            .map(\.rawValue)
+            .joined(separator: "|")
+    }
+    
+    /// Validates that for every ``repeatStart`` theres a ``repeatEnd``.
+    /// - Returns: Boolean describing if the patterns repeats are valid.
+    private func validateRepeats() -> Bool {
         var i = 0
         var lookingForRepeatEnd = false
         while i < measures.count {
@@ -80,7 +92,7 @@ public struct Pattern: RawRepresentable, Sendable, Hashable {
                 } else if lookingForRepeatEnd {
                     // and it's actively searching for an end:
                     // FAIL
-                    return nil
+                    return false
                 }
             } else if measure.repeatEnd {
                 // if this measure is the end of a repeat...
@@ -91,7 +103,7 @@ public struct Pattern: RawRepresentable, Sendable, Hashable {
                 } else {
                     // was not searching:
                     // FAIL
-                    return nil
+                    return false
                 }
             } else if lookingForRepeatEnd
                         && i == measures.count - 1 {
@@ -99,18 +111,14 @@ public struct Pattern: RawRepresentable, Sendable, Hashable {
                 // AND it's searching for an end,
                 // AND it's the last measure:
                 // FAIL
-                return nil
+                return false
             } else {
                 // otherwise continue
             }
             
             i += 1
         }
-    }
-    
-    public var rawValue: String {
-        measures
-            .map(\.rawValue)
-            .joined(separator: "|")
+        
+        return true
     }
 }
