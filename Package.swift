@@ -28,6 +28,10 @@ let package = Package(
                 .product(name: "Plot", package: "Plot"),
             ]
         ),
+        .testTarget(
+            name: "StrumModelsTests",
+            dependencies: ["StrumModels"]
+        ),
         .target(
             name: "StrumVGConfig",
             dependencies: [
