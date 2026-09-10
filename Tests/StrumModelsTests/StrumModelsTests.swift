@@ -138,4 +138,18 @@ struct StrumModelsTests {
             #expect(Pattern(rawValue: patternString) == pattern)
         }
     }
+    
+    @Test func testRepeatPatternValidation() {
+        let patterns: [String: Bool] = [
+            "|:DuD D  u:|D D uDu:|-8": false,
+            "|:DuD D  u|D D uDu:|-8": true,
+            "|:DuD D  u:|D D uDu|-8": true,
+            "|:DuD D  u:|:D D uDu:|-8": true,
+            "|DuD D  u:|D D uDu:|-8": false,
+        ]
+        
+        for (patternString, expectation) in patterns {
+            #expect((Pattern(rawValue: patternString) != nil) == expectation)
+        }
+    }
 }
