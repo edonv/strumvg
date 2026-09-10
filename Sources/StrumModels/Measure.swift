@@ -86,9 +86,14 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
             )
         }
         
+        let strWithoutTiming = rawValue.replacing(Timing.regex, with: "")
+        
         self.init(
             groups: groupsTemp,
-            timing: timing
+            timing: timing,
+            // Check for repeats
+            repeatStart: strWithoutTiming.contains(/^:/),
+            repeatEnd: strWithoutTiming.contains(/:$/)
         )
     }
     
