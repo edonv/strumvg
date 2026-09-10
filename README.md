@@ -66,7 +66,7 @@ Optionally, each note in `pattern` can have a heading character. To indicate thi
 
 Additionally, patterns can contain multiple measures of strums, specified by separating measures with `|` (pipe) characters.
 
-Pattern strings containing only a single measure can optionally be written with bar lines wrapping the pattern.
+Pattern strings containing only a single measure or containing only 1 type of timing can optionally be written with bar lines wrapping the pattern.
 
 Multiple measures can even have different rhythmic groupings (`noteLength`) by specifying the note length at the end of each measure. If the full pattern has only 1 note length, then it must be at the end of the patter, without any barlines after it.
 
