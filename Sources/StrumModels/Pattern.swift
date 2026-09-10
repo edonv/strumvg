@@ -39,7 +39,9 @@ public struct Pattern: RawRepresentable, Sendable, Hashable {
                     .replacingOccurrences(of: "|", with: "")
             }
         
-        // if there is more than 1 group (or there's just 1 group AND the Timing segment is separated by a barline)
+        // if the Timing segment is separated by a barline and there is either:
+        // - only 1 measure
+        // - more than 1 measure but only 1 Timing segment
         if timingRegexMatches.count == 1
             && rhythmGroupsByMeasure.count > 1,
            let firstMatch = timingRegexMatches.first,
