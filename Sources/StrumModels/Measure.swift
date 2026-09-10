@@ -31,7 +31,6 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
         // Timing
         
         guard let timing = Timing(rawValue: rawValue) else { return nil }
-        self.timing = timing
         
         // Strums
         
@@ -78,7 +77,10 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
             )
         }
         
-        self.groups = groupsTemp
+        self.init(
+            groups: groupsTemp,
+            timing: timing
+        )
     }
     
     public var rawValue: String {
