@@ -62,6 +62,50 @@ public struct Pattern: RawRepresentable, Sendable, Hashable {
         self.measures = rhythmGroupsByMeasure
 //            .compactMap(Measure.init(rawValue:))
             .map { Measure(rawValue: $0)! }
+        
+        // validation that for every repeatStart theres a repeatEnd
+        var i = 0
+        var lookingForRepeatEnd = false
+        while i < measures.count {
+            let measure = measures[i]
+            
+            // if this measure is the start of a repeat...
+            if measure.repeatStart {
+                if measure.repeatEnd {
+                    // and it's also the end repeat, continue
+                } else if !lookingForRepeatEnd {
+                    // and it's NOT the end of a repeat AND it's not actively searching for an end:
+                    // start looking for an end in the next measure
+                    lookingForRepeatEnd = true
+                } else if lookingForRepeatEnd {
+                    // and it's actively searching for an end:
+                    // FAIL
+                    return nil
+                }
+            } else if measure.repeatEnd {
+                // if this measure is the end of a repeat...
+                // and it's actively searching for an end:
+                if lookingForRepeatEnd {
+                    // stop searching, continue to next measure
+                    lookingForRepeatEnd = false
+                } else {
+                    // was not searching:
+                    // FAIL
+                    return nil
+                }
+            } else if lookingForRepeatEnd
+                        && i == measures.count - 1 {
+                // if this measure is not start or end of a repeat,
+                // AND it's searching for an end,
+                // AND it's the last measure:
+                // FAIL
+                return nil
+            } else {
+                // otherwise continue
+            }
+            
+            i += 1
+        }
     }
     
     public var rawValue: String {
