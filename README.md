@@ -140,3 +140,4 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
     - have a default subdivision per possible time signature
 - [ ] Option to hide `3` when in triplet (or 6/8 or 12/8)
 - [ ] Add repeats
+- [ ] Move all saved pattern string arguments into a test suite
