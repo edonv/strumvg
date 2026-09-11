@@ -93,7 +93,7 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
         /-(?<time>4|8|16)(?<triplet>t)?/
     }
     
-    private var rhythmGroupingRegexCountRange: ClosedRange<Int> {
+    internal var rhythmGroupingRegexCountRange: ClosedRange<Int> {
         switch self.triplet {
         case true:
             1...stemsPerGroup
