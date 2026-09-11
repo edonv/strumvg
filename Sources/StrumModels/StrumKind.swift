@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Parsing
 
 /// A type of strum.
 public struct StrumKind: RawRepresentable, Sendable, Hashable {
@@ -57,6 +58,39 @@ public struct StrumKind: RawRepresentable, Sendable, Hashable {
     
     public var rawValue: Character {
         self.variant.character(for: self.direction)
+    }
+    
+    public static func parser() -> AnyParserPrinter<Substring, StrumKind> {
+        OneOf(input: Substring.self, output: StrumKind.self) {
+            OneOf {
+                "D"
+                "d"
+            }
+            .map { .down }
+            
+            OneOf {
+                "u"
+                "U"
+            }
+            .map { .up }
+            
+            "M".map { .downMuted }
+            "m".map { .upMuted }
+            
+            "A".map { .downArpeggio }
+            "a".map { .upArpeggio }
+            
+            " ".map { .space }
+            "r".map { .rest }
+            
+            Prefix(1)
+                .compactMap(\.first)
+                .map(StrumKind.other)
+        }
+        .printing { kind, substring in
+            substring.prepend(kind.rawValue)
+        }
+        .eraseToAnyParserPrinter()
     }
 }
 
