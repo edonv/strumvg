@@ -22,6 +22,7 @@ public struct StyleConfiguration: Codable {
     public let beamSizes: BeamSizes
     /// Styling related to barline sizes.
     public let barlineSizes: BarlineSizes
+    public let repeats: Repeats
     /// Styling related to fonts.
     public let fonts: Fonts
     
@@ -283,6 +284,32 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    public struct Repeats: Codable {
+        /// Relative to ``StyleConfiguration/BarlineSizes/gap(withStrumSizes:)``.
+        public let spacingRatioFromBarline: CGFloat
+        /// Relative to height of ``StyleConfiguration/StrumSizes/height``.
+        public let yRatio: CGFloat
+        public let dotRadius: CGFloat
+        
+        public init(
+            spacingRatioFromBarline: CGFloat,
+            yRatio: CGFloat,
+            dotRadius: CGFloat
+        ) {
+            self.spacingRatioFromBarline = spacingRatioFromBarline
+            self.yRatio = yRatio
+            self.dotRadius = dotRadius
+        }
+        
+        public init(config: ConfigReader) {
+            self.init(
+                spacingRatioFromBarline: config.cgFloat(forKey: "spacingRatioFromBarline", default: 0.5),
+                yRatio: config.cgFloat(forKey: "yRatio", default: 1 / 3),
+                dotRadius: config.cgFloat(forKey: "dotRadius", default: 3)
+            )
+        }
+    }
+    
     /// Font properties
     public struct Fonts: Codable {
         /// Font styling for header text.
@@ -411,6 +438,7 @@ extension StyleConfiguration {
             strumSizes: .init(config: config.scoped(to: "strumSizes")),
             beamSizes: .init(config: config.scoped(to: "beamSizes")),
             barlineSizes: .init(config: config.scoped(to: "barlineSizes")),
+            repeats: .init(config: config.scoped(to: "repeats")),
             fonts: .init(config: config.scoped(to: "fonts"))
         )
     }
