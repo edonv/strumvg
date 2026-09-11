@@ -131,15 +131,18 @@ extension strumvg {
     /// Excludes trailing strum gap, includes leading/trailing barline gaps.
     private func widthsOfMeasures<S: Sequence>(_ measures: S) -> CGFloat where S.Element == Measure {
         measures
-            .map { m in
-                let beatCount = m.groups.flatMap(\.strums).count
-                /// Full group width, from left edge of first strum to right edge of last strum (excluding trailing strum gap after)
-                let measureWidth = CGFloat(beatCount) * (style.strumSizes.width + style.strumSizes.gap)
-                    - style.strumSizes.gap
-                // Add leading barline
-                return measureWidth + 2 * style.barlineSizes.gap(withStrumSizes: style.strumSizes)
-            }
+            .map(widthOfMeasure(_:))
             .reduce(into: 0, +=)
+    }
+    
+    /// Excludes trailing strum gap, includes leading/trailing barline gaps.
+    private func widthOfMeasure(_ measure: Measure) -> CGFloat {
+        let beatCount = measure.groups.flatMap(\.strums).count
+        /// Full group width, from left edge of first strum to right edge of last strum (excluding trailing strum gap after)
+        let measureWidth = CGFloat(beatCount) * (style.strumSizes.width + style.strumSizes.gap)
+        - style.strumSizes.gap
+        // Add leading barline
+        return measureWidth + 2 * style.barlineSizes.gap(withStrumSizes: style.strumSizes)
     }
     
     private func generateMeasureNodes(
