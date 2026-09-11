@@ -41,27 +41,28 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
         repeatStart: Bool = false,
         repeatEnd: Bool = false
     ) {
-        // Group the strums based on `timing`
-        self.groups = strums
-            .reduce(into: [[Strum]]()) { partialResult, strum in
-                guard !partialResult.isEmpty else {
-                    partialResult.append([strum])
-                    return
+        self.init(
+            // Group the strums based on `timing`
+            groups: strums
+                .reduce(into: [[Strum]]()) { partialResult, strum in
+                    guard !partialResult.isEmpty else {
+                        partialResult.append([strum])
+                        return
+                    }
+                    
+                    let lastIndex = partialResult.count - 1
+                    // append an empty array once limit is reached
+                    if !timing.rhythmGroupingRegexCountRange.contains(partialResult[lastIndex].count + 1) {
+                        partialResult.append([])
+                    }
+                    
+                    partialResult[lastIndex].append(strum)
                 }
-                
-                let lastIndex = partialResult.count - 1
-                // append an empty array once limit is reached
-                if !timing.rhythmGroupingRegexCountRange.contains(partialResult[lastIndex].count + 1) {
-                    partialResult.append([])
-                }
-                
-                partialResult[lastIndex].append(strum)
-            }
-            .map(RhythmicGroup.init)
-        
-        self.timing = timing
-        self.repeatStart = repeatStart
-        self.repeatEnd = repeatEnd
+                .map(RhythmicGroup.init),
+            timing: timing,
+            repeatStart: repeatStart,
+            repeatEnd: repeatEnd
+        )
     }
     
     /// - Returns: A validated `Measure`, or `nil` if the `timing` component is missing.
