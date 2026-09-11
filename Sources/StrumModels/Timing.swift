@@ -8,7 +8,7 @@
 import Foundation
 import RegexBuilder
 
-public enum NoteDuration: Int, Sendable, Hashable {
+public enum NoteDuration: Int, CaseIterable, Sendable, Hashable {
     case quarter = 4
     case eighth = 8
     case sixteenth = 16
