@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Parsing
 
 /// An instance of a strum in a pattern.
 ///
@@ -53,5 +54,33 @@ public struct Strum: RawRepresentable, Sendable, Hashable {
         } else {
             return "\(kind.rawValue)"
         }
+    }
+    
+    public static func parser() -> AnyParserPrinter<Substring, Strum> {
+        OneOf {
+            ParsePrint {
+                "{"
+                Prefix(1)
+                    .map(.string)
+                Kind.parser()
+                "}"
+            }
+            .map(.convert(apply: { (str: String, kind: Kind) in
+                (kind, str.first)
+            }, unapply: { (kind: Kind, heading: Character?) -> (String, Kind)? in
+                guard let heading else { return nil }
+                return ("\(heading)", kind)
+            }))
+            
+            Kind.parser()
+                .map(.convert(apply: { kind in
+                    (kind, nil)
+                }, unapply: { (kind: Kind, heading: Character?) in
+                    guard heading == nil else { return nil }
+                    return kind
+                }))
+        }
+        .map(.memberwise(Strum.init))
+        .eraseToAnyParserPrinter()
     }
 }
