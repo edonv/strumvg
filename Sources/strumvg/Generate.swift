@@ -150,7 +150,10 @@ extension strumvg {
         in allMeasures: [Measure]
     ) -> [Node<SVG.DocumentContext>] {
         let currentMeasure = allMeasures[measureNum]
-        let content = generateNodes(in: currentMeasure)
+        let content = generateNodes(
+            in: currentMeasure,
+            ofWidth: widthOfMeasure(currentMeasure)
+        )
         
         let widthUpToMeasure = widthsOfMeasures(allMeasures[..<measureNum])
         
@@ -191,11 +194,21 @@ extension strumvg {
         )
     }
     
-    private func generateNodes(in measure: Measure) -> [Node<SVG.DocumentContext>] {
+    private func generateNodes(
+        in measure: Measure,
+        ofWidth measureWidth: CGFloat
+    ) -> [Node<SVG.DocumentContext>] {
         let allStrums = measure.groups
             .flatMap(\.strums)
         
         let strs = createRhythmText(quantity: allStrums.count, noteLength: measure.timing)
+        
+        // MARK: Repeats
+        let repeats = createRepeatNotes(
+            showingStart: measure.repeatStart,
+            showingEnd: measure.repeatEnd,
+            withMeasureWidth: measureWidth
+        )
         
         // MARK: Header Text
         let headers = allStrums
@@ -260,11 +273,95 @@ extension strumvg {
         )
         
         return [
+            repeats,
             headersGroup,
             arrowsGroup,
             countCharsGroup,
             noteGroupsGroup,
         ]
+    }
+    
+    /// Creates a `<g>` element node that wraps around repeat signs for a measure of the provided width.
+    ///
+    /// The repeat signs will only be returned if they are each specified to be visible.
+    /// - Parameters:
+    ///   - repeatStart: Whether the starting repeat sign should be shown.
+    ///   - repeatEnd: Whether the ending repeat sign should be shown.
+    ///   - measureWidth: The width of the containing measure.
+    private func createRepeatNotes(
+        showingStart repeatStart: Bool,
+        showingEnd repeatEnd: Bool,
+        withMeasureWidth measureWidth: CGFloat
+    ) -> Node<SVG.DocumentContext> {
+        let groupTranslateX = -style.barlineSizes.gap(
+            withStrumSizes: style.strumSizes
+        ) * style.repeats.spacingRatioFromBarline
+        
+        func circleElement(
+            top: Bool
+        ) -> Node<SVG.DocumentContext> {
+            let cyBase: CGFloat = style.strumSizes.height * style.repeats.yRatio
+            return .element(
+                named: "circle",
+                nodes: [
+                    .attribute(
+                        named: "cy",
+                        value: cyBase * (top ? 1 : 2),
+                        format: numberFormat
+                    ),
+                    .attribute(
+                        named: "r",
+                        value: style.repeats.dotRadius,
+                        format: numberFormat
+                    ),
+                ]
+            )
+        }
+        
+        let topCircle = circleElement(top: true)
+        let bottomCircle = circleElement(top: false)
+        
+        func circleGroup(
+            start: Bool
+        ) -> Node<SVG.DocumentContext> {
+            let key = start ? "start" : "end"
+            let circleInclusionCheck = start ? repeatStart : repeatEnd
+            
+            let endTransformAttr: Node<SVG.DocumentContext>? = start
+                ? nil
+                : .attribute(
+                    named: "transform",
+                    value: "translate(\(measureWidth)) translate(\(groupTranslateX * 2))"
+                )
+            
+            return .element(
+                named: "g",
+                nodes: [
+                    .attribute(named: "key", value: key),
+                    endTransformAttr,
+                ].compactMap { $0 } + (
+                    circleInclusionCheck
+                    ? [topCircle, bottomCircle]
+                    : []
+                )
+            )
+        }
+        
+        let startGroup = circleGroup(start: true)
+        let endGroup = circleGroup(start: false)
+        
+        return .element(
+            named: "g",
+            nodes: [
+                .attribute(named: "key", value: "repeats"),
+                .attribute(
+                    named: "transform",
+                    value: "translate(\(groupTranslateX))"
+                ),
+                startGroup,
+                endGroup,
+            ]
+        )
     }
     
     private func createRhythmText(
