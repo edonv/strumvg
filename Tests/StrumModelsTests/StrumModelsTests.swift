@@ -131,6 +131,40 @@ struct StrumModelsTests {
                 timing: .init(duration: .quarter, triplet: false)
             ),
         ]),
+        "|:DuD D  u|D D uDu:|-8": .init(measures: [
+            .init(
+                groups: [
+                    .init(strums: [
+                        .init(kind: .down),
+                        .init(kind: .up),
+                        .init(kind: .down),
+                        .init(kind: .space),
+                        .init(kind: .down),
+                        .init(kind: .space),
+                        .init(kind: .space),
+                        .init(kind: .up),
+                    ])
+                ],
+                timing: .init(duration: .eighth, triplet: false),
+                repeatStart: true
+            ),
+            .init(
+                groups: [
+                    .init(strums: [
+                        .init(kind: .down),
+                        .init(kind: .space),
+                        .init(kind: .down),
+                        .init(kind: .space),
+                        .init(kind: .up),
+                        .init(kind: .down),
+                        .init(kind: .up),
+                        .init(kind: .space),
+                    ])
+                ],
+                timing: .init(duration: .eighth, triplet: false),
+                repeatEnd: true
+            ),
+        ]),
     ]
     
     @Test func testParsing() async throws {
