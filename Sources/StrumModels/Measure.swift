@@ -19,8 +19,11 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
     public let repeatStart: Bool
     public let repeatEnd: Bool
     
+    public var strums: [Strum] {
+        groups.flatMap(\.strums)
+    }
     public var totalStrums: Int {
-        groups.flatMap(\.strums).count
+        strums.count
     }
     
     internal init(
