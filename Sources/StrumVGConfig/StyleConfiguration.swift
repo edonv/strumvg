@@ -42,17 +42,22 @@ public struct StyleConfiguration: Codable {
         /// The color of the barlines.
         /// > Default: `#000000` (black)
         public let barlines: String
+        /// The color of the repeat signs.
+        /// > Default: `#000000` (black)
+        public let repeats: String
         
         public init(
             arrows: String,
             rhythms: String,
             headers: String,
-            barlines: String
+            barlines: String,
+            repeats: String
         ) {
             self.arrows = arrows
             self.rhythms = rhythms
             self.headers = headers
             self.barlines = barlines
+            self.repeats = repeats
         }
         
         public init(config: ConfigReader) {
@@ -71,6 +76,10 @@ public struct StyleConfiguration: Codable {
                 ),
                 barlines: config.string(
                     forKey: "barlines",
+                    default: "#000000"
+                ),
+                repeats: config.string(
+                    forKey: "repeats",
                     default: "#000000"
                 )
             )
