@@ -7,6 +7,7 @@
 
 import Foundation
 import RegexBuilder
+import Parsing
 
 public enum NoteDuration: Int, CaseIterable, Sendable, Hashable {
     case quarter = 4
@@ -69,6 +70,22 @@ public struct Timing: RawRepresentable, Sendable, Hashable {
                 return 4
             }
         }
+    }
+    
+    public static func parser() -> AnyParserPrinter<Substring, Timing> {
+        ParsePrint(.memberwise(Timing.init)) {
+            "-"
+            
+            NoteDuration.parser()
+            
+            Optionally { "t" }
+                .map(.convert { captured in
+                    captured != nil
+                } unapply: {
+                    $0 ? () : Optional.some(nil)
+                })
+        }
+        .eraseToAnyParserPrinter()
     }
     
     /// `/-(?<time>4|8|16)(?<triplet>t)?/`
