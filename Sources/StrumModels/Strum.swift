@@ -65,12 +65,12 @@ public struct Strum: RawRepresentable, Sendable, Hashable {
                 Kind.parser()
                 "}"
             }
-            .map(.convert(apply: { (str: String, kind: Kind) in
+            .map(.convert { (str: String, kind: Kind) in
                 (kind, str.first)
-            }, unapply: { (kind: Kind, heading: Character?) -> (String, Kind)? in
+            } unapply: { (kind: Kind, heading: Character?) -> (String, Kind)? in
                 guard let heading else { return nil }
                 return ("\(heading)", kind)
-            }))
+            })
             
             Kind.parser()
                 .map(.convert(apply: { kind in
