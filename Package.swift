@@ -12,6 +12,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.8.2"),
         .package(url: "https://github.com/JohnSundell/Plot.git", from: "0.14.0"),
         .package(url: "https://github.com/edonv/PlotSVG.git", exact: "0.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-parsing", from: "0.15.2"),
         .package(
             url: "https://github.com/apple/swift-configuration.git",
             from: "1.2.0",
@@ -21,7 +22,12 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams", "5.4.0"..<"7.0.0"),
     ],
     targets: [
-        .target(name: "StrumModels"),
+        .target(
+            name: "StrumModels",
+            dependencies: [
+                .product(name: "Parsing", package: "swift-parsing"),
+            ]
+        ),
         .target(
             name: "PlotExtensions",
             dependencies: [
