@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Parsing
 
 /// A group of strums.
 ///
@@ -39,5 +40,13 @@ public struct RhythmicGroup: RawRepresentable, Sendable, Hashable {
     
     package var containsHeaderText: Bool {
         strums.contains { $0.headingChar != nil }
+    }
+    
+    public static func parser() -> AnyParserPrinter<Substring, RhythmicGroup> {
+        Many {
+            Strum.parser()
+        }
+        .map(.memberwise(RhythmicGroup.init(strums:)))
+        .eraseToAnyParserPrinter()
     }
 }
