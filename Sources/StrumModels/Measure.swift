@@ -23,7 +23,7 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
         groups.flatMap(\.strums).count
     }
     
-    public init(
+    internal init(
         groups: [RhythmicGroup],
         timing: Timing,
         repeatStart: Bool = false,
