@@ -358,6 +358,8 @@ extension strumvg {
                     named: "transform",
                     value: "translate(\(groupTranslateX))"
                 ),
+                .attribute(named: "fill", value: style.colors.repeats),
+                .attribute(named: "stroke", value: "none"),
                 startGroup,
                 endGroup,
             ]
