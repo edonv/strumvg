@@ -247,7 +247,7 @@ public struct StyleConfiguration: Codable {
         public init(config: ConfigReader) {
             self.init(
                 strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 2),
-                stemHeight: config.cgFloat(forKey: "stemHeight", default: 8)
+                stemHeight: config.cgFloat(forKey: "stemHeight", default: 12)
             )
         }
     }
