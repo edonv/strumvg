@@ -83,7 +83,11 @@ public struct StrumKind: RawRepresentable, Sendable, Hashable {
             " ".map { .space }
             "r".map { .rest }
             
+            // Any character that is not a repeat sign or barline
             Prefix(1)
+                .filter { str in
+                    ![":", "|"].contains(str)
+                }
                 .compactMap(\.first)
                 .map(StrumKind.other)
         }
