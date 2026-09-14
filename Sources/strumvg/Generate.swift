@@ -201,7 +201,7 @@ extension strumvg {
         let allStrums = measure.groups
             .flatMap(\.strums)
         
-        let strs = createRhythmText(quantity: allStrums.count, noteLength: measure.timing)
+        let strs = createRhythmText(quantity: allStrums.count, timing: measure.timing)
         
         // MARK: Repeats
         let repeats = createRepeatNotes(
@@ -368,12 +368,12 @@ extension strumvg {
     
     private func createRhythmText(
         quantity: Int,
-        noteLength: Timing
+        timing: Timing
     ) -> [String] {
         return (0..<quantity).map { int in
             let i = Double(int)
             
-            switch noteLength.subdivision {
+            switch timing.subdivision {
             case .one:
                 return "\(int + 1)"
             case .two:
