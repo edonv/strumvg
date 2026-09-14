@@ -16,6 +16,53 @@ public struct Pattern: Sendable, Hashable {
         self.measures = measures
     }
     
+    /// An initializer only used internally when parsing a pattern.
+    ///
+    /// It might fail due to error.
+    private init(drafts: [Measure.Draft]) throws {
+        self.measures = try drafts.reduce(into: []) { partialResult, draft in
+            // Sometimes, it captures an empty measure at the end
+            if partialResult.count == drafts.count - 1
+                && draft.strums.isEmpty {
+                return
+            }
+            
+            guard let prevTiming = partialResult.last?.timing else {
+                if let measure = draft.confirmingTiming() {
+                    partialResult.append(measure)
+                    return
+                } else {
+                    throw ParsingError.firstMeasureMissingTiming
+                }
+            }
+            
+            partialResult.append(
+                draft.using(timing: prevTiming)
+            )
+        }
+    }
+    
+    private var drafts: [Measure.Draft] {
+        measures.reduce(into: []) { partialResult, measure in
+            let timing: Timing?
+            if partialResult.isEmpty
+                || partialResult.last?.timing != measure.timing {
+                timing = measure.timing
+            } else {
+                timing = nil
+            }
+            
+            partialResult.append(
+                .init(
+                    repeatStart: measure.repeatStart,
+                    timing: timing,
+                    strums: measure.strums,
+                    repeatEnd: measure.repeatEnd
+                )
+            )
+        }
+    }
+    
     /// Validates that for every ``repeatStart`` theres a ``repeatEnd``.
     /// - Returns: Boolean describing if the patterns repeats are valid.
     private func validateRepeats() -> Bool {
