@@ -159,7 +159,7 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [ ] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
-- [ ] Replace rhythmic indicator with some sort of combo of time signature and subdivision
+- [x] Replace rhythmic indicator with some sort of combo of time signature and subdivision
     - Examples:
         - 2/2 with 16th note subdivision
         - 4/4 with 4th note sub
@@ -168,5 +168,5 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
     - have a default subdivision per possible time signature
 - [ ] Option to hide `3` when in triplet (or 6/8 or 12/8)
 - [ ] Add repeats
-- [ ] Move all saved pattern string arguments into a test suite
+- [x] Move all saved pattern string arguments into a test suite
 - [ ] Move/namespace `StrumKind` and `Variant`
