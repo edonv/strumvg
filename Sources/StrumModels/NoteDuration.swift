@@ -15,7 +15,7 @@ public enum NoteDuration: Int, Sendable, Hashable, CaseIterable, Comparable {
     
     public var beamBarCount: Int {
         switch self {
-        case .quarter: 0
+        case .half, .quarter: 0
         case .eighth: 1
         case .sixteenth: 2
         }
