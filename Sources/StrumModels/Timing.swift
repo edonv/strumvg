@@ -9,6 +9,8 @@ import Foundation
 import RegexBuilder
 import Parsing
 
+// MARK: - Timing
+
 public struct Timing: Sendable, Hashable {
     public let duration: NoteDuration
     public let triplet: Bool
