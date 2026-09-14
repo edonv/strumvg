@@ -269,7 +269,7 @@ extension strumvg {
         // MARK: Note Groups
         let noteGroupsGroup = createNoteGroups(
             strums: allStrums,
-            noteLength: measure.timing
+            timing: measure.timing
         )
         
         return [
@@ -659,14 +659,14 @@ extension strumvg {
     
     private func createNoteGroups(
         strums: [Strum],
-        noteLength: Timing
+        timing: Timing
     ) -> Node<SVG.DocumentContext> {
         let y = style.strumSizes.height + style.textSizes.beatTextHeight
         
-        let tuplet = noteLength.tuplet
-        let beamBarCount = noteLength.duration.beamBarCount
+        let tuplet = timing.tuplet
+        let beamBarCount = timing.duration.beamBarCount
         
-        let strumsPerGroup = noteLength.stemsPerGroup
+        let strumsPerGroup = timing.stemsPerGroup
         let groupQuantity = Int(floor(Double(strums.count) / Double(strumsPerGroup)))
         
         return .element(
