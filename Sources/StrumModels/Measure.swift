@@ -26,18 +26,6 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
         strums.count
     }
     
-    internal init(
-        groups: [RhythmicGroup],
-        timing: Timing,
-        repeatStart: Bool = false,
-        repeatEnd: Bool = false
-    ) {
-        self.groups = groups
-        self.timing = timing
-        self.repeatStart = repeatStart
-        self.repeatEnd = repeatEnd
-    }
-    
     /// Create a `Measure` of strums.
     ///
     /// Internally, `strums` will be split into groups according to `timing` and its ``Timing/subdivision``.
