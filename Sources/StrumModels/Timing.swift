@@ -13,29 +13,29 @@ import Parsing
 
 public struct Timing: Sendable, Hashable {
     public let duration: NoteDuration
-    public let triplet: Bool
+    public let subdivision: Subdivision
+    public let tuplet: Bool
     
-    public init(duration: NoteDuration, triplet: Bool) {
+    /// Creates a new `Timing` specification.
+    /// - Parameters:
+    ///   - duration: The note duration of each beat.
+    ///   - subdivision: Defaults to ``Subdivision/one``.
+    ///   - tuplet: A boolean describing if the subdivision of each beat should be labeled as a tuplet.
+    public init(
+        duration: NoteDuration,
+        subdivision: Subdivision? = nil,
+        tuplet: Bool
+    ) {
         self.duration = duration
-        self.triplet = triplet
+        self.subdivision = subdivision ?? .one
+        self.tuplet = tuplet
     }
     
-    
     /// The (maximum) number of note stems per group, depending on the type of `Timing`.
+    ///
+    /// Returns ``subdivision``'s count.
     public var stemsPerGroup: Int {
-        switch self.triplet {
-        case true:
-            return 3
-        case false:
-            switch duration {
-            case .quarter:
-                return 1
-            case .eighth:
-                return 2
-            case .sixteenth:
-                return 4
-            }
-        }
+        subdivision.rawValue
     }
     
     public static func parser() -> AnyParserPrinter<Substring, Timing> {
