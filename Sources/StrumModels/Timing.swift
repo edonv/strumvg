@@ -39,7 +39,7 @@ public struct Timing: Sendable, Hashable {
     }
     
     public static func parser() -> AnyParserPrinter<Substring, Timing> {
-        ParsePrint(.memberwise(Timing.init)) {
+        ParsePrint {
             NoteDuration.parser()
             
             Optionally {
@@ -56,6 +56,11 @@ public struct Timing: Sendable, Hashable {
             
             "-"
         }
+        .map(.convert(apply: { (duration, subdivision, tuplet) in
+            Timing(duration: duration, subdivision: subdivision, tuplet: tuplet)
+        }, unapply: { timing in
+            (timing.duration, timing.subdivision, timing.tuplet)
+        }))
         .eraseToAnyParserPrinter()
     }
 }
