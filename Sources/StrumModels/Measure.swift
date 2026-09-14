@@ -54,37 +54,36 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
         repeatStart: Bool = false,
         repeatEnd: Bool = false
     ) {
-        self.init(
-            // Group the strums based on `timing`
-            groups: strums
-                .reduce(into: [[Strum]]()) { partialResult, strum in
-                    guard !partialResult.isEmpty else {
-                        partialResult.append([strum])
-                        return
-                    }
-                    
-                    var lastIndex = partialResult.count - 1
-                    // append an empty array once limit is reached
-                    if !timing.rhythmGroupingRegexCountRange.contains(partialResult[lastIndex].count + 1) {
-                        partialResult.append([])
-                        lastIndex += 1
-                    }
-                    
-                    partialResult[lastIndex].append(strum)
-                    
-                    // if this is the final strum and there's still room in the rhythmic grouping,
-                    // pad the end with spaces
-                    if partialResult.flatMap({ $0 }).count == strums.count {
-                        while timing.rhythmGroupingRegexCountRange.upperBound > partialResult[lastIndex].count {
-                            partialResult[lastIndex].append(.init(kind: .space))
-                        }
+        // Group the strums based on `timing`
+        self.groups = strums
+            .reduce(into: [[Strum]]()) { partialResult, strum in
+                guard !partialResult.isEmpty else {
+                    partialResult.append([strum])
+                    return
+                }
+                
+                var lastIndex = partialResult.count - 1
+                // append an empty array once limit is reached
+                if partialResult[lastIndex].count + 1 > timing.stemsPerGroup {
+                    partialResult.append([])
+                    lastIndex += 1
+                }
+                
+                partialResult[lastIndex].append(strum)
+                
+                // if this is the final strum and there's still room in the rhythmic grouping,
+                // then pad the end with spaces
+                if partialResult.flatMap({ $0 }).count == strums.count {
+                    while timing.stemsPerGroup > partialResult[lastIndex].count {
+                        partialResult[lastIndex].append(.init(kind: .space))
                     }
                 }
-                .map(RhythmicGroup.init),
-            timing: timing,
-            repeatStart: repeatStart,
-            repeatEnd: repeatEnd
-        )
+            }
+            .map(RhythmicGroup.init)
+        
+        self.timing = timing
+        self.repeatStart = repeatStart
+        self.repeatEnd = repeatEnd
     }
     
     /// - Returns: A validated `Measure`, or `nil` if the `timing` component is missing.
