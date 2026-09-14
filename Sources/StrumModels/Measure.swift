@@ -53,10 +53,11 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
                         return
                     }
                     
-                    let lastIndex = partialResult.count - 1
+                    var lastIndex = partialResult.count - 1
                     // append an empty array once limit is reached
                     if !timing.rhythmGroupingRegexCountRange.contains(partialResult[lastIndex].count + 1) {
                         partialResult.append([])
+                        lastIndex += 1
                     }
                     
                     partialResult[lastIndex].append(strum)
