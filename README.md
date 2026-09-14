@@ -50,9 +50,6 @@ The string format is as follows:
 - `4`: 1/4 (quarter) notes
 - `8`: 1/8 (eighth) notes
 - `16`: 1/16 (sixteenth) notes
-<!--- `4`: Triplet 1/4 notes-->
-<!--- `8t`: Triplet 1/8 notes-->
-<!--- `16t`: Triplet 1/16 notes-->
 
 #### `subdivision`
 
