@@ -39,7 +39,41 @@ OPTIONS:
 
 The string format is as follows:
 
-`[pattern]-[noteLength]`
+```
+[|][:]<noteLength>[/subdivision][t]-<pattern>[:][|]
+```
+
+#### `noteLength`
+
+`noteLength` dictates what duration each counted beat is:
+
+- `4`: 1/4 (quarter) notes
+- `8`: 1/8 (eighth) notes
+- `16`: 1/16 (sixteenth) notes
+<!--- `4`: Triplet 1/4 notes-->
+<!--- `8t`: Triplet 1/8 notes-->
+<!--- `16t`: Triplet 1/16 notes-->
+
+#### `subdivision`
+
+`subdivision` can optionally be provided (prefixed with a `/`) to specify the number of subdivisions the beat should be broken into:
+
+- `1`: no subdivision
+  - Example: "1 2 3 4", etc.
+- `2`: two subdivisions
+  - Example: "1 + 2 + 3 + 4 +", etc.
+- `3`: three subdivisions
+  - Example: "1 + a 2 + a 3 + a 4 + a", etc.
+- `4`: four subdivisions
+  - Example: "1 e + a 2 e + a 3 e + a 4 e + a", etc.
+
+If ommitted, it will default to a subdivision of `1`.
+
+#### `t`
+
+`t` can optionally be specified to generically define the rhythm as a "tuplet," and is not specific to a subdivision of 3. When present, the output will mark every beat grouping with the number of subdivisions (such as a triplet if `subdivision` is `3`, or as a duplet if `subdivision` is `2`).
+
+#### `pattern`
 
 `pattern` can be any of the following characters:
 
@@ -51,47 +85,42 @@ The string format is as follows:
 - `a`: Arpeggio up-stroke
 - <code>&nbsp;</code>: Pause
 - `r`: Rest
-- Any other character (except for `-`) is just inserted
-
-`noteLength` can be any of the following characters:
-
-- `4`: 1/4 (quarter) notes
-- `8`: 1/8 (eighth) notes
-- `16`: 1/16 (sixteenth) notes
-- `4t`: Triplet 1/4 notes
-- `8t`: Triplet 1/8 notes
-- `16t`: Triplet 1/16 notes
+- Any other character (except for `|`/`:`) is just inserted
 
 Optionally, each strum in `pattern` can have a heading character. To indicate this in the formatted string, wrap any given character in curly braces (`{` and `}`) and preface the character with the heading character.
 
-### Multiple Measures
+#### Multiple Measures (`|`)
 
 Additionally, patterns can contain multiple measures of strums, specified by separating measures with `|` (pipe) characters.
 
-Pattern strings containing only a single measure or containing only 1 type of timing can optionally be written with bar lines wrapping the pattern.
+Multiple measures can even have different rhythmic groupings (`noteLength`) by specifying the note length at the start of each measure. While the first measure must always have a timing specification, following measures can omit it if it should use the same timing as the previous measure.
 
-Multiple measures can even have different rhythmic groupings (`noteLength`) by specifying the note length at the end of each measure. If the full pattern has only 1 note length, then it must be at the end of the patter, without any barlines after it.
+#### Repeats (`:`)
+
+Patterns can have repeats as well. Repeat signs (`:`) can be specified at the start or end of a measure, just after or before (respectively) a barline. If a measure has a repeat sign at the start AND includes a timing specification, the repeat sign must come first.
+
+Repeats can also span multiple measures, though the program does validate that repeat signs are in logical positions in the pattern. That is, a pattern such as `|:4-d d d d |: u u u u|` will fail to validate, as each "starting repeat" sign doesn't have a matching "ending".
 
 ### Examples
 
 Basic Examples:
 
 ```
-{xD}f{xu}AaMmr-8
-D  D u  uD u-16t
-D umarDx-4
+8-{xD}f{xu}AaMmr
+16/3t-D  D u  uD u
+4-D umarDx
 ```
 
 Barline/Multi-Measure Examples:
 
 ```
-|DuD D  u|-8
-|DuD D  u-8
-DuD D  u|-8
-DuD D  u-8|
-|DuD D  u-8|
-|DuD D  u|D DuDu |-4
-|DuD D  u-8|D DuDu -4|
+|8-DuD D  u|
+|8-DuD D  u
+8-DuD D  u|
+|:8-DuD D  u:|
+|:4-DuD D  u:|:D DuDu :|
+|:8-DuD D  u|4-D DuDu :|
+|2/4-d d d du|: ud d du:|
 ```
 
 ### Styling
