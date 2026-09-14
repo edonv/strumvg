@@ -40,9 +40,12 @@ public struct Timing: Sendable, Hashable {
     
     public static func parser() -> AnyParserPrinter<Substring, Timing> {
         ParsePrint(.memberwise(Timing.init)) {
-            "-"
-            
             NoteDuration.parser()
+            
+            Optionally {
+                "/"
+                Subdivision.parser()
+            }
             
             Optionally { "t" }
                 .map(.convert { captured in
@@ -50,6 +53,8 @@ public struct Timing: Sendable, Hashable {
                 } unapply: {
                     $0 ? () : Optional.some(nil)
                 })
+            
+            "-"
         }
         .eraseToAnyParserPrinter()
     }
