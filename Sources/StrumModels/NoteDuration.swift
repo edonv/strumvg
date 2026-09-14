@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum NoteDuration: Int, Sendable, Hashable, CaseIterable {
+public enum NoteDuration: Int, Sendable, Hashable, CaseIterable, Comparable {
     case quarter = 4
     case eighth = 8
     case sixteenth = 16
@@ -26,5 +26,9 @@ public enum NoteDuration: Int, Sendable, Hashable, CaseIterable {
         case .eighth: "eighthRest"
         case .sixteenth: "sixteenthRest"
         }
+    }
+    
+    public static func <(lhs: NoteDuration, rhs: NoteDuration) -> Bool {
+        lhs.rawValue < rhs.rawValue
     }
 }
