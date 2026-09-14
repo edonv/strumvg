@@ -66,21 +66,20 @@ public struct Strum: RawRepresentable, Sendable, Hashable {
                 "}"
             }
             .map(.convert { (str: String, kind: Kind) in
-                (kind, str.first)
-            } unapply: { (kind: Kind, heading: Character?) -> (String, Kind)? in
-                guard let heading else { return nil }
-                return ("\(heading)", kind)
+                Strum(kind: kind, heading: str.first)
+            } unapply: { strum in
+                guard let heading = strum.headingChar else { return nil }
+                return ("\(heading)", strum.kind)
             })
             
             Kind.parser()
                 .map(.convert(apply: { kind in
-                    (kind, nil)
-                }, unapply: { (kind: Kind, heading: Character?) in
-                    guard heading == nil else { return nil }
-                    return kind
+                    Strum(kind: kind)
+                }, unapply: { strum in
+                    guard strum.headingChar == nil else { return nil }
+                    return strum.kind
                 }))
         }
-        .map(.memberwise(Strum.init))
         .eraseToAnyParserPrinter()
     }
 }
