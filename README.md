@@ -4,6 +4,8 @@ A command-line tool for generating SVG of a guitar strumming pattern from a form
 
 ## Usage
 
+### First Time
+
 The first time you run `strumvg` on macOS, you'll need to call the following command to give your computer permission:
 
 ```shell
