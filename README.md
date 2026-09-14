@@ -172,3 +172,4 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [ ] Option to hide `3` when in triplet (or 6/8 or 12/8)
 - [ ] Add repeats
 - [ ] Move all saved pattern string arguments into a test suite
+- [ ] Move/namespace `StrumKind` and `Variant`
