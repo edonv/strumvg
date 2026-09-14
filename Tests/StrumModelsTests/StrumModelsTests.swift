@@ -10,158 +10,139 @@ import Testing
 
 struct StrumModelsTests {
     private let parsingPatterns: [String: Pattern] = [
-        "|DuD D  u|D D uDu-8|": .init(measures: [
+        "|8/2-DuD D  u|D D uDu|": .init(measures: [
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                    ])
+                strums: [
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .space),
+                    .init(kind: .up),
                 ],
-                timing: .init(duration: .eighth, triplet: false)
+                timing: .init(duration: .eighth, subdivision: .two, tuplet: false)
             ),
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .space),
-                    ])
+                strums: [
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .up),
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .space),
                 ],
-                timing: .init(duration: .eighth, triplet: false)
+                timing: .init(duration: .eighth, subdivision: .two, tuplet: false)
             ),
         ]),
-        "|{hD}rr{rD}sADMD u-8t|udu d d -4": .init(measures: [
+        "|8/3t-{hD}rr{rD}sADMD u|4-udu d d ": .init(measures: [
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down, heading: "h"),
-                        .init(kind: .rest),
-                        .init(kind: .rest),
-                        .init(kind: .down, heading: "r"),
-                        .init(kind: .other("s")),
-                        .init(kind: .downArpeggio),
-                        .init(kind: .down),
-                        .init(kind: .downMuted),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                        .init(kind: .space),
-                    ])
+                strums: [
+                    .init(kind: .down, heading: "h"),
+                    .init(kind: .rest),
+                    .init(kind: .rest),
+                    .init(kind: .down, heading: "r"),
+                    .init(kind: .other("s")),
+                    .init(kind: .downArpeggio),
+                    .init(kind: .down),
+                    .init(kind: .downMuted),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .up),
+                    .init(kind: .space),
                 ],
-                timing: .init(duration: .eighth, triplet: true)
+                timing: .init(duration: .eighth, subdivision: .three, tuplet: true)
             ),
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .up),
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                    ])
+                strums: [
+                    .init(kind: .up),
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .space),
                 ],
-                timing: .init(duration: .quarter, triplet: false)
+                timing: .init(duration: .quarter, tuplet: false)
             ),
         ]),
-        "d  uMmMu u-16t": .init(measures: [
+        "16/3t-d  uMmMu u": .init(measures: [
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                        .init(kind: .downMuted),
-                        .init(kind: .upMuted),
-                        .init(kind: .downMuted),
-                        .init(kind: .up),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                        .init(kind: .space),
-                        .init(kind: .space),
-                        
-                    ])
+                strums: [
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .space),
+                    .init(kind: .up),
+                    .init(kind: .downMuted),
+                    .init(kind: .upMuted),
+                    .init(kind: .downMuted),
+                    .init(kind: .up),
+                    .init(kind: .space),
+                    .init(kind: .up),
+                    .init(kind: .space),
+                    .init(kind: .space),
                 ],
-                timing: .init(duration: .sixteenth, triplet: true)
+                timing: .init(duration: .sixteenth, subdivision: .three, tuplet: true)
             ),
         ]),
-        "|DuD D  u-8|D DuDu -4|": .init(measures: [
+        "|8-DuD D  u|4-D DuDu |": .init(measures: [
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                    ])
+                strums: [
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .space),
+                    .init(kind: .up),
                 ],
-                timing: .init(duration: .eighth, triplet: false)
+                timing: .init(duration: .eighth, tuplet: false)
             ),
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .space),
-                    ])
+                strums: [
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .space),
                 ],
-                timing: .init(duration: .quarter, triplet: false)
+                timing: .init(duration: .quarter, tuplet: false)
             ),
         ]),
-        "|:DuD D  u|D D uDu:|-8": .init(measures: [
+        "|:8/2-DuD D  u|D D uDu:|": .init(measures: [
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                    ])
+                strums: [
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .space),
+                    .init(kind: .up),
                 ],
-                timing: .init(duration: .eighth, triplet: false),
+                timing: .init(duration: .eighth, subdivision: .two, tuplet: false),
                 repeatStart: true
             ),
             .init(
-                groups: [
-                    .init(strums: [
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .down),
-                        .init(kind: .space),
-                        .init(kind: .up),
-                        .init(kind: .down),
-                        .init(kind: .up),
-                        .init(kind: .space),
-                    ])
+                strums: [
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .down),
+                    .init(kind: .space),
+                    .init(kind: .up),
+                    .init(kind: .down),
+                    .init(kind: .up),
+                    .init(kind: .space),
                 ],
-                timing: .init(duration: .eighth, triplet: false),
+                timing: .init(duration: .eighth, subdivision: .two, tuplet: false),
                 repeatEnd: true
             ),
         ]),
@@ -169,21 +150,23 @@ struct StrumModelsTests {
     
     @Test func testParsing() throws {
         for (patternString, pattern) in parsingPatterns {
-            #expect(Pattern(rawValue: patternString) == pattern)
+            let p = try Pattern.parser().parse(patternString)
+            #expect(p == pattern)
         }
     }
     
     @Test func testRepeatPatternValidation() {
         let patterns: [String: Bool] = [
-            "|:DuD D  u:|D D uDu:|-8": false,
-            "|:DuD D  u|D D uDu:|-8": true,
-            "|:DuD D  u:|D D uDu|-8": true,
-            "|:DuD D  u:|:D D uDu:|-8": true,
-            "|DuD D  u:|D D uDu:|-8": false,
+            "|:8-DuD D  u:|D D uDu:|": false,
+            "|:8-DuD D  u|D D uDu:|": true,
+            "|:8-DuD D  u:|D D uDu|": true,
+            "|:8-DuD D  u:|:D D uDu:|": true,
+            "|8-DuD D  u:|D D uDu:|": false,
         ]
         
         for (patternString, expectation) in patterns {
-            #expect((Pattern(rawValue: patternString) != nil) == expectation)
+            let pattern = try? Pattern.parser().parse(patternString)
+            #expect((pattern != nil) == expectation, "\(patternString)")
         }
     }
 }
