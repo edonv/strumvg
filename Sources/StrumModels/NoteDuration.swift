@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum NoteDuration: Int, CaseIterable, Sendable, Hashable {
+public enum NoteDuration: Int, Sendable, Hashable, CaseIterable {
     case quarter = 4
     case eighth = 8
     case sixteenth = 16
