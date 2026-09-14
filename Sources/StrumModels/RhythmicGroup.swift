@@ -47,7 +47,11 @@ extension Measure {
             Many {
                 Strum.parser()
             }
-            .map(.memberwise(RhythmicGroup.init(strums:)))
+            .map(.convert(apply: { strums in
+                RhythmicGroup(strums: strums)
+            }, unapply: { group in
+                group.strums
+            }))
             .eraseToAnyParserPrinter()
         }
     }
