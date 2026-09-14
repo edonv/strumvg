@@ -60,7 +60,7 @@ The string format is as follows:
 - `8t`: Triplet 1/8 notes
 - `16t`: Triplet 1/16 notes
 
-Optionally, each note in `pattern` can have a heading character. To indicate this in the formatted string, wrap any given character in curly braces (`{` and `}`) and preface the character with the heading character.
+Optionally, each strum in `pattern` can have a heading character. To indicate this in the formatted string, wrap any given character in curly braces (`{` and `}`) and preface the character with the heading character.
 
 ### Multiple Measures
 
