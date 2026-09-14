@@ -171,3 +171,4 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Move all saved pattern string arguments into a test suite
 - [ ] Move/namespace `StrumKind` and `Variant`
 - [ ] Add support for additional `subdivision` values
+- [ ] Update style configuration types to be generated from JSON Schema then implement `swift-configuration` initializers via extension
