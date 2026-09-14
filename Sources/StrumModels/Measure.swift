@@ -61,6 +61,14 @@ public struct Measure: RawRepresentable, Sendable, Hashable {
                     }
                     
                     partialResult[lastIndex].append(strum)
+                    
+                    // if this is the final strum and there's still room in the rhythmic grouping,
+                    // pad the end with spaces
+                    if partialResult.flatMap({ $0 }).count == strums.count {
+                        while timing.rhythmGroupingRegexCountRange.upperBound > partialResult[lastIndex].count {
+                            partialResult[lastIndex].append(.init(kind: .space))
+                        }
+                    }
                 }
                 .map(RhythmicGroup.init),
             timing: timing,
