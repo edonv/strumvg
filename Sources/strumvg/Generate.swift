@@ -88,7 +88,7 @@ extension strumvg {
         }
         if patternContainsAnyTriplets {
             calcHeight += style.textSizes.triplet3TextOffsetY
-        } else if pattern.measures.contains(where: { $0.timing.duration != .quarter }) {
+        } else if pattern.measures.contains(where: { $0.timing.duration > .quarter }) {
             // add beam stroke width so its thickness isn't outside the viewBox
             // if it's quarter notes, then it won't be jutting out anyway
             calcHeight += style.beamSizes.strokeWidth / 2
