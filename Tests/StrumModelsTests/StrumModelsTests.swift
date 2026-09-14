@@ -169,4 +169,20 @@ struct StrumModelsTests {
             #expect((pattern != nil) == expectation, "\(patternString)")
         }
     }
+    
+    @Test func testParsingDoesNotFail() throws {
+        let patterns = [
+            "|8-DuD D  u|",
+            "|8-DuD D  u",
+            "8-DuD D  u|",
+            "8-DuD D  u|",
+            "|8-DuD D  u|",
+            "|4-DuD D  u|D DuDu |",
+            "|8-DuD D  u|4-D DuDu |",
+        ]
+        
+        for pattern in patterns {
+            _ = try Pattern.parser().parse(pattern)
+        }
+    }
 }
