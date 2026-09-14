@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import RegexBuilder
 import Parsing
 
 /// A strumming pattern.

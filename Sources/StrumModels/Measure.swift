@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import RegexBuilder
 import Parsing
 
 /// A measure (or bar) of strumming.
