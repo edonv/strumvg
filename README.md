@@ -170,3 +170,4 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [ ] Add repeats
 - [x] Move all saved pattern string arguments into a test suite
 - [ ] Move/namespace `StrumKind` and `Variant`
+- [ ] Add support for additional `subdivision` values
