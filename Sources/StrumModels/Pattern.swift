@@ -7,6 +7,7 @@
 
 import Foundation
 import RegexBuilder
+import Parsing
 
 /// A strumming pattern.
 public struct Pattern: Sendable, Hashable {
@@ -110,5 +111,31 @@ public struct Pattern: Sendable, Hashable {
         }
         
         return true
+    }
+    
+    public static func parser() -> AnyParserPrinter<Substring, Pattern> {
+        ParsePrint {
+            Optionally { "|" }
+            
+            Many {
+                Measure.Draft.parser()
+            } separator: {
+                "|"
+            }
+            
+            Optionally { "|" }
+        }
+        .map(.convert(apply: { (_, drafts, _) in
+            do {
+                return try Pattern(drafts: drafts)
+            } catch {
+                print(error)
+                return nil
+            }
+        }, unapply: { pattern in
+            (() as ()?, pattern.drafts, () as ()?)
+        }))
+        .filter { $0.validateRepeats() }
+        .eraseToAnyParserPrinter()
     }
 }
