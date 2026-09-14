@@ -7,6 +7,7 @@
 
 import Foundation
 import RegexBuilder
+import Parsing
 
 /// A measure (or bar) of strumming.
 public struct Measure: Sendable, Hashable {
@@ -70,5 +71,73 @@ public struct Measure: Sendable, Hashable {
         self.timing = timing
         self.repeatStart = repeatStart
         self.repeatEnd = repeatEnd
+    }
+    
+    /// A ``Measure`` that might be missing `timing`. Used while parsing a ``Pattern``.
+    internal struct Draft: Sendable, Hashable {
+        let repeatStart: Bool
+        let timing: Timing?
+        let strums: [Strum]
+        let repeatEnd: Bool
+        
+        func confirmingTiming() -> Measure? {
+            guard let timing else { return nil }
+            return .init(
+                strums: strums,
+                timing: timing,
+                repeatStart: repeatStart,
+                repeatEnd: repeatEnd
+            )
+        }
+        
+        func using(timing newTiming: Timing) -> Measure {
+            if let timing {
+                .init(
+                    strums: strums,
+                    timing: timing,
+                    repeatStart: repeatStart,
+                    repeatEnd: repeatEnd
+                )
+            } else {
+                .init(
+                    strums: strums,
+                    timing: newTiming,
+                    repeatStart: repeatStart,
+                    repeatEnd: repeatEnd
+                )
+            }
+        }
+        
+        /// This parser is reached with a string that has already had its barlines stripped from it, but will still have repeat signs and might not have its Timing portion on its end.
+        ///
+        /// The incoming format will be `[:][timing-]<pattern>[:]`.
+        static func parser() -> AnyParserPrinter<Substring, Draft> {
+            ParsePrint(.memberwise(Draft.init)) {
+                // repeatStart
+                repeatSignParser()
+                
+                Optionally {
+                    Timing.parser()
+                }
+                
+                Many {
+                    Strum.parser()
+                }
+                
+                // repeatEnd
+                repeatSignParser()
+            }
+            .eraseToAnyParserPrinter()
+        }
+        
+        private static func repeatSignParser() -> AnyParserPrinter<Substring, Bool> {
+            Optionally { ":" }
+                .map(.convert { captured in
+                    captured != nil
+                } unapply: { repeats in
+                    repeats ? () : Optional.some(nil)
+                })
+                .eraseToAnyParserPrinter()
+        }
     }
 }
