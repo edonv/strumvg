@@ -65,8 +65,8 @@ extension strumvg {
     private func calcRect(for pattern: Pattern) -> CGRect {
         let patternContainsHeaderText = pattern.measures
             .contains { $0.groups.contains(where: \.containsHeaderText) }
-        let patternContainsAnyTriplets = pattern.measures
-            .contains(where: \.timing.triplet)
+        let patternContainsAnyTuplets = pattern.measures
+            .contains(where: \.timing.tuplet)
         
         var minY = patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0
         
@@ -76,7 +76,7 @@ extension strumvg {
         let calcWidth = widthsOfMeasures(pattern.measures)
             + style.barlineSizes.strokeWidth
         
-        /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> triplet text height, including padding above it)`
+        /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> tuplet text height, including padding above it)`
         ///
         /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
         var calcHeight = style.strumSizes.height
@@ -86,8 +86,8 @@ extension strumvg {
         if patternContainsHeaderText {
             calcHeight += style.textSizes.headerTextHeight
         }
-        if patternContainsAnyTriplets {
-            calcHeight += style.textSizes.triplet3TextOffsetY
+        if patternContainsAnyTuplets {
+            calcHeight += style.textSizes.tuplet3TextOffsetY
         } else if pattern.measures.contains(where: { $0.timing.duration > .quarter }) {
             // add beam stroke width so its thickness isn't outside the viewBox
             // if it's quarter notes, then it won't be jutting out anyway
@@ -370,14 +370,14 @@ extension strumvg {
         quantity: Int,
         noteLength: Timing
     ) -> [String] {
-        let triplet = noteLength.triplet
+        let tuplet = noteLength.tuplet
         
         return (0..<quantity).map { int in
             let i = Double(int)
             
             switch noteLength.duration {
             case .quarter:
-                if triplet {
+                if tuplet {
                     switch int % 3 {
                     case 0:
                         return "\(Int(Double(i / 3 + 1)))"
@@ -393,7 +393,7 @@ extension strumvg {
                 }
                 
             case .eighth:
-                if triplet {
+                if tuplet {
                     switch int % 3 {
                     case 0:
                         return "\(Int(Double(i / 3 + 1)))"
@@ -413,7 +413,7 @@ extension strumvg {
                 }
                 
             case .sixteenth:
-                if triplet {
+                if tuplet {
                     if int % 3 == 0 {
                         let v = Int(i / 6 + 1)
                         if int.isMultiple(of: 2) {
@@ -695,7 +695,7 @@ extension strumvg {
     ) -> Node<SVG.DocumentContext> {
         let y = style.strumSizes.height + style.textSizes.beatTextHeight
         
-        let triplet = noteLength.triplet
+        let tuplet = noteLength.tuplet
         let beamBarCount = noteLength.duration.beamBarCount
         
         let strumsPerGroup = noteLength.stemsPerGroup
@@ -713,16 +713,16 @@ extension strumvg {
                     value: style.beamSizes.strokeWidth,
                     format: numberFormat
                 ),
-                .attribute(named: "font-size", value: style.textSizes.tripletFontSize, format: numberFormat),
+                .attribute(named: "font-size", value: style.textSizes.tupletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
-                .attribute(named: "font-family", value: style.fonts.tripletText.family),
-                .attribute(named: "font-weight", value: style.fonts.tripletText.weight),
-                .attribute(named: "font-style", value: style.fonts.tripletText.style),
+                .attribute(named: "font-family", value: style.fonts.tupletText.family),
+                .attribute(named: "font-weight", value: style.fonts.tupletText.weight),
+                .attribute(named: "font-style", value: style.fonts.tupletText.style),
             ] + (0..<groupQuantity).map { i in
                 return createNoteGroup(
                     groupNum: i,
                     strumCount: strumsPerGroup,
-                    triplet: triplet,
+                    tuplet: tuplet,
                     beamBarCount: beamBarCount
                 )
             }
@@ -732,12 +732,12 @@ extension strumvg {
     /// - Parameters:
     ///   - groupNum: The index of the note group in the measure.
     ///   - strumCount: The number of strums in the group.
-    ///   - triplet: Whether or not the group is a triplet.
+    ///   - tuplet: Whether or not the group is a tuplet.
     ///   - beamBarCount: The number of beams/flags to draw for the group.
     private func createNoteGroup(
         groupNum: Int,
         strumCount: Int,
-        triplet: Bool,
+        tuplet: Bool,
         beamBarCount: Int
     ) -> Node<SVG.DocumentContext> {
         let strumCountFloat = CGFloat(strumCount)
@@ -747,11 +747,11 @@ extension strumvg {
         /// `fullWidth` - (0.5 of strum space width on each end, which equals 1 full width)
         let beamWidth: CGFloat = fullWidth - style.strumSizes.width - style.strumSizes.gap
         
-        let tripletTextElementY = style.beamSizes.stemHeight + style.textSizes.triplet3TextOffsetY
-        let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
+        let tupletTextElementY = style.beamSizes.stemHeight + style.textSizes.tuplet3TextOffsetY
+        let textEl: Node<SVG.DocumentContext>? = tuplet ? .element(
             named: "text",
             nodes: [
-                .text("3"), // triplet label
+                .text("\(strumCount)"), // tuplet label
                 .attribute(
                     named: "x",
                     value: beamWidth / 2,
@@ -759,7 +759,7 @@ extension strumvg {
                 ),
                 .attribute(
                     named: "y",
-                    value: tripletTextElementY,
+                    value: tupletTextElementY,
                     format: numberFormat
                 ),
                 .attribute(named: "stroke", value: "none"),
