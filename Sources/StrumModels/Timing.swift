@@ -52,3 +52,14 @@ public struct Timing: Sendable, Hashable {
         .eraseToAnyParserPrinter()
     }
 }
+
+// MARK: - Subdivision
+
+extension Timing {
+    public enum Subdivision: Int, Sendable, Hashable, CaseIterable {
+        case one = 1
+        case two = 2
+        case three = 3
+        case four = 4
+    }
+}
