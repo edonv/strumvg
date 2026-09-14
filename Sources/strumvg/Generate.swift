@@ -370,73 +370,41 @@ extension strumvg {
         quantity: Int,
         noteLength: Timing
     ) -> [String] {
-        let tuplet = noteLength.tuplet
-        
         return (0..<quantity).map { int in
             let i = Double(int)
             
-            switch noteLength.duration {
-            case .quarter:
-                if tuplet {
-                    switch int % 3 {
-                    case 0:
-                        return "\(Int(Double(i / 3 + 1)))"
-                    case 1:
-                        return "+"
-                    case 2:
-                        return "a"
-                    default:
-                        return ""
-                    }
+            switch noteLength.subdivision {
+            case .one:
+                return "\(int + 1)"
+            case .two:
+                if int % 2 == 0 {
+                    return "\(Int((Double(i) / 2).rounded() + 1))"
                 } else {
-                    return "\(int + 1)"
+                    return "+"
                 }
-                
-            case .eighth:
-                if tuplet {
-                    switch int % 3 {
-                    case 0:
-                        return "\(Int(Double(i / 3 + 1)))"
-                    case 1:
-                        return "+"
-                    case 2:
-                        return "a"
-                    default:
-                        return ""
-                    }
-                } else {
-                    if int % 2 == 0 {
-                        return "\(Int((Double(i) / 2).rounded() + 1))"
-                    } else {
-                        return "+"
-                    }
+            case .three:
+                switch int % 3 {
+                case 0:
+                    return "\(Int(Double(i / 3 + 1)))"
+                case 1:
+                    return "+"
+                case 2:
+                    return "a"
+                default:
+                    return ""
                 }
-                
-            case .sixteenth:
-                if tuplet {
-                    if int % 3 == 0 {
-                        let v = Int(i / 6 + 1)
-                        if int.isMultiple(of: 2) {
-                            return "\(v)"
-                        } else {
-                            return "+"
-                        }
-                    } else {
-                        return ""
-                    }
-                } else {
-                    switch int % 4 {
-                    case 0:
-                        return "\(Int((Double(i) / 4 + 1).rounded()))"
-                    case 1:
-                        return "e"
-                    case 2:
-                        return "+"
-                    case 3:
-                        return "a"
-                    default:
-                        return ""
-                    }
+            case .four:
+                switch int % 4 {
+                case 0:
+                    return "\(Int((Double(i) / 4 + 1).rounded()))"
+                case 1:
+                    return "e"
+                case 2:
+                    return "+"
+                case 3:
+                    return "a"
+                default:
+                    return ""
                 }
             }
         }
