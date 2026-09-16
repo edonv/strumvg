@@ -738,7 +738,7 @@ extension strumvg {
         // Add first path node
         var noteBeamsPathAttr = "M0,0"
         
-        // Construct repeat segments
+        // Construct repeating path segments
         let stemHeight = style.beamSizes.stemHeight * effectiveDuration.stemLengthRatio
         
         var pathSegment = "v\(stemHeight)"
