@@ -61,7 +61,7 @@ public struct Measure: Sendable, Hashable {
                 // then pad the end with spaces
                 if partialResult.flatMap({ $0 }).count == strums.count {
                     while timing.stemsPerGroup > partialResult[lastIndex].count {
-                        partialResult[lastIndex].append(.init(kind: .space))
+                        partialResult[lastIndex].append(.space)
                     }
                 }
             }
