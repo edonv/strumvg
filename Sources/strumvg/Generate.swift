@@ -734,7 +734,7 @@ extension strumvg {
         ) : nil
         
         // M0,0 [v8 h50 V0]+
-        let beamLength = beamWidth / (strumCountFloat - 1)
+        let beamSegmentLength = beamWidth / (strumCountFloat - 1)
         // Add first path node
         var noteBeamsPathAttr = "M0,0"
         
@@ -744,10 +744,10 @@ extension strumvg {
         var pathSegment = "v\(stemHeight)"
         // If at least 8th notes, draw first beam bar
         if effectiveDuration.beamBarCount > 0 {
-            pathSegment += " h\(beamLength)"
+            pathSegment += " h\(beamSegmentLength)"
         } else if strumCount > 1 {
             // Otherwise, just move node to next stem (if there is another stem)
-            pathSegment += " m\(beamLength),0"
+            pathSegment += " m\(beamSegmentLength),0"
         }
         if effectiveDuration.beamBarCount > 0 || strumCount > 1 {
             pathSegment += " V0"
