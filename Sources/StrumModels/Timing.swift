@@ -95,6 +95,17 @@ extension Timing {
         package let beamBarCount: Int
         package let stemLengthRatio: CGFloat
         
+        /// Just for testing.
+        internal init(
+            duration: Int,
+            beamBarCount: Int,
+            stemLengthRatio: CGFloat
+        ) {
+            self.duration = duration
+            self.beamBarCount = beamBarCount
+            self.stemLengthRatio = stemLengthRatio
+        }
+        
         package init(timing: Timing) {
             switch timing.subdivision {
             case .one:
