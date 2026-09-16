@@ -82,6 +82,15 @@ extension Timing {
         case two = 2
         case three = 3
         case four = 4
+        
+        /// Amount to subtract from the index of a ``NoteDuration``.
+        package var durationIndexDifference: Int {
+            switch self {
+            case .one: 0
+            case .two, .three: 1
+            case .four: 2
+            }
+        }
     }
 }
 
@@ -114,14 +123,8 @@ extension Timing {
                 self.stemLengthRatio = timing.duration.stemLengthRatio
                 
             default:
-                let noteDurationDiff = switch timing.subdivision {
-                case .one: 0
-                case .two, .three: 1
-                case .four: 2
-                }
-                
                 let index = NoteDuration.allCases.firstIndex(of: timing.duration)!
-                let effectiveIndex = index + noteDurationDiff
+                let effectiveIndex = index + timing.subdivision.durationIndexDifference
                 
                 if effectiveIndex < NoteDuration.allCases.count {
                     self.duration = NoteDuration.allCases[effectiveIndex].rawValue
