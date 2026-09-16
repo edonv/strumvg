@@ -788,7 +788,7 @@ extension strumvg {
                     - CGFloat(i + 1) * beamStrokeVerticalGap
                 return .element(
                     named: "line",
-                    attributes: [
+                    nodes: [
                         .attribute(named: "x1", value: "0"),
                         .attribute(named: "y1", value: y, format: numberFormat),
                         .attribute(named: "x2", value: beamWidth, format: numberFormat),
