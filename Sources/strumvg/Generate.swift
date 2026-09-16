@@ -88,7 +88,7 @@ extension strumvg {
         }
         if patternContainsAnyTuplets {
             calcHeight += style.textSizes.tuplet3TextOffsetY
-        } else if pattern.measures.contains(where: { $0.timing.duration > .quarter }) {
+        } else if pattern.measures.contains(where: { $0.timing.effectiveDuration.duration > NoteDuration.quarter.rawValue }) {
             // add beam stroke width so its thickness isn't outside the viewBox
             // if it's quarter notes, then it won't be jutting out anyway
             calcHeight += style.beamSizes.strokeWidth / 2
@@ -663,8 +663,7 @@ extension strumvg {
     ) -> Node<SVG.DocumentContext> {
         let y = style.strumSizes.height + style.textSizes.beatTextHeight
         
-        let tuplet = timing.tuplet
-        let beamBarCount = timing.duration.beamBarCount
+        let effectiveDuration = timing.effectiveDuration
         
         let strumsPerGroup = timing.stemsPerGroup
         let groupQuantity = Int(floor(Double(strums.count) / Double(strumsPerGroup)))
@@ -690,8 +689,8 @@ extension strumvg {
                 return createNoteGroup(
                     groupNum: i,
                     strumCount: strumsPerGroup,
-                    tuplet: tuplet,
-                    beamBarCount: beamBarCount
+                    tuplet: timing.tuplet,
+                    effectiveDuration: effectiveDuration
                 )
             }
         )
@@ -706,7 +705,7 @@ extension strumvg {
         groupNum: Int,
         strumCount: Int,
         tuplet: Bool,
-        beamBarCount: Int
+        effectiveDuration: Timing.EffectiveDuration
     ) -> Node<SVG.DocumentContext> {
         let strumCountFloat = CGFloat(strumCount)
         /// Full group width, from left edge of first strum to right edge of last strum (including gap after)
@@ -740,15 +739,17 @@ extension strumvg {
         var noteBeamsPathAttr = "M0,0"
         
         // Construct repeat segments
-        var pathSegment = "v\(style.beamSizes.stemHeight)"
+        let stemHeight = style.beamSizes.stemHeight * effectiveDuration.stemLengthRatio
+        
+        var pathSegment = "v\(stemHeight)"
         // If at least 8th notes, draw first beam bar
-        if beamBarCount > 0 {
+        if effectiveDuration.beamBarCount > 0 {
             pathSegment += " h\(beamLength)"
         } else if strumCount > 1 {
             // Otherwise, just move node to next stem (if there is another stem)
             pathSegment += " m\(beamLength),0"
         }
-        if beamBarCount > 0 || strumCount > 1 {
+        if effectiveDuration.beamBarCount > 0 || strumCount > 1 {
             pathSegment += " V0"
         }
         
@@ -769,7 +770,7 @@ extension strumvg {
             ]
         )
         
-        let extraBeamBars = beamBarCount - 1
+        let extraBeamBars = effectiveDuration.beamBarCount - 1
         var extraBeamPaths = [Node<SVG.DocumentContext>]()
         if extraBeamBars > 0 {
             // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
