@@ -88,10 +88,6 @@ extension strumvg {
         }
         if patternContainsAnyTuplets {
             calcHeight += style.textSizes.tuplet3TextOffsetY
-        } else if pattern.measures.contains(where: { $0.timing.effectiveDuration.duration > NoteDuration.quarter.rawValue }) {
-            // add beam stroke width so its thickness isn't outside the viewBox
-            // if it's quarter notes, then it won't be jutting out anyway
-            calcHeight += style.beamSizes.strokeWidth / 2
         }
         
         let barlineHeight = style.barlineSizes.height(withStrumSizes: style.strumSizes)
