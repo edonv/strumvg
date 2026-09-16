@@ -37,6 +37,16 @@ public struct Timing: Sendable, Hashable {
         subdivision.rawValue
     }
     
+    /// The ``EffectiveDuration`` that should be rendered, based on the combination of ``duration`` and ``subdivision``.
+    package var effectiveDuration: EffectiveDuration {
+        // .half + .four (2/4) = 8th notes
+        // .half + .three (2/3) = 4th notes
+        // .half + .two (2/2) = 4th notes
+        // .half + .one (2[/1]) = 2nd notes
+        
+        .init(timing: self)
+    }
+    
     public static func parser() -> AnyParserPrinter<Substring, Timing> {
         ParsePrint {
             NoteDuration.parser()
@@ -72,5 +82,51 @@ extension Timing {
         case two = 2
         case three = 3
         case four = 4
+    }
+}
+
+// MARK: - EffectiveDuration
+
+extension Timing {
+    /// The "effective duration" that a ``Timing`` value represents, based on the combination of its ``Timing/duration`` and ``Timing/subdivision``.
+    package struct EffectiveDuration: Sendable, Hashable {
+        /// The denominator of the note duration fraction.
+        package let duration: Int
+        package let beamBarCount: Int
+        package let stemLengthRatio: CGFloat
+        
+        package init(timing: Timing) {
+            switch timing.subdivision {
+            case .one:
+                self.duration = timing.duration.rawValue
+                self.beamBarCount = timing.duration.beamBarCount
+                self.stemLengthRatio = timing.duration.stemLengthRatio
+            default:
+                let noteDurationDiff = switch timing.subdivision {
+                case .one: 0
+                case .two, .three: 1
+                case .four: 2
+                }
+                
+                let index = NoteDuration.allCases.firstIndex(of: timing.duration)!
+                let effectiveIndex = index + noteDurationDiff
+                
+                if effectiveIndex < NoteDuration.allCases.count {
+                    self.duration = NoteDuration.allCases[effectiveIndex].rawValue
+                    self.beamBarCount = NoteDuration.allCases[effectiveIndex].beamBarCount
+                } else {
+                    let extraBeamsPastLastCase = effectiveIndex - NoteDuration.allCases.count - 1
+                    self.duration = Int(
+                        pow(
+                            Float(2),
+                            Float(NoteDuration.allCases.count + extraBeamsPastLastCase)
+                        )
+                    )
+                    self.beamBarCount = NoteDuration.allCases.last!.beamBarCount + extraBeamsPastLastCase
+                }
+                
+                self.stemLengthRatio = timing.duration.stemLengthRatio
+            }
+        }
     }
 }
