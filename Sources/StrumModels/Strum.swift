@@ -41,6 +41,11 @@ public struct Strum: Sendable, Hashable {
         .init(kind: .other(char))
     }
     
+    /// Returns a copy of this `Strum` with an updated ``headingChar``.
+    public func withHeading(_ heading: Character) -> Strum {
+        .init(kind: kind, heading: heading)
+    }
+    
     public static func parser() -> AnyParserPrinter<Substring, Strum> {
         OneOf {
             ParsePrint {
