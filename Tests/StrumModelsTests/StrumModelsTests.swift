@@ -151,6 +151,7 @@ struct StrumModelsTests {
     @Test func testParsing() throws {
         for (patternString, pattern) in parsingPatterns {
             let p = try Pattern.parser().parse(patternString)
+//            print(p)
             #expect(p == pattern)
         }
     }
