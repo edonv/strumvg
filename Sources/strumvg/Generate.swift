@@ -700,7 +700,7 @@ extension strumvg {
     ///   - groupNum: The index of the note group in the measure.
     ///   - strumCount: The number of strums in the group.
     ///   - tuplet: Whether or not the group is a tuplet.
-    ///   - beamBarCount: The number of beams/flags to draw for the group.
+    ///   - effectiveDuration: The "effective duration" of the notes.
     private func createNoteGroup(
         groupNum: Int,
         strumCount: Int,
