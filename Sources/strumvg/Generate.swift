@@ -734,7 +734,11 @@ extension strumvg {
         ) : nil
         
         // M0,0 [v8 h50 V0]+
-        let beamSegmentLength = beamWidth / (strumCountFloat - 1)
+        var beamSegmentLength = beamWidth / (strumCountFloat - 1)
+        if beamSegmentLength.isNaN {
+            beamSegmentLength = 0
+        }
+        
         // Add first path node
         var noteBeamsPathAttr = "M0,0"
         
