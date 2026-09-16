@@ -746,14 +746,14 @@ extension strumvg {
         let stemHeight = style.beamSizes.stemHeight * effectiveDuration.stemLengthRatio
         
         var pathSegment = "v\(stemHeight)"
-        // If at least 8th notes, draw first beam bar
-        if effectiveDuration.beamBarCount > 0 {
-            pathSegment += " h\(beamSegmentLength)"
-        } else if strumCount > 1 {
-            // Otherwise, just move node to next stem (if there is another stem)
-            pathSegment += " m\(beamSegmentLength),0"
-        }
-        if effectiveDuration.beamBarCount > 0 || strumCount > 1 {
+        // If there is more than 1 strum...
+        if strumCount > 1 {
+            // If there are any beams to draw
+            if effectiveDuration.beamBarCount > 0 {
+                // Move path position to draw next stem
+                pathSegment += " m\(beamSegmentLength),0"
+            }
+            // Draw next stem
             pathSegment += " V0"
         }
         
@@ -774,18 +774,21 @@ extension strumvg {
             ]
         )
         
-        let extraBeamBars = effectiveDuration.beamBarCount - 1
-        var extraBeamPaths = [Node<SVG.DocumentContext>]()
-        if extraBeamBars > 0 {
+        let beamBarCount = effectiveDuration.beamBarCount
+        var beamPaths = [Node<SVG.DocumentContext>]()
+        if beamBarCount > 0 {
             // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
             let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
             
-            extraBeamPaths = (0..<extraBeamBars).map { i in
+            beamPaths = (0..<beamBarCount).map { i in
                 // <line x1="0" y1="4" x2="50" y2="4"></line>
                 // height of the stem
                 let y = style.beamSizes.stemHeight
                     // spacing out each beam line
-                    - CGFloat(i + 1) * beamStrokeVerticalGap
+                    - CGFloat(i) * beamStrokeVerticalGap
+                    // adjust to line up with stems' "butt" stroke linecaps (keeping as "butt" so it matches style's value extactly)
+                    - style.beamSizes.strokeWidth / 2
+                
                 return .element(
                     named: "line",
                     nodes: [
@@ -803,7 +806,7 @@ extension strumvg {
             nodes: [
                 .attribute(named: "fill", value: "none"),
                 noteBeamsPath,
-            ] + extraBeamPaths
+            ] + beamPaths
         )
         
         let x = CGFloat(groupNum) * fullWidth
