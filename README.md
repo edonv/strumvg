@@ -60,6 +60,7 @@ The string format is as follows:
 - `2`: two subdivisions
   - Example: "1 + 2 + 3 + 4 +", etc.
 - `3`: three subdivisions
+  - This will be treated as though `noteLength` is dotted, so that each beat is "dotted `noteLength`".
   - Example: "1 + a 2 + a 3 + a 4 + a", etc.
 - `4`: four subdivisions
   - Example: "1 e + a 2 e + a 3 e + a 4 e + a", etc.
