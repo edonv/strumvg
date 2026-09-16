@@ -155,7 +155,8 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Allow `|` to be used as a barline to reset beat counting.
 - [ ] Figure out some way to better vertically center header, count, and strum characters
     - `dominant-baseline`/`alignment-baseline` don't work when embedded in PDFs by ChordPro
-- [ ] Add testing suite for testing parsing of pattern strings
+- [x] Add testing suite for testing parsing of pattern strings
+    - [x] Move all saved pattern string arguments into a test suite
 - [ ] Add JSON schema docs generator with GitHub Actions to host with GitHub Pages (`.github/docs`)
 - [ ] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
@@ -170,7 +171,6 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
     - [x] What to do when `noteLength` should have flags/beams, but `subdivision` is `1` (no notes will be beamed together)?
 - [ ] Option to hide `3` when in triplet (or 6/8 or 12/8)
 - [ ] Add repeats
-- [x] Move all saved pattern string arguments into a test suite
 - [ ] Move/namespace `StrumKind` and `Variant`
 - [ ] Add support for additional `subdivision` values
 - [ ] Update style configuration types to be generated from JSON Schema then implement `swift-configuration` initializers via extension
