@@ -112,6 +112,7 @@ extension Timing {
                 self.duration = timing.duration.rawValue
                 self.beamBarCount = timing.duration.beamBarCount
                 self.stemLengthRatio = timing.duration.stemLengthRatio
+                
             default:
                 let noteDurationDiff = switch timing.subdivision {
                 case .one: 0
