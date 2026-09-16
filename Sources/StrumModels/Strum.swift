@@ -28,6 +28,19 @@ public struct Strum: Sendable, Hashable {
         self.headingChar = heading
     }
     
+    public static var down: Strum { .init(kind: .down) }
+    public static var up: Strum { .init(kind: .up) }
+    public static var space: Strum { .init(kind: .space) }
+    public static var downMuted: Strum { .init(kind: .downMuted) }
+    public static var upMuted: Strum { .init(kind: .upMuted) }
+    public static var downArpeggio: Strum { .init(kind: .downArpeggio) }
+    public static var upArpeggio: Strum { .init(kind: .upArpeggio) }
+    public static var rest: Strum { .init(kind: .rest) }
+
+    public static func other(_ char: Character) -> Strum {
+        .init(kind: .other(char))
+    }
+    
     public static func parser() -> AnyParserPrinter<Substring, Strum> {
         OneOf {
             ParsePrint {
