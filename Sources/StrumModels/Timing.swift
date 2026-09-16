@@ -123,22 +123,20 @@ extension Timing {
                 self.stemLengthRatio = timing.duration.stemLengthRatio
                 
             default:
-                let index = NoteDuration.allCases.firstIndex(of: timing.duration)!
-                let effectiveIndex = index + timing.subdivision.durationIndexDifference
+                let durationIndex = NoteDuration.allCases.firstIndex(of: timing.duration)!
+                /// Unbound by `NoteDuration`'s valid values
+                let durationIndexUnbound = durationIndex + timing.subdivision.durationIndexDifference
                 
-                if effectiveIndex < NoteDuration.allCases.count {
-                    self.duration = NoteDuration.allCases[effectiveIndex].rawValue
-                    self.beamBarCount = NoteDuration.allCases[effectiveIndex].beamBarCount
-                } else {
-                    let extraBeamsPastLastCase = effectiveIndex - NoteDuration.allCases.count - 1
-                    self.duration = Int(
-                        pow(
-                            Float(2),
-                            Float(NoteDuration.allCases.count + extraBeamsPastLastCase)
-                        )
-                    )
-                    self.beamBarCount = NoteDuration.allCases.last!.beamBarCount + extraBeamsPastLastCase
-                }
+                let effectiveDurationDurationValue = Int(pow(
+                    Float(2),
+                    Float(durationIndexUnbound + 1)
+                ))
+                
+                self.duration = effectiveDurationDurationValue
+                self.beamBarCount =  max(
+                    0,
+                    durationIndexUnbound - NoteDuration.allCases.firstIndex(of: NoteDuration.quarter)!
+                )
                 
                 self.stemLengthRatio = self.duration == NoteDuration.half.rawValue
                     ? NoteDuration.half.stemLengthRatio
