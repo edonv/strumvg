@@ -771,14 +771,16 @@ extension strumvg {
         )
         
         let beamBarCount = effectiveDuration.beamBarCount
-        var beamPaths = [Node<SVG.DocumentContext>]()
+        let beamPath: Node<SVG.DocumentContext>?
         if beamBarCount > 0 {
-            beamPaths = createNoteGroupBeamLines(
+            beamPath = createNoteGroupBeamLines(
                 segmentLength: beamSegmentLength,
                 beamWidth: beamWidth,
                 beamBarCount: beamBarCount,
                 fullBeams: strumCount > 1
             )
+        } else {
+            beamPath = nil
         }
         
         let beamsGroup = Node<SVG.DocumentContext>.element(
@@ -786,7 +788,8 @@ extension strumvg {
             nodes: [
                 .attribute(named: "fill", value: "none"),
                 noteBeamsPath,
-            ] + beamPaths
+                beamPath,
+            ].compactMap { $0 }
         )
         
         let x = CGFloat(groupNum) * fullWidth
@@ -819,7 +822,7 @@ extension strumvg {
         beamWidth: CGFloat,
         beamBarCount: Int,
         fullBeams: Bool
-    ) -> [Node<SVG.DocumentContext>] {
+    ) -> Node<SVG.DocumentContext> {
         // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
         let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
         
@@ -834,21 +837,23 @@ extension strumvg {
         
         // check if there should be full beams or just flags
         switch fullBeams {
-        // if full beams, just return <line> elements as it does right now
+        // if full beams, return ~~<line>~~ <path> element as it does right now
         case true:
-            return (0..<beamBarCount).map { i in
-                // <line x1="0" y1="4" x2="50" y2="4"></line>
-                let y = y(for: i)
-                return .element(
-                    named: "line",
-                    nodes: [
-                        .attribute(named: "x1", value: "0"),
-                        .attribute(named: "y1", value: y, format: numberFormat),
-                        .attribute(named: "x2", value: beamWidth, format: numberFormat),
-                        .attribute(named: "y2", value: y, format: numberFormat),
-                    ]
-                )
-            }
+            let pathString = (0..<beamBarCount)
+                .map { i in
+                    // ~~<line x1="0" y1="4" x2="50" y2="4"></line>~~
+                    // now it's a single path element like the flags below
+                    let y = y(for: i)
+                    return "M0,\(y) h\(beamWidth)"
+                }
+                .joined(separator: " ")
+            
+            return .element(
+                named: "path",
+                nodes: [
+                    .attribute(named: "d", value: pathString),
+                ]
+            )
             
         // if just flags, make 1 path for each stem that draws all of that stem's flag marks
         case false:
@@ -861,12 +866,12 @@ extension strumvg {
                 }
                 .joined(separator: " ")
             
-            return [.element(
+            return .element(
                 named: "path",
                 nodes: [
                     .attribute(named: "d", value: pathString),
                 ]
-            )]
+            )
         }
     }
 }
