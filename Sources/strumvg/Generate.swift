@@ -773,28 +773,12 @@ extension strumvg {
         let beamBarCount = effectiveDuration.beamBarCount
         var beamPaths = [Node<SVG.DocumentContext>]()
         if beamBarCount > 0 {
-            // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
-            let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
-            
-            beamPaths = (0..<beamBarCount).map { i in
-                // <line x1="0" y1="4" x2="50" y2="4"></line>
-                // height of the stem
-                let y = style.beamSizes.stemHeight
-                    // spacing out each beam line
-                    - CGFloat(i) * beamStrokeVerticalGap
-                    // adjust to line up with stems' "butt" stroke linecaps (keeping as "butt" so it matches style's value extactly)
-                    - style.beamSizes.strokeWidth / 2
-                
-                return .element(
-                    named: "line",
-                    nodes: [
-                        .attribute(named: "x1", value: "0"),
-                        .attribute(named: "y1", value: y, format: numberFormat),
-                        .attribute(named: "x2", value: beamWidth, format: numberFormat),
-                        .attribute(named: "y2", value: y, format: numberFormat),
-                    ]
-                )
-            }
+            beamPaths = createNoteGroupBeamLines(
+                segmentLength: beamSegmentLength,
+                beamWidth: beamWidth,
+                beamBarCount: beamBarCount,
+                fullBeams: strumCount > 1
+            )
         }
         
         let beamsGroup = Node<SVG.DocumentContext>.element(
@@ -825,5 +809,64 @@ extension strumvg {
                     .compactMap { $0 },
             ].flatMap { $0 }
         )
+    }
+    
+    /// Create note group beam lines.
+    ///
+    /// If the timing is such that the beat duration requies beams but it's not being sudivided, then this will output stem flags instead.
+    private func createNoteGroupBeamLines(
+        segmentLength: CGFloat,
+        beamWidth: CGFloat,
+        beamBarCount: Int,
+        fullBeams: Bool
+    ) -> [Node<SVG.DocumentContext>] {
+        // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
+        let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
+        
+        func y(for i: Int) -> CGFloat {
+            // height of the stem
+            style.beamSizes.stemHeight
+                // spacing out each beam line
+                - CGFloat(i) * beamStrokeVerticalGap
+                // adjust to line up with stems' "butt" stroke linecaps (keeping as "butt" so it matches style's value extactly)
+                - style.beamSizes.strokeWidth / 2
+        }
+        
+        // check if there should be full beams or just flags
+        switch fullBeams {
+        // if full beams, just return <line> elements as it does right now
+        case true:
+            return (0..<beamBarCount).map { i in
+                // <line x1="0" y1="4" x2="50" y2="4"></line>
+                let y = y(for: i)
+                return .element(
+                    named: "line",
+                    nodes: [
+                        .attribute(named: "x1", value: "0"),
+                        .attribute(named: "y1", value: y, format: numberFormat),
+                        .attribute(named: "x2", value: beamWidth, format: numberFormat),
+                        .attribute(named: "y2", value: y, format: numberFormat),
+                    ]
+                )
+            }
+            
+        // if just flags, make 1 path for each stem that draws all of that stem's flag marks
+        case false:
+            let flagLength = style.beamSizes.flagLength
+            
+            let pathString = (0..<beamBarCount)
+                .map { i in
+                    let y = y(for: i)
+                    return "M0,\(y) h\(flagLength)"
+                }
+                .joined(separator: " ")
+            
+            return [.element(
+                named: "path",
+                nodes: [
+                    .attribute(named: "d", value: pathString),
+                ]
+            )]
+        }
     }
 }
