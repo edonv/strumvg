@@ -104,9 +104,9 @@ public struct StyleConfiguration: Codable {
         /// The relative font-size of the articulations and header text above the arrows, as a fraction of its height.
         /// > Default: `0.8`
         public let headerFontSizeRatio: CGFloat
-        /// The actual font-size of the triplet label, if applicable.
+        /// The actual font-size of the tuplet label, if applicable.
         /// > Default: `14`
-        public let tripletFontSize: CGFloat
+        public let tupletFontSize: CGFloat
         
         /// The actual font size to use for beat text, computed automatically.
         package var beatFontSize: CGFloat {
@@ -118,11 +118,11 @@ public struct StyleConfiguration: Codable {
             headerTextHeight * headerFontSizeRatio
         }
         
-        /// The vertical space between a triplet beam and the `3` text.
-        private static let triplet3TextGap: CGFloat = 2
-        /// The vertical offset between the bottom of a `RhythmicGroup`'s beams and the baseline of the "triplet 3" text.
-        package var triplet3TextOffsetY: CGFloat {
-            tripletFontSize + TextSizes.triplet3TextGap
+        /// The vertical space between a tuplet beam and the tuplet text.
+        private static let tuplet3TextGap: CGFloat = 2
+        /// The vertical offset between the bottom of a `RhythmicGroup`'s beams and the baseline of the tuplet text.
+        package var tuplet3TextOffsetY: CGFloat {
+            tupletFontSize + TextSizes.tuplet3TextGap
         }
         
         public init(
@@ -130,13 +130,13 @@ public struct StyleConfiguration: Codable {
             beatFontSizeRatio: CGFloat,
             headerTextHeight: CGFloat,
             headerFontSizeRatio: CGFloat,
-            tripletFontSize: CGFloat
+            tupletFontSize: CGFloat
         ) {
             self.beatTextHeight = beatTextHeight
             self.beatFontSizeRatio = beatFontSizeRatio
             self.headerTextHeight = headerTextHeight
             self.headerFontSizeRatio = headerFontSizeRatio
-            self.tripletFontSize = tripletFontSize
+            self.tupletFontSize = tupletFontSize
         }
         
         public init(config: ConfigReader) {
@@ -157,8 +157,8 @@ public struct StyleConfiguration: Codable {
                     forKey: "headerFontSizeRatio",
                     default: 0.8
                 ),
-                tripletFontSize: config.cgFloat(
-                    forKey: "tripletFontSize",
+                tupletFontSize: config.cgFloat(
+                    forKey: "tupletFontSize",
                     default: 14
                 )
             )
@@ -233,21 +233,29 @@ public struct StyleConfiguration: Codable {
         /// The vertical length of the beam stems.
         /// > Default: `8`
         public let stemHeight: CGFloat
+        /// The length of a stem's flag.
+        ///
+        /// This is only used when each beat's duration is an eighth note or shorter and is not being subdivided.
+        ///
+        /// > Default: `5`
+        public let flagLength: CGFloat
         
         /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
         package var beamStrokeVerticalGap: CGFloat {
             max(1.5 * strokeWidth, 1)
         }
         
-        public init(strokeWidth: CGFloat, stemHeight: CGFloat) {
+        public init(strokeWidth: CGFloat, stemHeight: CGFloat, flagLength: CGFloat) {
             self.strokeWidth = strokeWidth
             self.stemHeight = stemHeight
+            self.flagLength = flagLength
         }
         
         public init(config: ConfigReader) {
             self.init(
                 strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 2),
-                stemHeight: config.cgFloat(forKey: "stemHeight", default: 8)
+                stemHeight: config.cgFloat(forKey: "stemHeight", default: 12),
+                flagLength: config.cgFloat(forKey: "flagLength", default: 5)
             )
         }
     }
@@ -327,19 +335,19 @@ public struct StyleConfiguration: Codable {
         public let arrowText: Styling
         /// Font styling for rhythm count text.
         public let countChar: Styling
-        /// Font styling for triplet labels (`"3"`), if applicable.
-        public let tripletText: Styling
+        /// Font styling for tuplet labels (`"3"`), if applicable.
+        public let tupletText: Styling
         
         public init(
             strumHeader: Styling,
             arrowText: Styling,
             countChar: Styling,
-            tripletText: Styling
+            tupletText: Styling
         ) {
             self.strumHeader = strumHeader
             self.arrowText = arrowText
             self.countChar = countChar
-            self.tripletText = tripletText
+            self.tupletText = tupletText
         }
         
         public init(config: ConfigReader) {
@@ -356,8 +364,8 @@ public struct StyleConfiguration: Codable {
                     config: config.scoped(to: "countChar"),
                     default: .default.bold
                 ),
-                tripletText: .init(
-                    config: config.scoped(to: "tripletText"),
+                tupletText: .init(
+                    config: config.scoped(to: "tupletText"),
                     default: .default
                 )
             )

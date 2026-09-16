@@ -6,71 +6,61 @@
 //
 
 import Foundation
-import RegexBuilder
+import Parsing
 
 /// A strumming pattern.
-///
-/// Raw value: `[measure]+` (separated by `"|"`), each measure can end with `-[timing]`
-///
-/// Can also have a timing identifier at the end of the full string to represent for the full pattern.
-public struct Pattern: RawRepresentable, Sendable, Hashable {
+public struct Pattern: Sendable, Hashable {
     public let measures: [Measure]
     
     public init(measures: [Measure]) {
         self.measures = measures
     }
     
-    /// - Returns: A validated `Pattern`, or `nil` if the format is invalid.
-    public init?(rawValue: String) {
-        let timingRegexMatches = rawValue.matches(of: Timing.regex)
-        
-        guard !timingRegexMatches.isEmpty else { return nil }
-        
-        var rhythmGroupsByMeasure = rawValue
-            // Trim only newlines in case there is intentional leading whitespace in the strums
-            .trimmingCharacters(in: .newlines)
-            .split(separator: "|")
-            // Initial clean-up
-            .map { measureStr in
-                measureStr
-                    // Trim only newlines in case there is intentional leading whitespace in the strums
-                    .trimmingCharacters(in: .newlines)
-                    // Remove any remaining barlines in each measure
-                    .replacingOccurrences(of: "|", with: "")
-            }
-        
-        // if the Timing segment is separated by a barline and there is either:
-        // - only 1 measure
-        // - more than 1 measure but only 1 Timing segment
-        if timingRegexMatches.count == 1
-            && rhythmGroupsByMeasure.count > 1,
-           let firstMatch = timingRegexMatches.first,
-           let timing = Timing(rawValue: String(firstMatch.output.0)) {
-            // remove only timing string
-            if let index = rhythmGroupsByMeasure.firstIndex(of: timing.rawValue) {
-                rhythmGroupsByMeasure.remove(at: index)
+    /// An initializer only used internally when parsing a pattern.
+    ///
+    /// It might fail due to error.
+    private init(drafts: [Measure.Draft]) throws {
+        self.measures = try drafts.reduce(into: []) { partialResult, draft in
+            // Sometimes, it captures an empty measure at the end
+            if partialResult.count == drafts.count - 1
+                && draft.strums.isEmpty {
+                return
             }
             
-            // append each measure string with the timing string
-            rhythmGroupsByMeasure = rhythmGroupsByMeasure
-                .map { segment in
-                    guard !segment.contains(timing.rawValue) else { return segment }
-                    return segment + timing.rawValue
+            guard let prevTiming = partialResult.last?.timing else {
+                if let measure = draft.confirmingTiming() {
+                    partialResult.append(measure)
+                    return
+                } else {
+                    throw ParsingError.firstMeasureMissingTiming
                 }
+            }
+            
+            partialResult.append(
+                draft.using(timing: prevTiming)
+            )
         }
-        
-        self.measures = rhythmGroupsByMeasure
-//            .compactMap(Measure.init(rawValue:))
-            .map { Measure(rawValue: $0)! }
-        
-        // validation that for every repeatStart theres a repeatEnd
-        guard self.validateRepeats() else { return nil }
     }
     
-    public var rawValue: String {
-        measures
-            .map(\.rawValue)
-            .joined(separator: "|")
+    private var drafts: [Measure.Draft] {
+        measures.reduce(into: []) { partialResult, measure in
+            let timing: Timing?
+            if partialResult.isEmpty
+                || partialResult.last?.timing != measure.timing {
+                timing = measure.timing
+            } else {
+                timing = nil
+            }
+            
+            partialResult.append(
+                .init(
+                    repeatStart: measure.repeatStart,
+                    timing: timing,
+                    strums: measure.strums,
+                    repeatEnd: measure.repeatEnd
+                )
+            )
+        }
     }
     
     /// Validates that for every ``repeatStart`` theres a ``repeatEnd``.
@@ -120,5 +110,31 @@ public struct Pattern: RawRepresentable, Sendable, Hashable {
         }
         
         return true
+    }
+    
+    public static func parser() -> AnyParserPrinter<Substring, Pattern> {
+        ParsePrint {
+            Optionally { "|" }
+            
+            Many {
+                Measure.Draft.parser()
+            } separator: {
+                "|"
+            }
+            
+            Optionally { "|" }
+        }
+        .map(.convert(apply: { (_, drafts, _) in
+            do {
+                return try Pattern(drafts: drafts)
+            } catch {
+                print(error)
+                return nil
+            }
+        }, unapply: { pattern in
+            (() as ()?, pattern.drafts, () as ()?)
+        }))
+        .filter { $0.validateRepeats() }
+        .eraseToAnyParserPrinter()
     }
 }

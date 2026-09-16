@@ -50,6 +50,8 @@ private func restViewBoxNode(with size: CGSize) -> Node<SVG.DocumentContext> {
 
 private func restOriginalSize(for duration: NoteDuration) -> CGSize {
     switch duration {
+    case .half:
+        return .init(width: 30, height: 62)
     case .quarter:
         return .init(width: 5.2967267, height: 14.276536)
     case .eighth:
@@ -61,6 +63,56 @@ private func restOriginalSize(for duration: NoteDuration) -> CGSize {
 
 private func restPathNode(for duration: NoteDuration) -> Node<SVG.DocumentContext> {
     switch duration {
+    case .half:
+        return .element(
+            named: "g",
+            nodes: [
+                .attribute(named: "stroke", value: "none"),
+                .element(
+                    named: "rect",
+                    nodes: [
+                        .attribute(
+                            named: "width",
+                            value: "9.2204475"
+                        ),
+                        .attribute(
+                            named: "height",
+                            value: "5.1031408"
+                        ),
+                        .attribute(
+                            named: "x",
+                            value: "10.902164"
+                        ),
+                        .attribute(
+                            named: "y",
+                            value: "18.913252"
+                        ),
+                    ]
+                ),
+                .element(
+                    named: "rect",
+                    nodes: [
+                        .attribute(
+                            named: "width",
+                            value: "15.077462"
+                        ),
+                        .attribute(
+                            named: "height",
+                            value: "1.1018145"
+                        ),
+                        .attribute(
+                            named: "x",
+                            value: "7.9446626"
+                        ),
+                        .attribute(
+                            named: "y",
+                            value: "22.972569"
+                        ),
+                    ]
+                )
+            ]
+        )
+        
     case .quarter:
         return .element(
             named: "path",

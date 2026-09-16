@@ -19,7 +19,7 @@ struct strumvg: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "A command for generating an SVG of a strumming pattern.",
         discussion: "Any SVG-compatible value can be used for any configuration option.",
-        version: "2.3.0"
+        version: "3.0.0"
     )
     
     @OptionGroup(title: "Input/Output Options")
@@ -99,12 +99,8 @@ struct strumvg: AsyncParsableCommand {
         }
         
 //        let string = "{xD} D u uD u-16t"
-        let pattern = Pattern(rawValue: str)
+        let pattern = try Pattern.parser().parse(str)
 //        print(pattern?.rawValue)
-        
-        guard let pattern else {
-            throw ValidationError("Invalid pattern string, missing timing/note length component at the end.")
-        }
         
         let svg = generate(pattern: pattern)
         let svgStr = svg.render(indentedBy: .spaces(2))

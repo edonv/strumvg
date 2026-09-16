@@ -65,8 +65,8 @@ extension strumvg {
     private func calcRect(for pattern: Pattern) -> CGRect {
         let patternContainsHeaderText = pattern.measures
             .contains { $0.groups.contains(where: \.containsHeaderText) }
-        let patternContainsAnyTriplets = pattern.measures
-            .contains(where: \.timing.triplet)
+        let patternContainsAnyTuplets = pattern.measures
+            .contains(where: \.timing.tuplet)
         
         var minY = patternContainsHeaderText ? -style.textSizes.headerTextHeight : 0
         
@@ -76,7 +76,7 @@ extension strumvg {
         let calcWidth = widthsOfMeasures(pattern.measures)
             + style.barlineSizes.strokeWidth
         
-        /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> triplet text height, including padding above it)`
+        /// `(<conditional> header text height) + (strum array height) + (beat text height) + (rhythm group stem height) + (<conditional> tuplet text height, including padding above it)`
         ///
         /// This conditionally includes the header text, as the height will need to be stretched "outside" the standard bounds to include in the calculated `viewBox`.
         var calcHeight = style.strumSizes.height
@@ -86,12 +86,8 @@ extension strumvg {
         if patternContainsHeaderText {
             calcHeight += style.textSizes.headerTextHeight
         }
-        if patternContainsAnyTriplets {
-            calcHeight += style.textSizes.triplet3TextOffsetY
-        } else if pattern.measures.contains(where: { $0.timing.duration != .quarter }) {
-            // add beam stroke width so its thickness isn't outside the viewBox
-            // if it's quarter notes, then it won't be jutting out anyway
-            calcHeight += style.beamSizes.strokeWidth / 2
+        if patternContainsAnyTuplets {
+            calcHeight += style.textSizes.tuplet3TextOffsetY
         }
         
         let barlineHeight = style.barlineSizes.height(withStrumSizes: style.strumSizes)
@@ -201,7 +197,7 @@ extension strumvg {
         let allStrums = measure.groups
             .flatMap(\.strums)
         
-        let strs = createRhythmText(quantity: allStrums.count, noteLength: measure.timing)
+        let strs = createRhythmText(quantity: allStrums.count, timing: measure.timing)
         
         // MARK: Repeats
         let repeats = createRepeatNotes(
@@ -269,7 +265,7 @@ extension strumvg {
         // MARK: Note Groups
         let noteGroupsGroup = createNoteGroups(
             strums: allStrums,
-            noteLength: measure.timing
+            timing: measure.timing
         )
         
         return [
@@ -368,75 +364,43 @@ extension strumvg {
     
     private func createRhythmText(
         quantity: Int,
-        noteLength: Timing
+        timing: Timing
     ) -> [String] {
-        let triplet = noteLength.triplet
-        
         return (0..<quantity).map { int in
             let i = Double(int)
             
-            switch noteLength.duration {
-            case .quarter:
-                if triplet {
-                    switch int % 3 {
-                    case 0:
-                        return "\(Int(Double(i / 3 + 1)))"
-                    case 1:
-                        return "+"
-                    case 2:
-                        return "a"
-                    default:
-                        return ""
-                    }
+            switch timing.subdivision {
+            case .one:
+                return "\(int + 1)"
+            case .two:
+                if int % 2 == 0 {
+                    return "\(Int((Double(i) / 2).rounded() + 1))"
                 } else {
-                    return "\(int + 1)"
+                    return "+"
                 }
-                
-            case .eighth:
-                if triplet {
-                    switch int % 3 {
-                    case 0:
-                        return "\(Int(Double(i / 3 + 1)))"
-                    case 1:
-                        return "+"
-                    case 2:
-                        return "a"
-                    default:
-                        return ""
-                    }
-                } else {
-                    if int % 2 == 0 {
-                        return "\(Int((Double(i) / 2).rounded() + 1))"
-                    } else {
-                        return "+"
-                    }
+            case .three:
+                switch int % 3 {
+                case 0:
+                    return "\(Int(Double(i / 3 + 1)))"
+                case 1:
+                    return "+"
+                case 2:
+                    return "a"
+                default:
+                    return ""
                 }
-                
-            case .sixteenth:
-                if triplet {
-                    if int % 3 == 0 {
-                        let v = Int(i / 6 + 1)
-                        if int.isMultiple(of: 2) {
-                            return "\(v)"
-                        } else {
-                            return "+"
-                        }
-                    } else {
-                        return ""
-                    }
-                } else {
-                    switch int % 4 {
-                    case 0:
-                        return "\(Int((Double(i) / 4 + 1).rounded()))"
-                    case 1:
-                        return "e"
-                    case 2:
-                        return "+"
-                    case 3:
-                        return "a"
-                    default:
-                        return ""
-                    }
+            case .four:
+                switch int % 4 {
+                case 0:
+                    return "\(Int((Double(i) / 4 + 1).rounded()))"
+                case 1:
+                    return "e"
+                case 2:
+                    return "+"
+                case 3:
+                    return "a"
+                default:
+                    return ""
                 }
             }
         }
@@ -691,14 +655,13 @@ extension strumvg {
     
     private func createNoteGroups(
         strums: [Strum],
-        noteLength: Timing
+        timing: Timing
     ) -> Node<SVG.DocumentContext> {
         let y = style.strumSizes.height + style.textSizes.beatTextHeight
         
-        let triplet = noteLength.triplet
-        let beamBarCount = noteLength.duration.beamBarCount
+        let effectiveDuration = timing.effectiveDuration
         
-        let strumsPerGroup = noteLength.stemsPerGroup
+        let strumsPerGroup = timing.stemsPerGroup
         let groupQuantity = Int(floor(Double(strums.count) / Double(strumsPerGroup)))
         
         return .element(
@@ -713,17 +676,17 @@ extension strumvg {
                     value: style.beamSizes.strokeWidth,
                     format: numberFormat
                 ),
-                .attribute(named: "font-size", value: style.textSizes.tripletFontSize, format: numberFormat),
+                .attribute(named: "font-size", value: style.textSizes.tupletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
-                .attribute(named: "font-family", value: style.fonts.tripletText.family),
-                .attribute(named: "font-weight", value: style.fonts.tripletText.weight),
-                .attribute(named: "font-style", value: style.fonts.tripletText.style),
+                .attribute(named: "font-family", value: style.fonts.tupletText.family),
+                .attribute(named: "font-weight", value: style.fonts.tupletText.weight),
+                .attribute(named: "font-style", value: style.fonts.tupletText.style),
             ] + (0..<groupQuantity).map { i in
                 return createNoteGroup(
                     groupNum: i,
                     strumCount: strumsPerGroup,
-                    triplet: triplet,
-                    beamBarCount: beamBarCount
+                    tuplet: timing.tuplet,
+                    effectiveDuration: effectiveDuration
                 )
             }
         )
@@ -732,13 +695,13 @@ extension strumvg {
     /// - Parameters:
     ///   - groupNum: The index of the note group in the measure.
     ///   - strumCount: The number of strums in the group.
-    ///   - triplet: Whether or not the group is a triplet.
-    ///   - beamBarCount: The number of beams/flags to draw for the group.
+    ///   - tuplet: Whether or not the group is a tuplet.
+    ///   - effectiveDuration: The "effective duration" of the notes.
     private func createNoteGroup(
         groupNum: Int,
         strumCount: Int,
-        triplet: Bool,
-        beamBarCount: Int
+        tuplet: Bool,
+        effectiveDuration: Timing.EffectiveDuration
     ) -> Node<SVG.DocumentContext> {
         let strumCountFloat = CGFloat(strumCount)
         /// Full group width, from left edge of first strum to right edge of last strum (including gap after)
@@ -747,11 +710,11 @@ extension strumvg {
         /// `fullWidth` - (0.5 of strum space width on each end, which equals 1 full width)
         let beamWidth: CGFloat = fullWidth - style.strumSizes.width - style.strumSizes.gap
         
-        let tripletTextElementY = style.beamSizes.stemHeight + style.textSizes.triplet3TextOffsetY
-        let textEl: Node<SVG.DocumentContext>? = triplet ? .element(
+        let tupletTextElementY = style.beamSizes.stemHeight + style.textSizes.tuplet3TextOffsetY
+        let textEl: Node<SVG.DocumentContext>? = tuplet ? .element(
             named: "text",
             nodes: [
-                .text("3"), // triplet label
+                .text("\(strumCount)"), // tuplet label
                 .attribute(
                     named: "x",
                     value: beamWidth / 2,
@@ -759,7 +722,7 @@ extension strumvg {
                 ),
                 .attribute(
                     named: "y",
-                    value: tripletTextElementY,
+                    value: tupletTextElementY,
                     format: numberFormat
                 ),
                 .attribute(named: "stroke", value: "none"),
@@ -767,67 +730,67 @@ extension strumvg {
         ) : nil
         
         // M0,0 [v8 h50 V0]+
-        let beamLength = beamWidth / (strumCountFloat - 1)
-        // Add first path node
-        var noteBeamsPathAttr = "M0,0"
-        
-        // Construct repeat segments
-        var pathSegment = "v\(style.beamSizes.stemHeight)"
-        // If at least 8th notes, draw first beam bar
-        if beamBarCount > 0 {
-            pathSegment += " h\(beamLength)"
-        } else if strumCount > 1 {
-            // Otherwise, just move node to next stem (if there is another stem)
-            pathSegment += " m\(beamLength),0"
+        var beamSegmentLength = beamWidth / (strumCountFloat - 1)
+        if beamSegmentLength.isNaN {
+            beamSegmentLength = 0
         }
-        if beamBarCount > 0 || strumCount > 1 {
+        
+        // Add first path node
+        var noteStemsPathAttr = "M0,0"
+        
+        // Construct repeating path segments
+        let stemHeight = style.beamSizes.stemHeight * effectiveDuration.stemLengthRatio
+        
+        var pathSegment = "v\(stemHeight)"
+        // If there is more than 1 strum...
+        if strumCount > 1 {
+            // If there are any beams to draw
+            if effectiveDuration.beamBarCount > 0 {
+                // Move path position to draw next stem
+                pathSegment += " m\(beamSegmentLength),0"
+            }
+            // Draw next stem
             pathSegment += " V0"
         }
         
         // Append path string with repeating nodes
-        noteBeamsPathAttr += Array(
+        noteStemsPathAttr += Array(
             repeating: pathSegment,
             count: max(strumCount - 1, 1) // always add at least 1
         )
         .joined(separator: " ")
         
-        let noteBeamsPath = Node<SVG.DocumentContext>.element(
+        let noteStemsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
+                .attribute(named: "key", value: "stems"),
                 .attribute(
                     named: "d",
-                    value: noteBeamsPathAttr
+                    value: noteStemsPathAttr
                 )
             ]
         )
         
-        let extraBeamBars = beamBarCount - 1
-        var extraBeamPaths = [Node<SVG.DocumentContext>]()
-        if extraBeamBars > 0 {
-            // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
-            let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
-            
-            extraBeamPaths = (0..<extraBeamBars).map { i in
-                // <line x1="0" y1="4" x2="50" y2="4"></line>
-                let y = style.beamSizes.stemHeight - CGFloat(i + 1) * beamStrokeVerticalGap
-                return .element(
-                    named: "line",
-                    attributes: [
-                        .attribute(named: "x1", value: "0"),
-                        .attribute(named: "y1", value: y, format: numberFormat),
-                        .attribute(named: "x2", value: beamWidth, format: numberFormat),
-                        .attribute(named: "y2", value: y, format: numberFormat),
-                    ]
-                )
-            }
+        let beamBarCount = effectiveDuration.beamBarCount
+        let beamPath: Node<SVG.DocumentContext>?
+        if beamBarCount > 0 {
+            beamPath = createNoteGroupBeamLines(
+                segmentLength: beamSegmentLength,
+                beamWidth: beamWidth,
+                beamBarCount: beamBarCount,
+                fullBeams: strumCount > 1
+            )
+        } else {
+            beamPath = nil
         }
         
         let beamsGroup = Node<SVG.DocumentContext>.element(
             named: "g",
             nodes: [
                 .attribute(named: "fill", value: "none"),
-                noteBeamsPath,
-            ] + extraBeamPaths
+                noteStemsPath,
+                beamPath,
+            ].compactMap { $0 }
         )
         
         let x = CGFloat(groupNum) * fullWidth
@@ -849,6 +812,68 @@ extension strumvg {
                 [beamsGroup, textEl]
                     .compactMap { $0 },
             ].flatMap { $0 }
+        )
+    }
+    
+    /// Create note group beam lines.
+    ///
+    /// If the timing is such that the beat duration requies beams but it's not being sudivided, then this will output stem flags instead.
+    private func createNoteGroupBeamLines(
+        segmentLength: CGFloat,
+        beamWidth: CGFloat,
+        beamBarCount: Int,
+        fullBeams: Bool
+    ) -> Node<SVG.DocumentContext> {
+        // Space out beams by 1.5*strokeWidth, or 1 (whichever is larger)
+        let beamStrokeVerticalGap = style.beamSizes.beamStrokeVerticalGap
+        
+        func y(for i: Int) -> CGFloat {
+            // height of the stem
+            style.beamSizes.stemHeight
+                // spacing out each beam line
+                - CGFloat(i) * beamStrokeVerticalGap
+                // adjust to line up with stems' "butt" stroke linecaps (keeping as "butt" so it matches style's value extactly)
+                - style.beamSizes.strokeWidth / 2
+        }
+        
+        let elementKey: String
+        let pathString: String
+        
+        // check if there should be full beams or just flags
+        switch fullBeams {
+        // if full beams, return ~~<line>~~ <path> element as it does right now
+        case true:
+            elementKey = "beams"
+            
+            pathString = (0..<beamBarCount)
+                .map { i in
+                    // ~~<line x1="0" y1="4" x2="50" y2="4"></line>~~
+                    // now it's a single path element like the flags below
+                    let y = y(for: i)
+                    return "M0,\(y) h\(beamWidth)"
+                }
+                .joined(separator: " ")
+            
+        // if just flags, make 1 path for each stem that draws all of that stem's flag marks
+        case false:
+            elementKey = "flag"
+            
+            let flagLength = style.beamSizes.flagLength
+            
+            pathString = (0..<beamBarCount)
+                .map { i in
+                    let y = y(for: i)
+                    return "M0,\(y) h\(flagLength)"
+                }
+                .joined(separator: " ")
+        }
+        
+        return .element(
+            named: "path",
+            nodes: [
+                .attribute(named: "key", value: elementKey),
+                .attribute(named: "d", value: pathString),
+            ]
         )
     }
 }

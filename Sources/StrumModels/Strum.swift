@@ -6,13 +6,12 @@
 //
 
 import Foundation
+import Parsing
 
 /// An instance of a strum in a pattern.
 ///
 /// It contains a reference of the type of strum and an optional heading character.
-public struct Strum: RawRepresentable, Sendable, Hashable {
-    public typealias Kind = StrumKind
-    
+public struct Strum: Sendable, Hashable {
     public let kind: Kind
     public let headingChar: Character?
     
@@ -29,29 +28,48 @@ public struct Strum: RawRepresentable, Sendable, Hashable {
         self.headingChar = heading
     }
     
-    public init?(rawValue: String) {
-        // rawValue might be wrapping in {}
-        var content = rawValue
-            .trimmingCharacters(in: .init(["{", "}"]))
-        
-        if rawValue != " " {
-            content = content
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-        
-        guard content.count <= 2,
-              let kindChar = content.popLast() else { return nil }
-        
-        self.kind = .init(rawValue: kindChar)
-        // If there's an element left
-        self.headingChar = content.first
+    public static var down: Strum { .init(kind: .down) }
+    public static var up: Strum { .init(kind: .up) }
+    public static var space: Strum { .init(kind: .space) }
+    public static var downMuted: Strum { .init(kind: .downMuted) }
+    public static var upMuted: Strum { .init(kind: .upMuted) }
+    public static var downArpeggio: Strum { .init(kind: .downArpeggio) }
+    public static var upArpeggio: Strum { .init(kind: .upArpeggio) }
+    public static var rest: Strum { .init(kind: .rest) }
+
+    public static func other(_ char: Character) -> Strum {
+        .init(kind: .other(char))
     }
     
-    public var rawValue: String {
-        if let headingChar {
-            return "{\(headingChar)\(kind.rawValue)}"
-        } else {
-            return "\(kind.rawValue)"
+    /// Returns a copy of this `Strum` with an updated ``headingChar``.
+    public func withHeading(_ heading: Character) -> Strum {
+        .init(kind: kind, heading: heading)
+    }
+    
+    public static func parser() -> AnyParserPrinter<Substring, Strum> {
+        OneOf {
+            ParsePrint {
+                "{"
+                Prefix(1)
+                    .map(.string)
+                Kind.parser()
+                "}"
+            }
+            .map(.convert { (str: String, kind: Kind) in
+                Strum(kind: kind, heading: str.first)
+            } unapply: { strum in
+                guard let heading = strum.headingChar else { return nil }
+                return ("\(heading)", strum.kind)
+            })
+            
+            Kind.parser()
+                .map(.convert(apply: { kind in
+                    Strum(kind: kind)
+                }, unapply: { strum in
+                    guard strum.headingChar == nil else { return nil }
+                    return strum.kind
+                }))
         }
+        .eraseToAnyParserPrinter()
     }
 }

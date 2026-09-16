@@ -6,38 +6,37 @@
 //
 
 import Foundation
+import Parsing
 
-/// A group of strums.
-///
-/// One group is rendered with shared stems.
-public struct RhythmicGroup: RawRepresentable, Sendable, Hashable {
-    public let strums: [Strum]
-    
-    public init(strums: [Strum]) {
-        self.strums = strums
-    }
-    
-    /// Initializes from a portion of a pattern string.
-    /// - Parameter rawValue: A portion of a pattern string to be grouped together. Each strum (even those without header characters) must be wrapped in curly braces.
-    public init?(rawValue: String) {
-        self.strums = rawValue
-            .components(separatedBy: "}")
-            .map { $0.trimmingPrefix("{") }
-            .map(String.init)
-            .compactMap { Strum(rawValue: $0) }
-    }
-    
-    public var rawValue: String {
-        strums
-            .map(\.rawValue)
-            .joined()
-    }
-    
-    internal func appending(strums: [Strum]) -> RhythmicGroup {
-        .init(strums: self.strums + strums)
-    }
-    
-    package var containsHeaderText: Bool {
-        strums.contains { $0.headingChar != nil }
+extension Measure {
+    /// A group of strums.
+    ///
+    /// One group is rendered with shared stems.
+    public struct RhythmicGroup: Sendable, Hashable {
+        public let strums: [Strum]
+        
+        public init(strums: [Strum]) {
+            self.strums = strums
+        }
+        
+        internal func appending(strums: [Strum]) -> RhythmicGroup {
+            .init(strums: self.strums + strums)
+        }
+        
+        package var containsHeaderText: Bool {
+            strums.contains { $0.headingChar != nil }
+        }
+        
+        public static func parser() -> AnyParserPrinter<Substring, RhythmicGroup> {
+            Many {
+                Strum.parser()
+            }
+            .map(.convert(apply: { strums in
+                RhythmicGroup(strums: strums)
+            }, unapply: { group in
+                group.strums
+            }))
+            .eraseToAnyParserPrinter()
+        }
     }
 }

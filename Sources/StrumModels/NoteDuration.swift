@@ -1,0 +1,35 @@
+//
+//  NoteDuration.swift
+//  strumvg
+//
+//  Created by Edon Valdman on 9/13/26.
+//
+
+import Foundation
+
+public enum NoteDuration: Int, Sendable, Hashable, CaseIterable, Comparable {
+    case half = 2
+    case quarter = 4
+    case eighth = 8
+    case sixteenth = 16
+    
+    public var beamBarCount: Int {
+        switch self {
+        case .half, .quarter: 0
+        case .eighth: 1
+        case .sixteenth: 2
+        }
+    }
+    
+    public var stemLengthRatio: CGFloat {
+        switch self {
+        case .half: 0.5
+        default: 1
+        }
+    }
+    
+    
+    public static func <(lhs: NoteDuration, rhs: NoteDuration) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
+}
