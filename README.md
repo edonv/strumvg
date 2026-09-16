@@ -158,7 +158,7 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Add testing suite for testing parsing of pattern strings
     - [x] Move all saved pattern string arguments into a test suite
 - [ ] Add JSON schema docs generator with GitHub Actions to host with GitHub Pages (`.github/docs`)
-- [ ] Update stem beams to connect between groups if `timing` is 16th note
+- [x] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
 - [x] Replace rhythmic indicator with some sort of combo of time signature and subdivision
@@ -169,7 +169,7 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
         - 6/8 with dotted 4th sub or 8th note sub
     - have a default subdivision per possible time signature
     - [x] What to do when `noteLength` should have flags/beams, but `subdivision` is `1` (no notes will be beamed together)?
-- [ ] Option to hide `3` when in triplet (or 6/8 or 12/8)
+- [x] Option to hide `3` when in triplet (or 6/8 or 12/8)
 - [ ] Add repeats
 - [ ] Move/namespace `StrumKind` and `Variant`
 - [ ] Add support for additional `subdivision` values
