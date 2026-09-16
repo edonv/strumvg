@@ -167,6 +167,7 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
         - 3/4 with 8th note sub
         - 6/8 with dotted 4th sub or 8th note sub
     - have a default subdivision per possible time signature
+    - [ ] What to do when `noteLength` should have flags/beams, but `subdivision` is `1` (no notes will be beamed together)?
 - [ ] Option to hide `3` when in triplet (or 6/8 or 12/8)
 - [ ] Add repeats
 - [x] Move all saved pattern string arguments into a test suite
