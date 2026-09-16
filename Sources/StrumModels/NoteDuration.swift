@@ -28,14 +28,6 @@ public enum NoteDuration: Int, Sendable, Hashable, CaseIterable, Comparable {
         }
     }
     
-    package var restPathReuseID: String {
-        switch self {
-        case .half: "halfRest"
-        case .quarter: "quarterRest"
-        case .eighth: "eighthRest"
-        case .sixteenth: "sixteenthRest"
-        }
-    }
     
     public static func <(lhs: NoteDuration, rhs: NoteDuration) -> Bool {
         lhs.rawValue < rhs.rawValue
