@@ -736,7 +736,7 @@ extension strumvg {
         }
         
         // Add first path node
-        var noteBeamsPathAttr = "M0,0"
+        var noteStemsPathAttr = "M0,0"
         
         // Construct repeating path segments
         let stemHeight = style.beamSizes.stemHeight * effectiveDuration.stemLengthRatio
@@ -754,18 +754,18 @@ extension strumvg {
         }
         
         // Append path string with repeating nodes
-        noteBeamsPathAttr += Array(
+        noteStemsPathAttr += Array(
             repeating: pathSegment,
             count: max(strumCount - 1, 1) // always add at least 1
         )
         .joined(separator: " ")
         
-        let noteBeamsPath = Node<SVG.DocumentContext>.element(
+        let noteStemsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
                 .attribute(
                     named: "d",
-                    value: noteBeamsPathAttr
+                    value: noteStemsPathAttr
                 )
             ]
         )
@@ -787,7 +787,7 @@ extension strumvg {
             named: "g",
             nodes: [
                 .attribute(named: "fill", value: "none"),
-                noteBeamsPath,
+                noteStemsPath,
                 beamPath,
             ].compactMap { $0 }
         )
