@@ -16,14 +16,14 @@ extension Strum {
         /// The direction of the strum, optionally.
         public let direction: Direction?
         
-        public static let down = Kind(variant: .normal, direction: .down)
-        public static let up = Kind(variant: .normal, direction: .up)
-        public static let space = Kind(variant: .space, direction: nil)
-        public static let downMuted = Kind(variant: .muted, direction: .down)
-        public static let upMuted = Kind(variant: .muted, direction: .up)
-        public static let downArpeggio = Kind(variant: .arpeggio, direction: .down)
-        public static let upArpeggio = Kind(variant: .arpeggio, direction: .up)
-        public static let rest = Kind(variant: .rest, direction: nil)
+        public static var down: Kind { .init(variant: .normal, direction: .down) }
+        public static var up: Kind { .init(variant: .normal, direction: .up) }
+        public static var space: Kind { .init(variant: .space, direction: nil) }
+        public static var downMuted: Kind { .init(variant: .muted, direction: .down) }
+        public static var upMuted: Kind { .init(variant: .muted, direction: .up) }
+        public static var downArpeggio: Kind { .init(variant: .arpeggio, direction: .down) }
+        public static var upArpeggio: Kind { .init(variant: .arpeggio, direction: .up) }
+        public static var rest: Kind { .init(variant: .rest, direction: nil) }
         
         public static func other(_ char: Character) -> Kind {
             Kind(variant: .other(char), direction: nil)
