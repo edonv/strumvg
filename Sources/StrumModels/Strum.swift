@@ -12,8 +12,6 @@ import Parsing
 ///
 /// It contains a reference of the type of strum and an optional heading character.
 public struct Strum: Sendable, Hashable {
-    public typealias Kind = StrumKind
-    
     public let kind: Kind
     public let headingChar: Character?
     
