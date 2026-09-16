@@ -170,7 +170,7 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
     - have a default subdivision per possible time signature
     - [x] What to do when `noteLength` should have flags/beams, but `subdivision` is `1` (no notes will be beamed together)?
 - [x] Option to hide `3` when in triplet (or 6/8 or 12/8)
-- [ ] Add repeats
+- [x] Add repeats
 - [x] Move/namespace `StrumKind` and `Variant`
 - [ ] Add support for additional `subdivision` values
 - [ ] Update style configuration types to be generated from JSON Schema then implement `swift-configuration` initializers via extension
