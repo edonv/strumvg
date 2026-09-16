@@ -137,7 +137,9 @@ extension Timing {
                     self.beamBarCount = NoteDuration.allCases.last!.beamBarCount + extraBeamsPastLastCase
                 }
                 
-                self.stemLengthRatio = timing.duration.stemLengthRatio
+                self.stemLengthRatio = self.duration == NoteDuration.half.rawValue
+                    ? NoteDuration.half.stemLengthRatio
+                    : NoteDuration.quarter.stemLengthRatio
             }
         }
     }
