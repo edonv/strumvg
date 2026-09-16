@@ -763,6 +763,7 @@ extension strumvg {
         let noteStemsPath = Node<SVG.DocumentContext>.element(
             named: "path",
             attributes: [
+                .attribute(named: "key", value: "stems"),
                 .attribute(
                     named: "d",
                     value: noteStemsPathAttr
