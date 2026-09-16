@@ -185,4 +185,101 @@ struct StrumModelsTests {
             _ = try Pattern.parser().parse(pattern)
         }
     }
+    
+    @Test func testEffectiveDuration() {
+        for duration in NoteDuration.allCases {
+            for subdivision in Timing.Subdivision.allCases {
+                // `tuplet` is irrelevant to this test
+                let timing = Timing(duration: duration, subdivision: subdivision, tuplet: false)
+                
+                let effectiveDuration: Timing.EffectiveDuration
+                switch (duration, subdivision) {
+                case (_, .one):
+                    effectiveDuration = .init(
+                        duration: duration.rawValue,
+                        beamBarCount: duration.beamBarCount,
+                        stemLengthRatio: duration.stemLengthRatio
+                    )
+                    
+                case (.half, .two):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.quarter.rawValue,
+                        beamBarCount: NoteDuration.quarter.beamBarCount,
+                        stemLengthRatio: NoteDuration.quarter.stemLengthRatio
+                    )
+                case (.half, .three):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.quarter.rawValue,
+                        beamBarCount: NoteDuration.quarter.beamBarCount,
+                        stemLengthRatio: NoteDuration.quarter.stemLengthRatio
+                    )
+                case (.half, .four):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.eighth.rawValue,
+                        beamBarCount: NoteDuration.eighth.beamBarCount,
+                        stemLengthRatio: NoteDuration.eighth.stemLengthRatio
+                    )
+                    
+                case (.quarter, .two):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.eighth.rawValue,
+                        beamBarCount: NoteDuration.eighth.beamBarCount,
+                        stemLengthRatio: NoteDuration.eighth.stemLengthRatio
+                    )
+                case (.quarter, .three):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.eighth.rawValue,
+                        beamBarCount: NoteDuration.eighth.beamBarCount,
+                        stemLengthRatio: NoteDuration.eighth.stemLengthRatio
+                    )
+                case (.quarter, .four):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.sixteenth.rawValue,
+                        beamBarCount: NoteDuration.sixteenth.beamBarCount,
+                        stemLengthRatio: NoteDuration.sixteenth.stemLengthRatio
+                    )
+                    
+                case (.eighth, .two):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.sixteenth.rawValue,
+                        beamBarCount: NoteDuration.sixteenth.beamBarCount,
+                        stemLengthRatio: NoteDuration.sixteenth.stemLengthRatio
+                    )
+                case (.eighth, .three):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.sixteenth.rawValue,
+                        beamBarCount: NoteDuration.sixteenth.beamBarCount,
+                        stemLengthRatio: NoteDuration.sixteenth.stemLengthRatio
+                    )
+                case (.eighth, .four):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.sixteenth.rawValue * 2,
+                        beamBarCount: NoteDuration.sixteenth.beamBarCount + 1,
+                        stemLengthRatio: NoteDuration.sixteenth.stemLengthRatio
+                    )
+                    
+                case (.sixteenth, .two):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.sixteenth.rawValue * 2,
+                        beamBarCount: NoteDuration.sixteenth.beamBarCount + 1,
+                        stemLengthRatio: NoteDuration.sixteenth.stemLengthRatio
+                    )
+                case (.sixteenth, .three):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.sixteenth.rawValue * 2,
+                        beamBarCount: NoteDuration.sixteenth.beamBarCount + 1,
+                        stemLengthRatio: NoteDuration.sixteenth.stemLengthRatio
+                    )
+                case (.sixteenth, .four):
+                    effectiveDuration = .init(
+                        duration: NoteDuration.sixteenth.rawValue * 4,
+                        beamBarCount: NoteDuration.sixteenth.beamBarCount + 2,
+                        stemLengthRatio: NoteDuration.sixteenth.stemLengthRatio
+                    )
+                }
+                
+                #expect(timing.effectiveDuration == effectiveDuration, "\(timing)")
+            }
+        }
+    }
 }
