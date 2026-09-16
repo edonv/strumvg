@@ -836,12 +836,15 @@ extension strumvg {
                 - style.beamSizes.strokeWidth / 2
         }
         
+        let elementKey: String
         let pathString: String
         
         // check if there should be full beams or just flags
         switch fullBeams {
         // if full beams, return ~~<line>~~ <path> element as it does right now
         case true:
+            elementKey = "beams"
+            
             pathString = (0..<beamBarCount)
                 .map { i in
                     // ~~<line x1="0" y1="4" x2="50" y2="4"></line>~~
@@ -851,9 +854,10 @@ extension strumvg {
                 }
                 .joined(separator: " ")
             
-            
         // if just flags, make 1 path for each stem that draws all of that stem's flag marks
         case false:
+            elementKey = "flag"
+            
             let flagLength = style.beamSizes.flagLength
             
             pathString = (0..<beamBarCount)
@@ -867,6 +871,7 @@ extension strumvg {
         return .element(
             named: "path",
             nodes: [
+                .attribute(named: "key", value: elementKey),
                 .attribute(named: "d", value: pathString),
             ]
         )
