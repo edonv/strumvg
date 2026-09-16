@@ -778,7 +778,10 @@ extension strumvg {
             
             extraBeamPaths = (0..<extraBeamBars).map { i in
                 // <line x1="0" y1="4" x2="50" y2="4"></line>
-                let y = style.beamSizes.stemHeight - CGFloat(i + 1) * beamStrokeVerticalGap
+                // height of the stem
+                let y = style.beamSizes.stemHeight
+                    // spacing out each beam line
+                    - CGFloat(i + 1) * beamStrokeVerticalGap
                 return .element(
                     named: "line",
                     attributes: [
