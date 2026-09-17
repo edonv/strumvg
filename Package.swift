@@ -18,6 +18,7 @@ let package = Package(
             from: "1.2.0",
             traits: [.defaults, "Logging", "YAML", "CommandLineArguments"]
         ),
+        .package(url: "https://github.com/ajevans99/swift-json-schema-codegen", from: "0.3.0"),
         // Only added explicitly as a workaround for https://github.com/apple/swift-configuration/issues/89
         .package(url: "https://github.com/jpsim/Yams", "5.4.0"..<"7.0.0"),
     ],
@@ -43,6 +44,12 @@ let package = Package(
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Configuration", package: "swift-configuration"),
+                .product(name: "JSONSchemaCodegen", package: "swift-json-schema-codegen"),
+            ],
+            exclude: ["json-schema-codegen.json"],
+            resources: [.copy("Schemas")],
+            plugins: [
+                .plugin(name: "JSONSchemaCodegenPlugin", package: "swift-json-schema-codegen")
             ]
         ),
         // Targets are the basic building blocks of a package, defining a module or a test suite.
