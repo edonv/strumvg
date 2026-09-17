@@ -160,6 +160,8 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [ ] Add JSON schema docs generator with GitHub Actions to host with GitHub Pages (`.github/docs`)
 - [x] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
+    - [ ] `homebrew` requires executable to be signed, which requires a paid developer account
+    - <https://scriptingosx.com/2023/08/build-a-notarized-package-with-a-swift-package-manager-executable/>
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
 - [x] Replace rhythmic indicator with some sort of combo of time signature and subdivision
     - Examples:
