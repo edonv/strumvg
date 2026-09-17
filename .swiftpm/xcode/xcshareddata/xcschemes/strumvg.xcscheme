@@ -87,6 +87,10 @@
             argument = "-c"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;~/Music/ChordPro/Website Songbook/strumming/strumvg.json&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
