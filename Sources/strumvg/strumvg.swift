@@ -19,7 +19,7 @@ struct strumvg: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "A command for generating an SVG of a strumming pattern.",
         discussion: "Any SVG-compatible value can be used for any configuration option.",
-        version: "3.0.0"
+        version: "3.0.1"
     )
     
     @OptionGroup(title: "Input/Output Options")
