@@ -132,7 +132,7 @@
       "properties": {
         "strumHeader": {
           "description": "Font styling for header text.",
-          "$ref": "#/definitions/font",
+          "$ref": "#/$defs/font",
           "default": {
             "family": "sans-serif",
             "weight": "bold",
@@ -141,7 +141,7 @@
         },
         "arrowText": {
           "description": "Font styling for text inserted in place of arrows.",
-          "$ref": "#/definitions/font",
+          "$ref": "#/$defs/font",
           "default": {
             "family": "sans-serif",
             "weight": "bold",
@@ -150,7 +150,7 @@
         },
         "countChar": {
           "description": "Font styling for rhythm count text.",
-          "$ref": "#/definitions/font",
+          "$ref": "#/$defs/font",
           "default": {
             "family": "sans-serif",
             "weight": "bold",
@@ -159,7 +159,7 @@
         },
         "tripletText": {
           "description": "Font styling for triplet labels (\"3\"), if applicable.",
-          "$ref": "#/definitions/font",
+          "$ref": "#/$defs/font",
           "default": {
             "family": "sans-serif",
             "weight": "normal",
@@ -169,7 +169,7 @@
       }
     }
   },
-  "definitions": {
+  "$defs": {
     "font-family": {
       "type": "string",
       "examples": [
@@ -222,17 +222,17 @@
         "family": {
           "title": "Font family name.",
           "description": "Values can be any string recognized by [SVG/CSS as a font family](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-family).",
-          "$ref": "#/definitions/font-family"
+          "$ref": "#/$defs/font-family"
         },
         "weight": {
           "title": "Font weight.",
           "description": "Values can be any string recognized by [SVG/CSS as a font weight](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight).",
-          "$ref": "#/definitions/font-weight"
+          "$ref": "#/$defs/font-weight"
         },
         "style": {
           "title": "Font style.",
           "description": "Values can be any string recognized by [SVG/CSS as a font style](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-style).",
-          "$ref": "#/definitions/font-style"
+          "$ref": "#/$defs/font-style"
         }
       }
     }
