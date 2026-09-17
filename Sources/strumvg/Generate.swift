@@ -744,11 +744,8 @@ extension strumvg {
         var pathSegment = "v\(stemHeight)"
         // If there is more than 1 strum...
         if strumCount > 1 {
-            // If there are any beams to draw
-            if effectiveDuration.beamBarCount > 0 {
-                // Move path position to draw next stem
-                pathSegment += " m\(beamSegmentLength),0"
-            }
+            // Move path position to draw next stem
+            pathSegment += " m\(beamSegmentLength),0"
             // Draw next stem
             pathSegment += " V0"
         }
