@@ -741,18 +741,18 @@ extension strumvg {
         // Construct repeating path segments
         let stemHeight = style.beamSizes.stemHeight * effectiveDuration.stemLengthRatio
         
-        var pathSegment = "v\(stemHeight)"
+        var pathSegments = ["v\(stemHeight)"]
         // If there is more than 1 strum...
         if strumCount > 1 {
             // Move path position to draw next stem
-            pathSegment += " m\(beamSegmentLength),0"
+            pathSegments.append("m\(beamSegmentLength),0")
             // Draw next stem
-            pathSegment += " V0"
+            pathSegments.append("V0")
         }
         
         // Append path string with repeating nodes
-        noteStemsPathAttr += Array(
-            repeating: pathSegment,
+        noteStemsPathAttr += " " + Array(
+            repeating: pathSegments.joined(separator: " "),
             count: max(strumCount - 1, 1) // always add at least 1
         )
         .joined(separator: " ")
