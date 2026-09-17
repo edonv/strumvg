@@ -174,3 +174,6 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Move/namespace `StrumKind` and `Variant`
 - [ ] Add support for additional `subdivision` values
 - [ ] Update style configuration types to be generated from JSON Schema then implement `swift-configuration` initializers via extension
+- [ ] Add some way to display swing
+    - [ ] Maybe triplet counted "1+2+" beams together, marked as triplet, and 2nd note of each pair has reverse flag of next shorter duration
+    - [ ] Maybe `noteLength` written as `4/2s`
