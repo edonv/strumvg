@@ -105,6 +105,11 @@
           "description": "The vertical length of the beam stems.",
           "type": "number",
           "default": 8
+        },
+        "flagWidth": {
+          "description": "The width of a stem's flag.\nThis is only used when each beat's duration is an eighth note or shorter and is not being subdivided.",
+          "type": "number",
+          "default": 5
         }
       }
     },
