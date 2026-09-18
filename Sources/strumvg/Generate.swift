@@ -856,12 +856,12 @@ extension strumvg {
         case false:
             elementKey = "flag"
             
-            let flagLength = style.beamSizes.flagLength
+            let flagWidth = style.beamSizes.flagWidth
             
             pathString = (0..<beamBarCount)
                 .map { i in
                     let y = y(for: i)
-                    return "M0,\(y) h\(flagLength)"
+                    return "M0,\(y) h\(flagWidth)"
                 }
                 .joined(separator: " ")
         }
