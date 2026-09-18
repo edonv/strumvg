@@ -301,11 +301,16 @@ public struct StyleConfiguration: Codable {
         }
     }
     
+    /// Repeats sizing properties
     public struct Repeats: Codable {
-        /// Relative to ``StyleConfiguration/BarlineSizes/gap(withStrumSizes:)``.
+        /// The relative distance repeat signs' horizontal centers are away from the barline, as a fraction of the gap between a barline and its adject strums.
+        /// > Default: `0.5`
         public let horizontalInsetRatio: CGFloat
-        /// Relative to height of ``StyleConfiguration/StrumSizes/height``.
+        /// The relative distance each repeat sign dot's vertical center is inset from the top or bottom of the height of the strum arrows, as a fraction of ``StyleConfiguration/StrumSizes/height``.
+        /// > Default: `1/3`
         public let verticalInsetRatio: CGFloat
+        /// Radius of the repeat signs' dots.
+        /// > Default: `3`
         public let dotRadius: CGFloat
         
         public init(
