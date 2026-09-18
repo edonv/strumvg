@@ -296,13 +296,14 @@ extension strumvg {
         func circleElement(
             top: Bool
         ) -> Node<SVG.DocumentContext> {
-            let cyBase: CGFloat = style.strumSizes.height * style.repeats.yRatio
+            let cyFactor: CGFloat = top ? style.repeats.verticalInsetRatio : (1 - style.repeats.verticalInsetRatio)
+            let cyInset: CGFloat = style.strumSizes.height * cyFactor
             return .element(
                 named: "circle",
                 nodes: [
                     .attribute(
                         named: "cy",
-                        value: cyBase * (top ? 1 : 2),
+                        value: cyInset,
                         format: numberFormat
                     ),
                     .attribute(
