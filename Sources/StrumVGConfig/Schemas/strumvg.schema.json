@@ -119,7 +119,7 @@
           "default": 1.25
         },
         "gapRatio": {
-          "description": "The relative width of a gap between a barline and adjacent \"rhythmic columns\", as a fraction of `strumSizes/gap`.",
+          "description": "The relative width of a gap between a barline and adjacent \"rhythmic columns\", as a fraction of `strumSizes.gap`.",
           "type": "number",
           "default": 0.5
         }
