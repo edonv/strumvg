@@ -22,6 +22,7 @@ public struct StyleConfiguration: Codable {
     public let beamSizes: BeamSizes
     /// Styling related to barline sizes.
     public let barlineSizes: BarlineSizes
+    /// Styling relating to repeats.
     public let repeats: Repeats
     /// Styling related to fonts.
     public let fonts: Fonts
