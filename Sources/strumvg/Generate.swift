@@ -291,7 +291,7 @@ extension strumvg {
     ) -> Node<SVG.DocumentContext> {
         let groupTranslateX = -style.barlineSizes.gap(
             withStrumSizes: style.strumSizes
-        ) * style.repeats.spacingRatioFromBarline
+        ) * style.repeats.horizontalInsetRatio
         
         func circleElement(
             top: Bool
