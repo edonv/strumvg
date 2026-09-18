@@ -28,6 +28,11 @@
           "description": "The color of the barlines.",
           "type": "string",
           "default": "#000000"
+        },
+        "repeats": {
+          "description": "The color of the repeat signs.",
+          "type": "string",
+          "default": "#000000"
         }
       }
     },
@@ -122,6 +127,28 @@
           "description": "The relative width of a gap between a barline and adjacent \"rhythmic columns\", as a fraction of `strumSizes.gap`.",
           "type": "number",
           "default": 0.5
+        }
+      }
+    },
+    "repeats": {
+      "title": "Repeats sizing properties",
+      "description": "Styling relating to repeats.",
+      "type": "object",
+      "properties": {
+        "horizontalInsetRatio": {
+          "description": "The relative distance repeat signs' horizontal centers are away from the barline, as a fraction of the gap between a barline and its adject strums.",
+          "type": "number",
+          "default": 0.5
+        },
+        "verticalInsetRatio": {
+          "description": "The relative distance each repeat sign dot's vertical center is inset from the top or bottom of the height of the strum arrows, as a fraction of `strumSizes.height`.",
+          "type": "number",
+          "default": 0.333
+        },
+        "dotRadius": {
+          "description": "Radius of the repeat signs' dots.",
+          "type": "number",
+          "default": 3
         }
       }
     },
