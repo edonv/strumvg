@@ -1,5 +1,5 @@
 {
-  "originHash" : "a670e6d0582717dbaa4dcb9a6004bbc2dfeb8f77b785f7d210b3269084a34e15",
+  "originHash" : "b1d16dc239940af110127b1f18060449b809714873b848494d73a8e87a24a009",
   "pins" : [
     {
       "identity" : "plot",
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ajevans99/swift-json-schema-codegen",
       "state" : {
-        "revision" : "2937926f4def9885ced02b31bcb0155248c612ef",
-        "version" : "0.3.0"
+        "revision" : "5ed94b7f8aacd85e3de4355a6159f694d493b03f",
+        "version" : "0.4.0"
       }
     },
     {

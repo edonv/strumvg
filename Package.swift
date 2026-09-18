@@ -18,7 +18,7 @@ let package = Package(
             from: "1.2.0",
             traits: [.defaults, "Logging", "YAML", "CommandLineArguments"]
         ),
-        .package(url: "https://github.com/ajevans99/swift-json-schema-codegen", from: "0.3.0"),
+        .package(url: "https://github.com/ajevans99/swift-json-schema-codegen", from: "0.4.0"),
         // Only added explicitly as a workaround for https://github.com/apple/swift-configuration/issues/89
         .package(url: "https://github.com/jpsim/Yams", "5.4.0"..<"7.0.0"),
     ],
