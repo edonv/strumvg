@@ -89,7 +89,7 @@ public struct StyleConfiguration: Codable {
     
     /// Text sizing properties
     ///
-    /// Properties denoted as a \"height\" refer to the amount of vertical space (in SVG user units) that will be reserved for that text.
+    /// Properties denoted as a "height" refer to the amount of vertical space (in SVG user units) that will be reserved for that text.
     ///
     /// Properties denoted as a "font size" will translate to the `font-size` attribute.
     public struct TextSizes: Codable {
@@ -170,7 +170,7 @@ public struct StyleConfiguration: Codable {
     public struct StrumSizes: Codable {
         /// The width of the space reserved for each strum arrow.
         ///
-        /// This is the width of the space reserved for each \"rhythmic column\" composed of arrow, header text, and beat text. It also defines the maximum width of a strum's arrowhead.
+        /// This is the width of the space reserved for each "rhythmic column" composed of arrow, header text, and beat text. It also defines the maximum width of a strum's arrowhead.
         /// > Default: `20`
         public let width: CGFloat
         /// The height of each strum arrow.
@@ -269,7 +269,7 @@ public struct StyleConfiguration: Codable {
         /// The relative height of a barline, as a fraction of ``StyleConfiguration/StrumSizes/height``.
         /// > Default: `1.25`
         public let heightRatio: CGFloat
-        /// The relative width of a gap between a barline and adjacent \"rhythmic columns\", as a fraction of ``StyleConfiguration/StrumSizes/gap``.
+        /// The relative width of a gap between a barline and adjacent "rhythmic columns", as a fraction of ``StyleConfiguration/StrumSizes/gap``.
         /// > Default: `0.5`
         public let gapRatio: CGFloat
         
