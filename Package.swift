@@ -49,7 +49,7 @@ let package = Package(
             exclude: ["json-schema-codegen.json"],
             resources: [.copy("Schemas")],
             plugins: [
-                .plugin(name: "JSONSchemaCodegenPlugin", package: "swift-json-schema-codegen")
+                .plugin(name: "JSONSchemaCodegenPlugin", package: "swift-json-schema-codegen"),
             ]
         ),
         // Targets are the basic building blocks of a package, defining a module or a test suite.
