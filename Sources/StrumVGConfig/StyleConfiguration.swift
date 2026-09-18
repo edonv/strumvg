@@ -303,25 +303,25 @@ public struct StyleConfiguration: Codable {
     
     public struct Repeats: Codable {
         /// Relative to ``StyleConfiguration/BarlineSizes/gap(withStrumSizes:)``.
-        public let spacingRatioFromBarline: CGFloat
+        public let horizontalInsetRatio: CGFloat
         /// Relative to height of ``StyleConfiguration/StrumSizes/height``.
-        public let yRatio: CGFloat
+        public let verticalInsetRatio: CGFloat
         public let dotRadius: CGFloat
         
         public init(
-            spacingRatioFromBarline: CGFloat,
-            yRatio: CGFloat,
+            horizontalInsetRatio: CGFloat,
+            verticalInsetRatio: CGFloat,
             dotRadius: CGFloat
         ) {
-            self.spacingRatioFromBarline = spacingRatioFromBarline
-            self.yRatio = yRatio
+            self.horizontalInsetRatio = horizontalInsetRatio
+            self.verticalInsetRatio = verticalInsetRatio
             self.dotRadius = dotRadius
         }
         
         public init(config: ConfigReader) {
             self.init(
-                spacingRatioFromBarline: config.cgFloat(forKey: "spacingRatioFromBarline", default: 0.5),
-                yRatio: config.cgFloat(forKey: "yRatio", default: 1 / 3),
+                horizontalInsetRatio: config.cgFloat(forKey: "horizontalInsetRatio", default: 0.5),
+                verticalInsetRatio: config.cgFloat(forKey: "verticalInsetRatio", default: 1 / 3),
                 dotRadius: config.cgFloat(forKey: "dotRadius", default: 3)
             )
         }
