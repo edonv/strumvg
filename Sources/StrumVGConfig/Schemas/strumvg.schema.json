@@ -56,8 +56,8 @@
           "type": "number",
           "default": 0.8
         },
-        "tripletFontSize": {
-          "description": "The actual font-size of the triplet label, if applicable.",
+        "tupletFontSize": {
+          "description": "The actual font-size of the tuplet label, if applicable.",
           "type": "number",
           "default": 14
         }
@@ -157,8 +157,8 @@
             "style": "normal"
           }
         },
-        "tripletText": {
-          "description": "Font styling for triplet labels (\"3\"), if applicable.",
+        "tupletText": {
+          "description": "Font styling for tuplet labels (\"3\"), if applicable.",
           "$ref": "#/$defs/font",
           "default": {
             "family": "sans-serif",
