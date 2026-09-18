@@ -234,29 +234,29 @@ public struct StyleConfiguration: Codable {
         /// The vertical length of the beam stems.
         /// > Default: `8`
         public let stemHeight: CGFloat
-        /// The length of a stem's flag.
+        /// The width of a stem's flag.
         ///
         /// This is only used when each beat's duration is an eighth note or shorter and is not being subdivided.
         ///
         /// > Default: `5`
-        public let flagLength: CGFloat
+        public let flagWidth: CGFloat
         
         /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
         package var beamStrokeVerticalGap: CGFloat {
             max(1.5 * strokeWidth, 1)
         }
         
-        public init(strokeWidth: CGFloat, stemHeight: CGFloat, flagLength: CGFloat) {
+        public init(strokeWidth: CGFloat, stemHeight: CGFloat, flagWidth: CGFloat) {
             self.strokeWidth = strokeWidth
             self.stemHeight = stemHeight
-            self.flagLength = flagLength
+            self.flagWidth = flagWidth
         }
         
         public init(config: ConfigReader) {
             self.init(
                 strokeWidth: config.cgFloat(forKey: "strokeWidth", default: 2),
                 stemHeight: config.cgFloat(forKey: "stemHeight", default: 12),
-                flagLength: config.cgFloat(forKey: "flagLength", default: 5)
+                flagWidth: config.cgFloat(forKey: "flagWidth", default: 5)
             )
         }
     }
