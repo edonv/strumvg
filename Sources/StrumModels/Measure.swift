@@ -28,7 +28,7 @@ public struct Measure: Sendable, Hashable {
     ///
     /// Internally, `strums` will be split into groups according to `timing` and its ``Timing/subdivision``.
     ///
-    /// Additionally, if `strums` doesn't have enough strums to make a full final rhythmic group of subdivisions, the final group will be padded at the end with empty ``StrumKind/space`` strums.
+    /// Additionally, if `strums` doesn't have enough strums to make a full final rhythmic group of subdivisions, the final group will be padded at the end with empty ``Strum/Kind/space`` strums.
     /// - Parameters:
     ///   - strums: The strums to include in the measure.
     ///   - timing: The timing for laying out the strums.
