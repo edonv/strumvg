@@ -444,7 +444,7 @@ public struct StyleConfiguration: Codable {
                 .init(
                     family: family,
                     weight: "bold",
-                    style: "normal"
+                    style: style
                 )
             }
         }
