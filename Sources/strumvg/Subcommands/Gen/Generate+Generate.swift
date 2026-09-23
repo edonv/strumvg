@@ -16,7 +16,7 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
     .precision(.fractionLength(...4))
     .grouping(.never)
 
-extension strumvg {
+extension Generate {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
         let rect = calcRect(for: pattern)
         
