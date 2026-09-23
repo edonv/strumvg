@@ -27,9 +27,9 @@ ARGUMENTS:
 
 INPUT/OUTPUT OPTIONS:
   -i, --stdin/-a, --arg=<pattern>
-                          Source for input pattern string. (default: --stdin)
+                          Source for input pattern string. (no default value)
   -o, --stdout/-l, --log/-f, --file=<file-path>.svg
-                          Destination for output SVG content. (default: --stdout)
+                          Destination for output SVG content. (no default value)
 
 OPTIONS:
   -h, --help              Show help information.
