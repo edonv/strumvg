@@ -91,6 +91,10 @@
             argument = "&quot;~/Music/ChordPro/Website Songbook/strumming/strumvg.json&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "config-schema"
+            isEnabled = "NO">
+         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
