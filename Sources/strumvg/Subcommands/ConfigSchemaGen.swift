@@ -20,7 +20,7 @@ struct ConfigSchemaGen: ParsableCommand {
     @Option(
         name: [.customShort("o"), .customLong("output")],
         help: .init(
-            "Path to a direcetory to output the schema file.",
+            "Path to a directory to output the schema file.",
             discussion: "If the directory does not exist, it will be created."
         ),
         completion: .directory
