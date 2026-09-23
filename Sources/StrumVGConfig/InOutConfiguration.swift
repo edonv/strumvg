@@ -55,12 +55,6 @@ package struct InOutConfiguration: ParsableArguments {
         package private(set) var source: Source!
         
         package mutating func validate() throws {
-            // Apply default value
-            if sourceType == nil
-                && patternString == nil {
-                self.sourceType = .stdin
-            }
-            
             switch sourceType {
             case .stdin where patternString == nil:
                 self.source = .stdin
@@ -141,12 +135,6 @@ package struct InOutConfiguration: ParsableArguments {
         package private(set) var destination: Destination!
         
         package mutating func validate() throws {
-            // Apply default value
-            if destinationType == nil
-                && fileOutput == nil {
-                self.destinationType = .stdout
-            }
-            
             switch destinationType {
             case .stdout where fileOutput == nil:
                 self.destination = .stdout
