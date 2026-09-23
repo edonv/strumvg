@@ -68,12 +68,13 @@ package struct InOutConfiguration: ParsableArguments {
                 // sourceType != nil
                 // both non-nil
                 if patternString != nil {
-                    throw ValidationError("Both a `sourceType` flag and `--arg` option are present. They are mutually exclusive.")
+                    throw ValidationError("Both a `sourceType` flag (`--stdin`) and `--arg` option are present. They are mutually exclusive.")
                 }
             }
             
             // both nil
-            throw ValidationError("Neither a `sourceType` flag nor the `--arg` option is present. One of them must be present.")
+            // Throw error if no arguments are present
+            throw ValidationError("Neither a `sourceType` flag (`--stdin`) nor the `--arg` option is present. One of them must be present.")
         }
         
         private enum SourceType: EnumerableFlag {
@@ -151,12 +152,13 @@ package struct InOutConfiguration: ParsableArguments {
                 // destinationType != nil
                 // both non-nil
                 if fileOutput != nil {
-                    throw ValidationError("Both a `destinationType` flag and `--file` option are present. They are mutually exclusive.")
+                    throw ValidationError("Both a `destinationType` flag (`--stdout`/`--log`) and `--file` option are present. They are mutually exclusive.")
                 }
             }
             
             // both nil
-            throw ValidationError("Neither a `destinationType` flag nor the `--file` option is present. One of them must be present.")
+            // Throw error if no arguments are present
+            throw ValidationError("Neither a `destinationType` flag (`--stdout`/`--log`) nor the `--file` option is present. One of them must be present.")
         }
         
         private enum DestinationType: EnumerableFlag {
