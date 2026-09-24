@@ -7,10 +7,17 @@
 
 import Foundation
 import Configuration
+import JSONSchemaBuilder
+import JSONSchemaConversion
 
 /// Configurable properties for customizing the SVG output of `strumvg`.
 ///
 /// Size-related properties are either an SVG user unit measurement or a ratio relative to another concrete property.
+@Schemable(optionalNulls: false)
+@SchemaOptions(
+    .title("strumvg Style Configuration"),
+    .description("Configurable properties for customizing the SVG output of `strumvg`.\n\nSize-related properties are either an SVG user unit measurement or a ratio relative to another concrete property."),
+)
 public struct StyleConfiguration: Codable {
     /// Styling related to colors.
     public let colors: Colors
@@ -30,21 +37,22 @@ public struct StyleConfiguration: Codable {
     /// Color styling properties
     ///
     /// Color values can be any string recognized by [SVG/CSS as a color](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value).
+    @Schemable(optionalNulls: false)
     public struct Colors: Codable {
         /// The color of the arrows.
-        /// > Default: `#000000` (black)
+        @SchemaOptions(.default(.string("#000000")))
         public let arrows: String
         /// The color of the rhythm text and stems below the arrows.
-        /// > Default: `#555555` (dark gray)
+        @SchemaOptions(.default(.string("#555555")))
         public let rhythms: String
         /// The color of the articulations and header text above the arrows.
-        /// > Default: `#000000` (black)
+        @SchemaOptions(.default(.string("#000000")))
         public let headers: String
         /// The color of the barlines.
-        /// > Default: `#000000` (black)
+        @SchemaOptions(.default(.string("#000000")))
         public let barlines: String
         /// The color of the repeat signs.
-        /// > Default: `#000000` (black)
+        @SchemaOptions(.default(.string("#000000")))
         public let repeats: String
         
         public init(
@@ -92,21 +100,37 @@ public struct StyleConfiguration: Codable {
     /// Properties denoted as a "height" refer to the amount of vertical space (in SVG user units) that will be reserved for that text.
     ///
     /// Properties denoted as a "font size" will translate to the `font-size` attribute.
+    @Schemable(optionalNulls: false)
     public struct TextSizes: Codable {
         /// The height of the space reserved for rhythm text below the arrows.
-        /// > Default: `30`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(30),
+        )
         public let beatTextHeight: CGFloat
         /// The relative font-size of the rhythm text below the arrows, as a fraction of ``beatTextHeight``.
-        /// > Default: `0.8`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(0.8),
+        )
         public let beatFontSizeRatio: CGFloat
         /// The height of the space reserved for articulations and header text above the arrows.
-        /// > Default: `30`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(30),
+        )
         public let headerTextHeight: CGFloat
         /// The relative font-size of the articulations and header text above the arrows, as a fraction of ``headerTextHeight``.
-        /// > Default: `0.8`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(0.8),
+        )
         public let headerFontSizeRatio: CGFloat
         /// The actual font-size of the tuplet label, if applicable.
-        /// > Default: `14`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(14),
+        )
         public let tupletFontSize: CGFloat
         
         /// The actual font size to use for beat text, computed automatically.
@@ -167,20 +191,33 @@ public struct StyleConfiguration: Codable {
     }
     
     /// Strum sizing properties
+    @Schemable(optionalNulls: false)
     public struct StrumSizes: Codable {
         /// The width of the space reserved for each strum arrow.
         ///
         /// This is the width of the space reserved for each "rhythmic column" composed of arrow, header text, and beat text. It also defines the maximum width of a strum's arrowhead.
-        /// > Default: `20`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(20),
+        )
         public let width: CGFloat
         /// The height of each strum arrow.
-        /// > Default: `80`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(80),
+        )
         public let height: CGFloat
         /// The relative stroke width of a strum arrow's lines, as a fraction of ``width``.
-        /// > Default: `0.2`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(0.2),
+        )
         public let strokeWidthRatio: CGFloat
         /// The horizontal space between each strum.
-        /// > Default: `30`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(30),
+        )
         public let gap: CGFloat
         
         /// The computed stroke width of a strum arrow's lines.
@@ -227,18 +264,27 @@ public struct StyleConfiguration: Codable {
     }
     
     /// Beam and rhythmic-grouping sizing properties
+    @Schemable(optionalNulls: false)
     public struct BeamSizes: Codable {
         /// The stroke width of the rhythm stems/beams below the arrows.
-        /// > Default: `2`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(2),
+        )
         public let strokeWidth: CGFloat
         /// The vertical length of the beam stems.
-        /// > Default: `8`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(8),
+        )
         public let stemHeight: CGFloat
         /// The width of a stem's flag.
         ///
         /// This is only used when each beat's duration is an eighth note or shorter and is not being subdivided.
-        ///
-        /// > Default: `5`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(5),
+        )
         public let flagWidth: CGFloat
         
         /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
@@ -262,15 +308,25 @@ public struct StyleConfiguration: Codable {
     }
     
     /// Barline sizing properties
+    @Schemable(optionalNulls: false)
     public struct BarlineSizes: Codable {
         /// The stroke width of the barlines.
-        /// > Default: `2`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(2),
+        )
         public let strokeWidth: CGFloat
         /// The relative height of a barline, as a fraction of ``StyleConfiguration/StrumSizes/height``.
-        /// > Default: `1.25`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(1.25),
+        )
         public let heightRatio: CGFloat
         /// The relative width of a gap between a barline and adjacent "rhythmic columns", as a fraction of ``StyleConfiguration/StrumSizes/gap``.
-        /// > Default: `0.5`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(0.5),
+        )
         public let gapRatio: CGFloat
         
         /// Computed height of a barline, using ``StyleConfiguration/StrumSizes`` as a reference point.
@@ -303,15 +359,25 @@ public struct StyleConfiguration: Codable {
     }
     
     /// Repeats sizing properties
+    @Schemable(optionalNulls: false)
     public struct Repeats: Codable {
         /// The relative distance repeat signs' horizontal centers are away from the barline, as a fraction of the gap between a barline and its adject strums.
-        /// > Default: `0.5`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(0.5),
+        )
         public let horizontalInsetRatio: CGFloat
         /// The relative distance each repeat sign dot's vertical center is inset from the top or bottom of the height of the strum arrows, as a fraction of ``StyleConfiguration/StrumSizes/height``.
-        /// > Default: `1/3`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(0.333),
+        )
         public let verticalInsetRatio: CGFloat
         /// Radius of the repeat signs' dots.
-        /// > Default: `3`
+        @SchemaOptions(
+            .customSchema(Conversions.cgFloat),
+            .default(3),
+        )
         public let dotRadius: CGFloat
         
         public init(
@@ -334,14 +400,47 @@ public struct StyleConfiguration: Codable {
     }
     
     /// Font properties
+    @Schemable(optionalNulls: false)
     public struct Fonts: Codable {
         /// Font styling for header text.
+        @SchemaOptions(
+            .customSchema(Styling.self),
+            .default([
+                "family": "sans-serif",
+                "weight": "bold",
+                "style": "normal"
+            ])
+        )
         public let strumHeader: Styling
         /// Font styling for text inserted in place of arrows.
+        @SchemaOptions(
+            .customSchema(Styling.self),
+            .default([
+                "family": "sans-serif",
+                "weight": "bold",
+                "style": "normal"
+            ])
+        )
         public let arrowText: Styling
         /// Font styling for rhythm count text.
+        @SchemaOptions(
+            .customSchema(Styling.self),
+            .default([
+                "family": "sans-serif",
+                "weight": "bold",
+                "style": "normal"
+            ])
+        )
         public let countChar: Styling
         /// Font styling for tuplet labels (`"3"`), if applicable.
+        @SchemaOptions(
+            .customSchema(Styling.self),
+            .default([
+                "family": "sans-serif",
+                "weight": "normal",
+                "style": "normal"
+            ])
+        )
         public let tupletText: Styling
         
         public init(
@@ -380,30 +479,25 @@ public struct StyleConfiguration: Codable {
         /// A set of font specification properties.
         ///
         /// Includes values for `font-family`, `font-weight`, and `font-style` attributes.
+        @Schemable(optionalNulls: false)
         public struct Styling: Codable {
             /// Font family name.
             ///
             /// Values can be any string recognized by [SVG/CSS as a font family](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-family).
             ///
-            /// > Default: `sans-serif`
-            ///
-            /// > Attribute: `font-family`
+            /// Attribute: `font-family`
             public let family: String
             /// Font weight.
             ///
             /// Values can be any string recognized by [SVG/CSS as a font weight](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight).
             ///
-            /// > Default: `normal`
-            ///
-            /// > Attribute: `font-weight`
+            /// Attribute: `font-weight`
             public let weight: String
             /// Font style.
             ///
             /// Values can be any string recognized by [SVG/CSS as a font style](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-style).
             ///
-            /// > Default: `normal`
-            ///
-            /// > Attribute: `font-style`
+            /// Attribute: `font-style`
             public let style: String
             
             public init(family: String, weight: String, style: String) {
