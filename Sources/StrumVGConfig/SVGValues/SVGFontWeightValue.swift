@@ -61,11 +61,13 @@ public struct SVGFontWeightValue: Sendable, Hashable {
 
 extension SVGFontWeightValue: Codable {
     public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        
         switch value {
         case .number(let int):
-            try int.encode(to: encoder)
+            try container.encode(int)
         default:
-            try stringValue.encode(to: encoder)
+            try container.encode(stringValue)
         }
     }
     
