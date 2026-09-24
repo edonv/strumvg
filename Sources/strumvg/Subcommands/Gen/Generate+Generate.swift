@@ -450,7 +450,7 @@ extension Generate {
             ),
             .attribute(named: "font-family", value: style.fonts.strumHeader.family),
             .attribute(named: "font-weight", value: style.fonts.strumHeader.weight.stringValue),
-            .attribute(named: "font-style", value: style.fonts.strumHeader.style),
+            .attribute(named: "font-style", value: style.fonts.strumHeader.style.stringValue),
         ] + strumHeaderAndCountTextSharedAttrs
     }
     
@@ -466,7 +466,7 @@ extension Generate {
             ),
             .attribute(named: "font-family", value: style.fonts.countChar.family),
             .attribute(named: "font-weight", value: style.fonts.countChar.weight.stringValue),
-            .attribute(named: "font-style", value: style.fonts.countChar.style),
+            .attribute(named: "font-style", value: style.fonts.countChar.style.stringValue),
         ] + strumHeaderAndCountTextSharedAttrs
     }
     
@@ -650,7 +650,7 @@ extension Generate {
             ),
             .attribute(named: "font-family", value: style.fonts.arrowText.family),
             .attribute(named: "font-weight", value: style.fonts.arrowText.weight.stringValue),
-            .attribute(named: "font-style", value: style.fonts.arrowText.style),
+            .attribute(named: "font-style", value: style.fonts.arrowText.style.stringValue),
         ]
     }
     
@@ -681,7 +681,7 @@ extension Generate {
                 .attribute(named: "text-anchor", value: "middle"),
                 .attribute(named: "font-family", value: style.fonts.tupletText.family),
                 .attribute(named: "font-weight", value: style.fonts.tupletText.weight.stringValue),
-                .attribute(named: "font-style", value: style.fonts.tupletText.style),
+                .attribute(named: "font-style", value: style.fonts.tupletText.style.stringValue),
             ] + (0..<groupQuantity).map { i in
                 return createNoteGroup(
                     groupNum: i,
