@@ -40,19 +40,19 @@ public struct StyleConfiguration: Codable {
     @Schemable(optionalNulls: false)
     public struct Colors: Codable {
         /// The color of the arrows.
-        @SchemaOptions(.default(.string("#000000")))
+        @SchemaOptions(.default(.string("#000000")), .examples(SVGColorValue.examples))
         public let arrows: String
         /// The color of the rhythm text and stems below the arrows.
-        @SchemaOptions(.default(.string("#555555")))
+        @SchemaOptions(.default(.string("#555555")), .examples(SVGColorValue.examples))
         public let rhythms: String
         /// The color of the articulations and header text above the arrows.
-        @SchemaOptions(.default(.string("#000000")))
+        @SchemaOptions(.default(.string("#000000")), .examples(SVGColorValue.examples))
         public let headers: String
         /// The color of the barlines.
-        @SchemaOptions(.default(.string("#000000")))
+        @SchemaOptions(.default(.string("#000000")), .examples(SVGColorValue.examples))
         public let barlines: String
         /// The color of the repeat signs.
-        @SchemaOptions(.default(.string("#000000")))
+        @SchemaOptions(.default(.string("#000000")), .examples(SVGColorValue.examples))
         public let repeats: String
         
         public init(
