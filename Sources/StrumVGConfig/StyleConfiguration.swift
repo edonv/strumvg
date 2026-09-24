@@ -481,6 +481,8 @@ public struct StyleConfiguration: Codable {
         /// Includes values for `font-family`, `font-weight`, and `font-style` attributes.
         @Schemable(optionalNulls: false)
         public struct Styling: Codable {
+            public typealias Weight = SVGFontWeight
+            
             /// Font family name.
             ///
             /// Values can be any string recognized by [SVG/CSS as a font family](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-family).
@@ -492,7 +494,7 @@ public struct StyleConfiguration: Codable {
             /// Values can be any string recognized by [SVG/CSS as a font weight](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight).
             ///
             /// Attribute: `font-weight`
-            public let weight: String
+            public let weight: Weight
             /// Font style.
             ///
             /// Values can be any string recognized by [SVG/CSS as a font style](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-style).
@@ -500,7 +502,7 @@ public struct StyleConfiguration: Codable {
             /// Attribute: `font-style`
             public let style: String
             
-            public init(family: String, weight: String, style: String) {
+            public init(family: String, weight: Weight, style: String) {
                 self.family = family
                 self.weight = weight
                 self.style = style
@@ -515,7 +517,7 @@ public struct StyleConfiguration: Codable {
                         forKey: "family",
                         default: defaultValue.family
                     ),
-                    weight: config.string(
+                    weight: config.svgFontWeight(
                         forKey: "weight",
                         default: defaultValue.weight
                     ),
@@ -529,7 +531,7 @@ public struct StyleConfiguration: Codable {
             public static var `default`: Styling {
                 .init(
                     family: "sans-serif",
-                    weight: "normal",
+                    weight: .normal,
                     style: "normal"
                 )
             }
@@ -537,7 +539,7 @@ public struct StyleConfiguration: Codable {
             public var bold: Styling {
                 .init(
                     family: family,
-                    weight: "bold",
+                    weight: .bold,
                     style: style
                 )
             }
