@@ -158,6 +158,9 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Add testing suite for testing parsing of pattern strings
     - [x] Move all saved pattern string arguments into a test suite
 - [ ] Add JSON schema docs generator with GitHub Actions to host with GitHub Pages (`.github/docs`)
+    - [ ] types that should be `$ref` types:
+        - [ ] `SVGColor` (in `Colors`)
+        - [ ] `Font.Styling`
 - [x] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
     - [ ] `homebrew` requires executable to be signed, which requires a paid developer account
