@@ -1,5 +1,5 @@
 //
-//  SVGFontWeight.swift
+//  SVGFontWeightValue.swift
 //  strumvg
 //
 //  Created by Edon Valdman on 9/24/26.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight#values
-public struct SVGFontWeight: Sendable, Hashable {
+public struct SVGFontWeightValue: Sendable, Hashable {
     private var value: Value
     
     private init(value: Value) {
@@ -50,16 +50,16 @@ public struct SVGFontWeight: Sendable, Hashable {
         case normal, bold, lighter, bolder
     }
     
-    internal static func number(_ number: Int) -> SVGFontWeight { .init(value: .number(number)) }
-    internal static let normal: SVGFontWeight = .init(value: .normal)
-    internal static let bold: SVGFontWeight = .init(value: .bold)
-    internal static let lighter: SVGFontWeight = .init(value: .lighter)
-    internal static let bolder: SVGFontWeight = .init(value: .bolder)
+    internal static func number(_ number: Int) -> SVGFontWeightValue { .init(value: .number(number)) }
+    internal static let normal: SVGFontWeightValue = .init(value: .normal)
+    internal static let bold: SVGFontWeightValue = .init(value: .bold)
+    internal static let lighter: SVGFontWeightValue = .init(value: .lighter)
+    internal static let bolder: SVGFontWeightValue = .init(value: .bolder)
 }
 
 // MARK: Codable
 
-extension SVGFontWeight: Codable {
+extension SVGFontWeightValue: Codable {
     public func encode(to encoder: any Encoder) throws {
         switch value {
         case .number(let int):
@@ -73,7 +73,7 @@ extension SVGFontWeight: Codable {
         let container = try decoder.singleValueContainer()
         
         if let string = try? container.decode(String.self),
-           let weight = SVGFontWeight(stringValue: string) {
+           let weight = SVGFontWeightValue(stringValue: string) {
             self = weight
         } else {
             let int = try container.decode(Int.self)
@@ -87,14 +87,14 @@ extension SVGFontWeight: Codable {
 import JSONSchemaBuilder
 import OrderedJSON
 
-extension SVGFontWeight: Schemable {
-    public static var schema: some JSONSchemaComponent<SVGFontWeight> {
-        JSONComposition.OneOf(into: SVGFontWeight.self) {
+extension SVGFontWeightValue: Schemable {
+    public static var schema: some JSONSchemaComponent<SVGFontWeightValue> {
+        JSONComposition.OneOf(into: SVGFontWeightValue.self) {
             JSONInteger()
                 .title("Weight value number")
                 .minimum(JSONNumberLiteral(1 as Int))
                 .maximum(JSONNumberLiteral(1000 as Int))
-                .map { SVGFontWeight(value: .number($0)) }
+                .map { SVGFontWeightValue(value: .number($0)) }
             
             JSONString()
                 .title("Standardized weight name")
@@ -105,14 +105,14 @@ extension SVGFontWeight: Schemable {
                     "bolder"
                 }
                 .compactMap { string in
-                    SVGFontWeight(stringValue: string)
+                    SVGFontWeightValue(stringValue: string)
                 }
             
             JSONString()
                 .title("Weight value number in a string")
                 .pattern("(\\d{1,3})|(1000)")
                 .compactMap(Int.init)
-                .map { SVGFontWeight(value: .number($0)) }
+                .map { SVGFontWeightValue(value: .number($0)) }
         }
     }
 }
@@ -125,10 +125,10 @@ extension ConfigReader {
     func svgFontWeight(
         forKey key: ConfigKey,
         isSecret: Bool = false,
-        default defaultValue: SVGFontWeight,
+        default defaultValue: SVGFontWeightValue,
         fileID: String = #fileID,
         line: UInt = #line
-    ) -> SVGFontWeight {
+    ) -> SVGFontWeightValue {
         let string = string(
             forKey: key,
             isSecret: isSecret,
@@ -144,7 +144,7 @@ extension ConfigReader {
         )
         
         if let string,
-           let weight = SVGFontWeight(stringValue: string) {
+           let weight = SVGFontWeightValue(stringValue: string) {
             return weight
         } else if let int {
             return .number(int)

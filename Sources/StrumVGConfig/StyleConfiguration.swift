@@ -481,7 +481,7 @@ public struct StyleConfiguration: Codable {
         /// Includes values for `font-family`, `font-weight`, and `font-style` attributes.
         @Schemable(optionalNulls: false)
         public struct Styling: Codable {
-            public typealias Weight = SVGFontWeight
+            public typealias Weight = SVGFontWeightValue
             
             /// Font family name.
             ///
