@@ -449,7 +449,7 @@ extension Generate {
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.strumHeader.family),
-            .attribute(named: "font-weight", value: style.fonts.strumHeader.weight),
+            .attribute(named: "font-weight", value: style.fonts.strumHeader.weight.stringValue),
             .attribute(named: "font-style", value: style.fonts.strumHeader.style),
         ] + strumHeaderAndCountTextSharedAttrs
     }
@@ -465,7 +465,7 @@ extension Generate {
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.countChar.family),
-            .attribute(named: "font-weight", value: style.fonts.countChar.weight),
+            .attribute(named: "font-weight", value: style.fonts.countChar.weight.stringValue),
             .attribute(named: "font-style", value: style.fonts.countChar.style),
         ] + strumHeaderAndCountTextSharedAttrs
     }
@@ -649,7 +649,7 @@ extension Generate {
                 value: "middle"
             ),
             .attribute(named: "font-family", value: style.fonts.arrowText.family),
-            .attribute(named: "font-weight", value: style.fonts.arrowText.weight),
+            .attribute(named: "font-weight", value: style.fonts.arrowText.weight.stringValue),
             .attribute(named: "font-style", value: style.fonts.arrowText.style),
         ]
     }
@@ -680,7 +680,7 @@ extension Generate {
                 .attribute(named: "font-size", value: style.textSizes.tupletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
                 .attribute(named: "font-family", value: style.fonts.tupletText.family),
-                .attribute(named: "font-weight", value: style.fonts.tupletText.weight),
+                .attribute(named: "font-weight", value: style.fonts.tupletText.weight.stringValue),
                 .attribute(named: "font-style", value: style.fonts.tupletText.style),
             ] + (0..<groupQuantity).map { i in
                 return createNoteGroup(
