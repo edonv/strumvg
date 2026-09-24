@@ -96,13 +96,13 @@ public struct StyleConfiguration: Codable {
         /// The height of the space reserved for rhythm text below the arrows.
         /// > Default: `30`
         public let beatTextHeight: CGFloat
-        /// The relative font-size of the rhythm text below the arrows, as a fraction of its height.
+        /// The relative font-size of the rhythm text below the arrows, as a fraction of ``beatTextHeight``.
         /// > Default: `0.8`
         public let beatFontSizeRatio: CGFloat
         /// The height of the space reserved for articulations and header text above the arrows.
         /// > Default: `30`
         public let headerTextHeight: CGFloat
-        /// The relative font-size of the articulations and header text above the arrows, as a fraction of its height.
+        /// The relative font-size of the articulations and header text above the arrows, as a fraction of ``headerTextHeight``.
         /// > Default: `0.8`
         public let headerFontSizeRatio: CGFloat
         /// The actual font-size of the tuplet label, if applicable.
