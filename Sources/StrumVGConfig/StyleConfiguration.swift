@@ -482,6 +482,7 @@ public struct StyleConfiguration: Codable {
         @Schemable(optionalNulls: false)
         public struct Styling: Codable {
             public typealias Weight = SVGFontWeightValue
+            public typealias Style = SVGFontStyleValue
             
             /// Font family name.
             ///
@@ -500,9 +501,9 @@ public struct StyleConfiguration: Codable {
             /// Values can be any string recognized by [SVG/CSS as a font style](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-style).
             ///
             /// Attribute: `font-style`
-            public let style: String
+            public let style: Style
             
-            public init(family: String, weight: Weight, style: String) {
+            public init(family: String, weight: Weight, style: Style) {
                 self.family = family
                 self.weight = weight
                 self.style = style
@@ -521,7 +522,7 @@ public struct StyleConfiguration: Codable {
                         forKey: "weight",
                         default: defaultValue.weight
                     ),
-                    style: config.string(
+                    style: config.svgFontStyle(
                         forKey: "style",
                         default: defaultValue.style
                     )
@@ -532,7 +533,7 @@ public struct StyleConfiguration: Codable {
                 .init(
                     family: "sans-serif",
                     weight: .normal,
-                    style: "normal"
+                    style: .normal
                 )
             }
             
