@@ -103,34 +103,24 @@ public struct StyleConfiguration: Codable {
     @Schemable(optionalNulls: false)
     public struct TextSizes: Codable {
         /// The height of the space reserved for rhythm text below the arrows.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(30),
-        )
+        @SchemaOptions(.default(30))
+        @NumberOptions(.minimum(0))
         public let beatTextHeight: CGFloat
         /// The relative font-size of the rhythm text below the arrows, as a fraction of ``beatTextHeight``.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(0.8),
-        )
+        @SchemaOptions(.default(0.8))
+        @NumberOptions(.minimum(0))
         public let beatFontSizeRatio: CGFloat
         /// The height of the space reserved for articulations and header text above the arrows.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(30),
-        )
+        @SchemaOptions(.default(30))
+        @NumberOptions(.minimum(0))
         public let headerTextHeight: CGFloat
         /// The relative font-size of the articulations and header text above the arrows, as a fraction of ``headerTextHeight``.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(0.8),
-        )
+        @SchemaOptions(.default(0.8))
+        @NumberOptions(.minimum(0))
         public let headerFontSizeRatio: CGFloat
         /// The actual font-size of the tuplet label, if applicable.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(14),
-        )
+        @SchemaOptions(.default(14))
+        @NumberOptions(.minimum(0))
         public let tupletFontSize: CGFloat
         
         /// The actual font size to use for beat text, computed automatically.
@@ -196,28 +186,20 @@ public struct StyleConfiguration: Codable {
         /// The width of the space reserved for each strum arrow.
         ///
         /// This is the width of the space reserved for each "rhythmic column" composed of arrow, header text, and beat text. It also defines the maximum width of a strum's arrowhead.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(20),
-        )
+        @SchemaOptions(.default(20))
+        @NumberOptions(.minimum(0))
         public let width: CGFloat
         /// The height of each strum arrow.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(80),
-        )
+        @SchemaOptions(.default(80))
+        @NumberOptions(.minimum(0))
         public let height: CGFloat
         /// The relative stroke width of a strum arrow's lines, as a fraction of ``width``.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(0.2),
-        )
+        @SchemaOptions(.default(0.2))
+        @NumberOptions(.minimum(0))
         public let strokeWidthRatio: CGFloat
         /// The horizontal space between each strum.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(30),
-        )
+        @SchemaOptions(.default(30))
+        @NumberOptions(.minimum(0))
         public let gap: CGFloat
         
         /// The computed stroke width of a strum arrow's lines.
@@ -267,24 +249,18 @@ public struct StyleConfiguration: Codable {
     @Schemable(optionalNulls: false)
     public struct BeamSizes: Codable {
         /// The stroke width of the rhythm stems/beams below the arrows.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(2),
-        )
+        @SchemaOptions(.default(2))
+        @NumberOptions(.minimum(0))
         public let strokeWidth: CGFloat
         /// The vertical length of the beam stems.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(8),
-        )
+        @SchemaOptions(.default(8))
+        @NumberOptions(.minimum(0))
         public let stemHeight: CGFloat
         /// The width of a stem's flag.
         ///
         /// This is only used when each beat's duration is an eighth note or shorter and is not being subdivided.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(5),
-        )
+        @SchemaOptions(.default(5))
+        @NumberOptions(.minimum(0))
         public let flagWidth: CGFloat
         
         /// Space out beams by `1.5 * strokeWidth`, or `1` (whichever is larger)
@@ -311,22 +287,16 @@ public struct StyleConfiguration: Codable {
     @Schemable(optionalNulls: false)
     public struct BarlineSizes: Codable {
         /// The stroke width of the barlines.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(2),
-        )
+        @SchemaOptions(.default(2))
+        @NumberOptions(.minimum(0))
         public let strokeWidth: CGFloat
         /// The relative height of a barline, as a fraction of ``StyleConfiguration/StrumSizes/height``.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(1.25),
-        )
+        @SchemaOptions(.default(1.25))
+        @NumberOptions(.minimum(0))
         public let heightRatio: CGFloat
         /// The relative width of a gap between a barline and adjacent "rhythmic columns", as a fraction of ``StyleConfiguration/StrumSizes/gap``.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(0.5),
-        )
+        @SchemaOptions(.default(0.5))
+        @NumberOptions(.minimum(0))
         public let gapRatio: CGFloat
         
         /// Computed height of a barline, using ``StyleConfiguration/StrumSizes`` as a reference point.
@@ -362,22 +332,16 @@ public struct StyleConfiguration: Codable {
     @Schemable(optionalNulls: false)
     public struct Repeats: Codable {
         /// The relative distance repeat signs' horizontal centers are away from the barline, as a fraction of the gap between a barline and its adject strums.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(0.5),
-        )
+        @SchemaOptions(.default(0.5))
+        @NumberOptions(.minimum(0))
         public let horizontalInsetRatio: CGFloat
         /// The relative distance each repeat sign dot's vertical center is inset from the top or bottom of the height of the strum arrows, as a fraction of ``StyleConfiguration/StrumSizes/height``.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(0.333),
-        )
+        @SchemaOptions(.default(0.333))
+        @NumberOptions(.minimum(0))
         public let verticalInsetRatio: CGFloat
         /// Radius of the repeat signs' dots.
-        @SchemaOptions(
-            .customSchema(Conversions.cgFloat),
-            .default(3),
-        )
+        @SchemaOptions(.default(3))
+        @NumberOptions(.minimum(0))
         public let dotRadius: CGFloat
         
         public init(
