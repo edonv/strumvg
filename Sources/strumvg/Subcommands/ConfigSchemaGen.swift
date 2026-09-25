@@ -31,6 +31,36 @@ struct ConfigSchemaGen: ParsableCommand {
     }
     
     func run() throws {
+        if !FileManager.default.fileExists(atPath: outputDirectoryPath.string) {
+            try FileManager.default.createDirectory(
+                atPath: outputDirectoryPath.string,
+                withIntermediateDirectories: true
+            )
+        }
         
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        
+        let schema = StyleConfiguration.schema.definition()
+        
+        let schemaJSONString = try schema.jsonValue.serialized(options: .init(prettyPrinted: true, indent: "  "))
+            .replacing(/(?:``)(?:StyleConfiguration\/)?(?<symbol>[^`]+)(?:``)/) { match in
+                let normalizedSymbolPath = match.output.symbol
+                    .replacingOccurrences(of: "/", with: ".")
+                return "`\(normalizedSymbolPath)`"
+            }
+            .replacingOccurrences(of: "`StrumSizes.", with: "`strumSizes.")
+            .replacing(/"(?<key>[^"]+)" :(?= )/) { "\"\($0.output.key)\":" }
+            // Remove all "required"
+            .replacing(
+                /,?\n^ +"required": \[[\s"\w,]+\]/.anchorsMatchLineEndings(),
+                with: ""
+            )
+        
+        try schemaJSONString.write(
+            toFile: outputDirectoryPath.string,
+            atomically: true,
+            encoding: .utf8
+        )
     }
 }
