@@ -102,6 +102,12 @@ extension SVGFontStyleValue: Schemable {
                 .pattern("^oblique ((?:\\+|-)?\\d+\\.?\\d*)(deg|grad|rad|turn)$")
         }
         .compactMap { SVGFontStyleValue(stringValue: $0) }
+        .examples {
+            "oblique 45deg"
+            "oblique 0.5rad"
+            "oblique 200grad"
+            "oblique 0.25turn"
+        }
     }
 }
 
