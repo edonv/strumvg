@@ -64,28 +64,48 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-a=&quot;|{hD}rr{rD}sADMD u-8t|udu d d -4&quot;"
+            argument = "-a=&quot;|4/3t-{hD}rr{rD}sADMD u|2/2-udu d d |&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-a=&quot;|DuD D  u|D D uDu|-8&quot;"
+            argument = "-a=&quot;|4/2-DuD D  u|D D uDu|&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-a=&quot;|DuD D  u-8|D DuDu -4|&quot;"
+            argument = "-a=&quot;|4/2-DuD D  u|2/2-D DuDu |&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-a=&quot;d du udu-4|d du udu-8&quot;"
+            argument = "-a=&quot;|2/2-d du udu|4/2-d du udu|&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-a=&quot;d du udu-4t|d du udu-8&quot;"
+            argument = "-a=&quot;|2/3t-d du udu|4/2-d du udu|&quot;"
             isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-l"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-c"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;~/Music/ChordPro/Website Songbook/strumming/strumvg.json&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "config-schema"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-o"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;~/Documents/Developer Stuff/Swift Packages/strumvg/.github/docs&quot;"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

@@ -27,9 +27,9 @@ ARGUMENTS:
 
 INPUT/OUTPUT OPTIONS:
   -i, --stdin/-a, --arg=<pattern>
-                          Source for input pattern string. (default: --stdin)
+                          Source for input pattern string. (no default value)
   -o, --stdout/-l, --log/-f, --file=<file-path>.svg
-                          Destination for output SVG content. (default: --stdout)
+                          Destination for output SVG content. (no default value)
 
 OPTIONS:
   -h, --help              Show help information.
@@ -158,8 +158,13 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Add testing suite for testing parsing of pattern strings
     - [x] Move all saved pattern string arguments into a test suite
 - [ ] Add JSON schema docs generator with GitHub Actions to host with GitHub Pages (`.github/docs`)
+    - [ ] types that should be `$ref` types:
+        - [ ] `SVGColor` (in `Colors`)
+        - [ ] `Font.Styling`
 - [x] Update stem beams to connect between groups if `timing` is 16th note
 - [ ] Add to `homebrew`/equivalents?
+    - [ ] `homebrew` requires executable to be signed, which requires a paid developer account
+    - <https://scriptingosx.com/2023/08/build-a-notarized-package-with-a-swift-package-manager-executable/>
 - [ ] Add step to Action that regex replaces the version number in the strumvg command configuration.
 - [x] Replace rhythmic indicator with some sort of combo of time signature and subdivision
     - Examples:
@@ -174,3 +179,6 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [x] Move/namespace `StrumKind` and `Variant`
 - [ ] Add support for additional `subdivision` values
 - [ ] Update style configuration types to be generated from JSON Schema then implement `swift-configuration` initializers via extension
+- [ ] Add some way to display swing
+    - [ ] Maybe triplet counted "1+2+" beams together, marked as triplet, and 2nd note of each pair has reverse flag of next shorter duration
+    - [ ] Maybe `noteLength` written as `4/2s`

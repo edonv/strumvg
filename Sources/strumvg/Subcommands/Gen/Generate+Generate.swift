@@ -16,7 +16,7 @@ internal let numberFormat = FloatingPointFormatStyle<CGFloat>()
     .precision(.fractionLength(...4))
     .grouping(.never)
 
-extension strumvg {
+extension Generate {
     func generate(pattern: Pattern, size: CGSize? = nil) -> SVG {
         let rect = calcRect(for: pattern)
         
@@ -291,18 +291,19 @@ extension strumvg {
     ) -> Node<SVG.DocumentContext> {
         let groupTranslateX = -style.barlineSizes.gap(
             withStrumSizes: style.strumSizes
-        ) * style.repeats.spacingRatioFromBarline
+        ) * style.repeats.horizontalInsetRatio
         
         func circleElement(
             top: Bool
         ) -> Node<SVG.DocumentContext> {
-            let cyBase: CGFloat = style.strumSizes.height * style.repeats.yRatio
+            let cyFactor: CGFloat = top ? style.repeats.verticalInsetRatio : (1 - style.repeats.verticalInsetRatio)
+            let cyInset: CGFloat = style.strumSizes.height * cyFactor
             return .element(
                 named: "circle",
                 nodes: [
                     .attribute(
                         named: "cy",
-                        value: cyBase * (top ? 1 : 2),
+                        value: cyInset,
                         format: numberFormat
                     ),
                     .attribute(
@@ -448,8 +449,8 @@ extension strumvg {
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.strumHeader.family),
-            .attribute(named: "font-weight", value: style.fonts.strumHeader.weight),
-            .attribute(named: "font-style", value: style.fonts.strumHeader.style),
+            .attribute(named: "font-weight", value: style.fonts.strumHeader.weight.stringValue),
+            .attribute(named: "font-style", value: style.fonts.strumHeader.style.stringValue),
         ] + strumHeaderAndCountTextSharedAttrs
     }
     
@@ -464,8 +465,8 @@ extension strumvg {
                 format: numberFormat
             ),
             .attribute(named: "font-family", value: style.fonts.countChar.family),
-            .attribute(named: "font-weight", value: style.fonts.countChar.weight),
-            .attribute(named: "font-style", value: style.fonts.countChar.style),
+            .attribute(named: "font-weight", value: style.fonts.countChar.weight.stringValue),
+            .attribute(named: "font-style", value: style.fonts.countChar.style.stringValue),
         ] + strumHeaderAndCountTextSharedAttrs
     }
     
@@ -648,8 +649,8 @@ extension strumvg {
                 value: "middle"
             ),
             .attribute(named: "font-family", value: style.fonts.arrowText.family),
-            .attribute(named: "font-weight", value: style.fonts.arrowText.weight),
-            .attribute(named: "font-style", value: style.fonts.arrowText.style),
+            .attribute(named: "font-weight", value: style.fonts.arrowText.weight.stringValue),
+            .attribute(named: "font-style", value: style.fonts.arrowText.style.stringValue),
         ]
     }
     
@@ -679,8 +680,8 @@ extension strumvg {
                 .attribute(named: "font-size", value: style.textSizes.tupletFontSize, format: numberFormat),
                 .attribute(named: "text-anchor", value: "middle"),
                 .attribute(named: "font-family", value: style.fonts.tupletText.family),
-                .attribute(named: "font-weight", value: style.fonts.tupletText.weight),
-                .attribute(named: "font-style", value: style.fonts.tupletText.style),
+                .attribute(named: "font-weight", value: style.fonts.tupletText.weight.stringValue),
+                .attribute(named: "font-style", value: style.fonts.tupletText.style.stringValue),
             ] + (0..<groupQuantity).map { i in
                 return createNoteGroup(
                     groupNum: i,
@@ -855,12 +856,12 @@ extension strumvg {
         case false:
             elementKey = "flag"
             
-            let flagLength = style.beamSizes.flagLength
+            let flagWidth = style.beamSizes.flagWidth
             
             pathString = (0..<beamBarCount)
                 .map { i in
                     let y = y(for: i)
-                    return "M0,\(y) h\(flagLength)"
+                    return "M0,\(y) h\(flagWidth)"
                 }
                 .joined(separator: " ")
         }

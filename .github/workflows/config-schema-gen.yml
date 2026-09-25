@@ -1,0 +1,29 @@
+name: Generate Style Config Schema
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - Sources/StrumVGConfig/StyleConfiguration.swift
+jobs:
+  config-gen:
+    name: Generate Schema
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      # swift-actions/setup-swift@v3 is in beta
+      - uses: swift-actions/setup-swift@v3
+        with:
+          swift-version: "6.2"
+      - name: Build
+        run: swift build
+      - name: Run
+        run: swift run strumvg config-schema --output .github/docs
+      - name: Commit
+        run: |
+          git config user.name "GitHub Actions"
+          git add .github/docs/**/* -m "Updated configuration schema/docs."
+          git push
