@@ -17,7 +17,7 @@ jobs:
       # swift-actions/setup-swift@v3 is in beta
       - uses: swift-actions/setup-swift@v3
         with:
-          swift-version: "6.2"
+          swift-version: "6.3"
       - name: Build
         run: swift build
       - name: Run
