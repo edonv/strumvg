@@ -26,7 +26,7 @@ struct ConfigSchemaGen: ParsableCommand {
         completion: .directory
     )
     var outputDirectory: String
-    var outputDirectoryPath: FilePath {
+    private var outputDirectoryPath: FilePath {
         .init(outputDirectory)
     }
     
