@@ -64,8 +64,11 @@ struct ConfigSchemaGen: ParsableCommand {
             )
         
         try schemaJSONString.write(
-            toFile: outputDirectoryPath.string,
-            atomically: true,
+            to: URL(
+                filePath: outputFilePath.string,
+                directoryHint: .notDirectory
+            ),
+            atomically: false,
             encoding: .utf8
         )
     }
