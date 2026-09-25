@@ -62,7 +62,8 @@ let package = Package(
                 .product(name: "Yams", package: "Yams"),
                 "Plot",
                 "PlotSVG",
-            ]
+                .product(name: "JSONSchemaBuilder", package: "swift-json-schema"),
+            ],
         ),
     ]
 )
