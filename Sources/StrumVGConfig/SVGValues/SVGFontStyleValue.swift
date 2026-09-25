@@ -99,7 +99,7 @@ extension SVGFontStyleValue: Schemable {
             
             JSONString()
                 .title("Oblique font style with specified angle")
-                .pattern("oblique ((?:\\+|-)?\\d+\\.?\\d*)(deg|grad|rad|turn)")
+                .pattern("^oblique ((?:\\+|-)?\\d+\\.?\\d*)(deg|grad|rad|turn)$")
         }
         .compactMap { SVGFontStyleValue(stringValue: $0) }
     }
