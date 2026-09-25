@@ -112,7 +112,7 @@ extension SVGFontWeightValue: Schemable {
             
             JSONString()
                 .title("Weight value number in a string")
-                .pattern("(^[1-9]\\d{0,2}$)|(^1000$)")
+                .pattern("^([1-9]\\d{0,2}$)|(1000)$")
                 .compactMap(Int.init)
                 .map { SVGFontWeightValue(value: .number($0)) }
         }
