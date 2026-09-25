@@ -45,7 +45,9 @@ struct ConfigSchemaGen: ParsableCommand {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
         
-        let schema = StyleConfiguration.schema.definition()
+        let schema = StyleConfiguration.schema
+            .schema("https://json-schema.org/draft/2020-12/schema")
+            .definition()
         
         let schemaJSONString = try schema.jsonValue.serialized(options: .init(prettyPrinted: true, indent: "  "))
             .replacing(/(?:``)(?:StyleConfiguration\/)?(?<symbol>[^`]+)(?:``)/) { match in
