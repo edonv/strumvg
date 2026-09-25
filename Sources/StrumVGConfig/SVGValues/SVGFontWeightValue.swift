@@ -116,6 +116,17 @@ extension SVGFontWeightValue: Schemable {
                 .compactMap(Int.init)
                 .map { SVGFontWeightValue(value: .number($0)) }
         }
+        .examples {
+            100
+            200
+            300
+            400
+            500
+            600
+            700
+            800
+            900
+        }
     }
 }
 
