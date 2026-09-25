@@ -29,6 +29,10 @@ struct ConfigSchemaGen: ParsableCommand {
     private var outputDirectoryPath: FilePath {
         .init(outputDirectory)
     }
+    private var outputFilePath: FilePath {
+        outputDirectoryPath
+            .appending("strumvg.schema.json")
+    }
     
     func run() throws {
         if !FileManager.default.fileExists(atPath: outputDirectoryPath.string) {
