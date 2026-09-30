@@ -182,3 +182,5 @@ strumvg ... --colors-arrows blue --colors-rhythms="yellow" --colors-headers=gree
 - [ ] Add some way to display swing
     - [ ] Maybe triplet counted "1+2+" beams together, marked as triplet, and 2nd note of each pair has reverse flag of next shorter duration
     - [ ] Maybe `noteLength` written as `4/2s`
+- [ ] Add support for a partial/pick-up measure that can be told what beat count to start on
+    - [ ] Maybe something like `|:2/4-[2e]dud:|` would mean start counting on the "e" of beat 2?
